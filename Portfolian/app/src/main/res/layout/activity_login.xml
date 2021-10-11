@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".MainActivity">
+    tools:context=".View.LogInActivity">
 
     <ImageView
         android:id="@+id/imgLogo"
@@ -22,7 +22,7 @@
 
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnGit"
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
@@ -34,20 +34,22 @@
         app:layout_constraintVertical_bias="0.8"/>
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnKakao"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
+        android:background="@drawable/kakao_login_large_wide"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnGit"
         app:layout_constraintBottom_toTopOf="@id/btnGoogle"/>
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnGoogle"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
         android:layout_marginStart="30dp"
         android:layout_marginEnd="30dp"
+        android:background="@drawable/btn_google_signin_light_normal_hdpi"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnKakao"
