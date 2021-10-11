@@ -4,7 +4,27 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".View.LogInActivity">
+    tools:context=".login.LogInActivity">
+
+
+    <TextView
+        android:id="@+id/tvOneLine"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/OneLineIntroduction"
+        android:textSize="18sp"
+        android:textColor="@color/font"
+        android:fontFamily="@font/notosanskr_reqular"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toTopOf="@id/imgLogo"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:paddingEnd="30dp"
+        android:paddingStart="30dp"
+        android:layout_marginBottom="50dp"
+        app:layout_constraintVertical_chainStyle="packed"
+        android:gravity="center"/>
+
 
     <ImageView
         android:id="@+id/imgLogo"
@@ -15,11 +35,22 @@
         android:layout_marginEnd="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintVertical_bias="0.3"/>
-
-
+        app:layout_constraintTop_toBottomOf="@id/tvOneLine"
+        app:layout_constraintBottom_toTopOf="@id/tvSocial"
+        android:layout_marginBottom="80dp"/>
+    <TextView
+        android:id="@+id/tvSocial"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/social"
+        android:textColor="@color/gray1"
+        android:textSize="14sp"
+        android:fontFamily="@font/notosanskr_reqular"
+        app:layout_constraintTop_toBottomOf="@id/imgLogo"
+        app:layout_constraintBottom_toTopOf="@id/btnGit"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent" />
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnGit"
         android:layout_width="0dp"
@@ -29,9 +60,7 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/btnKakao"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed"
-        app:layout_constraintVertical_bias="0.8"/>
+        app:layout_constraintTop_toBottomOf="@id/tvSocial"/>
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnKakao"
         android:layout_width="0dp"
@@ -43,6 +72,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/btnGit"
         app:layout_constraintBottom_toTopOf="@id/btnGoogle"/>
+
     <androidx.appcompat.widget.AppCompatButton
         android:id="@+id/btnGoogle"
         android:layout_width="0dp"
