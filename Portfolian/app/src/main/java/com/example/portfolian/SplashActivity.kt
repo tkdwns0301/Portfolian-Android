@@ -1,10 +1,9 @@
-package com.example.portfolian.View
+package com.example.portfolian
 
 import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import androidx.appcompat.app.AppCompatActivity
-import com.example.portfolian.R
 import com.example.portfolian.login.LogInActivity
 
 class SplashActivity: AppCompatActivity() {
