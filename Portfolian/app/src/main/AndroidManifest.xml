@@ -17,7 +17,7 @@
             </intent-filter>
         </activity>
         <activity android:name="com.example.portfolian.view.login.LogInActivity"/>
-        <activity android:name=".view.MainActivity"/>
+        <activity android:name=".view.main.MainActivity"/>
     </application>
 
 </manifest>
