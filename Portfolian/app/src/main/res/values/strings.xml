@@ -5,4 +5,7 @@
     <string name="nickname_setting">반가워요!\n닉네임을 설정해주세요. (10자 이내)</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search">제목을 검색해보세요.</string>
+    <string name="filter_recent">최신순</string>
+    <string name="filter_view">조회순</string>
 </resources>
