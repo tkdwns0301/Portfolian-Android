@@ -15,17 +15,9 @@ import androidx.navigation.findNavController
 import com.example.portfolian.R
 
 class LogInActivity : AppCompatActivity() {
-    private lateinit var navController: NavController
-    private lateinit var fragment_LogIn: FragmentContainerView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_login)
-
-        init()
     }
-
-    private fun init() {
-    }
-
 }
