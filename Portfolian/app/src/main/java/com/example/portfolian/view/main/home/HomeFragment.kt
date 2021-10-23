@@ -15,6 +15,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun init(view: View) {
-
+        
     }
 }

@@ -8,4 +8,7 @@
     <string name="search">제목을 검색해보세요.</string>
     <string name="filter_recent">최신순</string>
     <string name="filter_view">조회순</string>
+    <string name="title">React를 활용한 간단한 로그인 기능 구현하기</string>
+    <string name="view">조회 123</string>
+    <string name="stack">+3</string>
 </resources>

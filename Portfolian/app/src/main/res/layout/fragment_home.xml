@@ -51,22 +51,22 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginEnd="10dp"
+            android:button="@drawable/ic_radio"
             android:checked="true"
             android:fontFamily="@font/notosanskr_reqular"
             android:text="@string/filter_recent"
             android:textColor="#343A40"
-            android:textSize="14sp"
-            android:button="@drawable/ic_radio"/>
+            android:textSize="14sp" />
 
         <RadioButton
             android:id="@+id/radio_View"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:button="@drawable/ic_radio"
             android:fontFamily="@font/notosanskr_reqular"
             android:text="@string/filter_view"
             android:textColor="#343A40"
-            android:textSize="14sp"
-            android:button="@drawable/ic_radio"/>
+            android:textSize="14sp" />
     </RadioGroup>
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -83,8 +83,9 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:paddingStart="20dp"
+            android:paddingTop="20dp"
             android:paddingEnd="20dp"
-            android:paddingTop="20dp"/>
+            tools:listitem="@layout/list_view_home_item" />
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 
