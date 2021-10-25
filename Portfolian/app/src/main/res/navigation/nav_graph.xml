@@ -9,7 +9,11 @@
         android:id="@+id/homeFragment"
         android:name="com.example.portfolian.view.main.home.HomeFragment"
         android:label="fragment_home"
-        tools:layout="@layout/fragment_home" />
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_homeFilterFragment"
+            app:destination="@id/homeFilterFragment" />
+    </fragment>
     <fragment
         android:id="@+id/bookmarkFragment"
         android:name="com.example.portfolian.view.main.BookmarkFragment"
@@ -25,4 +29,9 @@
         android:name="com.example.portfolian.view.main.UserFragment"
         android:label="UserFragment"
         tools:layout="@layout/fragment_user"/>
+    <fragment
+        android:id="@+id/homeFilterFragment"
+        android:name="com.example.portfolian.view.main.home.HomeFilterFragment"
+        android:label="fragment_home_filter"
+        tools:layout="@layout/fragment_home_filter" />
 </navigation>

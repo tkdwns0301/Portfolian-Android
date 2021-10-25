@@ -1,10 +1,10 @@
 package com.example.portfolian.view.main.home
 
 import android.os.Bundle
+import android.util.Log
+import android.view.*
 import androidx.fragment.app.Fragment
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -32,11 +32,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         return binding.root
     }
 
-
     private fun init() {
         initRecyclerView()
         initSwipeRefreshLayout()
-
+        initToolbar()
     }
 
     private fun initSwipeRefreshLayout() {
@@ -51,6 +50,27 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         rv_Project.layoutManager = layoutManager
         readProject()
     }
+
+    private fun initToolbar() {
+        val toolbar = binding.toolbarHome
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.toolbar_Filter -> {
+                    Log.d("HomeFragment: ", "Filter Button Click")
+                    findNavController().navigate(R.id.action_homeFragment_to_homeFilterFragment)
+                    true
+                }
+                R.id.toolbar_Alert -> {
+                    Log.d("HomeFragment: ", "Alert Button Click")
+                    true
+                }
+                else -> {
+                    super.onOptionsItemSelected(it)
+                }
+            }
+        }
+    }
+
 
     private fun readProject() {
         //TODO retrofit 으로 데이터 받아와서 표시
