@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/cl_Project"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="20dp"
@@ -10,7 +11,7 @@
     android:paddingEnd="10dp">
 
     <ImageButton
-        android:id="@+id/btn_bookmark"
+        android:id="@+id/btn_Bookmark"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:background="@drawable/ic_bookmark"
@@ -27,7 +28,7 @@
         app:layout_constraintBottom_toTopOf="@id/cl_Stack"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/btn_bookmark">
+        app:layout_constraintTop_toBottomOf="@id/btn_Bookmark">
 
         <TextView
             android:id="@+id/tv_Title"
@@ -94,14 +95,14 @@
             android:id="@+id/fbl_Stack"
             android:layout_width="0dp"
             android:layout_height="match_parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/tv_StackCount"
-            app:layout_constraintWidth="true"
-            app:flexWrap="wrap"
+            app:alignContent="stretch"
             app:alignItems="stretch"
-            app:alignContent="stretch"/>
+            app:flexWrap="wrap"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@id/tv_StackCount"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintWidth="true" />
 
         <TextView
             android:id="@+id/tv_StackCount"
