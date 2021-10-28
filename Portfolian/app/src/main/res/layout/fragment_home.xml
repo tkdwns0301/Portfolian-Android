@@ -10,12 +10,13 @@
 
     <include layout="@layout/fragment_drawer" />
 
+
     <LinearLayout
         android:id="@+id/cl_Drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
         android:layout_gravity="end"
+        android:background="@color/white"
         android:orientation="vertical">
 
         <LinearLayout
@@ -466,8 +467,7 @@
                 android:textColor="@color/base" />
 
         </LinearLayout>
-
-
     </LinearLayout>
+
 </androidx.drawerlayout.widget.DrawerLayout>
 
