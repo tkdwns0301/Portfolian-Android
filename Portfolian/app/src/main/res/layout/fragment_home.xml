@@ -583,6 +583,7 @@
                 android:layout_height="wrap_content"
                 android:background="@android:color/transparent"
                 android:text="전체 취소"
+                android:textSize="16sp"
                 android:textColor="@color/base" />
 
         </LinearLayout>
