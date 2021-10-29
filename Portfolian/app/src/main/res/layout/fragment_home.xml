@@ -12,19 +12,18 @@
 
 
     <LinearLayout
-        android:id="@+id/cl_Drawer"
+        android:id="@+id/ll_Drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_gravity="end"
         android:background="@color/white"
+        android:layout_gravity="end"
         android:orientation="vertical">
 
         <LinearLayout
             android:id="@+id/cl_TopView"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:paddingStart="25dp">
+            android:orientation="horizontal">
 
 
             <TextView
@@ -58,7 +57,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:paddingStart="25dp">
+            android:paddingStart="10dp">
 
             <Button
                 android:id="@+id/btn_AllClick"
@@ -67,40 +66,55 @@
                 android:background="@android:color/transparent"
                 android:text="전체 선택"
                 android:textColor="@color/base"
-                android:textSize="16sp" />
+                android:textSize="16sp"
+                android:layout_marginBottom="16dp"/>
 
             <LinearLayout
                 android:id="@+id/ll_1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
+                android:layout_marginBottom="16dp"
                 android:orientation="horizontal">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Front"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Front"
+                    android:layout_width="97dp"
+                    android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
-                    android:text="Front-end"
+                    android:textOff="Front-end"
+                    android:textOn="Front-end"
+                    android:background="@drawable/shape_btn_front"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
+                    android:textSize="14sp"
+                    android:textStyle="normal"
+                    android:stateListAnimator="@null"/>
+
+                <ToggleButton
+                    android:id="@+id/btn_Back"
+                    android:layout_width="94dp"
+                    android:layout_height="24dp"
+                    android:layout_marginEnd="10dp"
+                    android:background="@drawable/shape_btn_back"
+                    android:textOn="Back-end"
+                    android:textOff="Back-end"
+                    android:stateListAnimator="@null"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Back"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_React"
+                    android:layout_width="69dp"
+                    android:layout_height="24dp"
+                    android:stateListAnimator="@null"
                     android:layout_marginEnd="10dp"
-                    android:text="Back-end"
-                    android:textSize="14sp" />
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_React"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginEnd="10dp"
-                    android:text="React"
+                    android:background="@drawable/shape_btn_react"
+                    android:textOn="React"
+                    android:textOff="React"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -110,44 +124,61 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
+                android:layout_marginBottom="16dp"
                 android:orientation="horizontal">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Vue"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Vue"
+                    android:layout_width="56dp"
+                    android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
-                    android:text="Vue"
+                    android:background="@drawable/shape_btn_vue"
+                    android:textOn="Vue"
+                    android:textOff="Vue"
+                    android:stateListAnimator="@null"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Spring"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Spring"
+                    android:stateListAnimator="@null"
+                    android:layout_width="75dp"
+                    android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
-                    android:text="Spring"
+                    android:background="@drawable/shape_btn_spring"
+                    android:textOn="Spring"
+                    android:textOff="Spring"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Django"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Django"
+                    android:layout_width="79dp"
+                    android:stateListAnimator="@null"
+                    android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
-                    android:text="Django"
+                    android:background="@drawable/shape_btn_django"
+                    android:textOn="Django"
+                    android:textOff="Django"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_iOS"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_iOS"
+                    android:layout_width="55dp"
+                    android:stateListAnimator="@null"
+                    android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
-                    android:text="iOS"
+                    android:background="@drawable/shape_btn_ios"
+                    android:textOn="iOS"
+                    android:textOff="iOS"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -157,34 +188,47 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
+                android:layout_marginBottom="16dp"
                 android:orientation="horizontal">
 
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Typescript"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Typescript"
+                    android:layout_width="101dp"
+                    android:layout_height="24dp"
+                    android:stateListAnimator="@null"
                     android:layout_marginEnd="10dp"
-                    android:text="Typescript"
+                    android:background="@drawable/shape_btn_typescript"
+                    android:textOn="Typescript"
+                    android:textOff="Typescript"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Javascript"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Javascript"
+                    android:layout_width="99dp"
+                    android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
-                    android:text="Javascript"
+                    android:background="@drawable/shape_btn_javascript"
+                    android:textOn="Javascript"
+                    android:textOff="Javascript"
+                    android:textAllCaps="false"
+                    android:stateListAnimator="@null"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Android"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Android"
+                    android:layout_width="85dp"
+                    android:layout_height="24dp"
+                    android:stateListAnimator="@null"
                     android:layout_marginEnd="10dp"
-                    android:text="Android"
+                    android:background="@drawable/shape_btn_android"
+                    android:textOn="Android"
+                    android:textOff="Android"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -194,34 +238,47 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
+                android:layout_marginBottom="16dp"
                 android:orientation="horizontal">
 
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Angular"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Angular"
+                    android:layout_width="83dp"
+                    android:layout_height="24dp"
+                    android:stateListAnimator="@null"
                     android:layout_marginEnd="10dp"
-                    android:text="Angular"
+                    android:background="@drawable/shape_btn_angular"
+                    android:textOn="Angular"
+                    android:textOff="Angular"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_HTML_CSS"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_HTML_CSS"
+                    android:layout_width="100dp"
+                    android:layout_height="24dp"
+                    android:stateListAnimator="@null"
                     android:layout_marginEnd="10dp"
-                    android:text="HTML/CSS"
+                    android:background="@drawable/shape_btn_html"
+                    android:textOn="HTML/CSS"
+                    android:textOff="HTML/CSS"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Flask"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Flask"
+                    android:stateListAnimator="@null"
+                    android:layout_width="66dp"
+                    android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
-                    android:text="Flask"
+                    android:background="@drawable/shape_btn_flask"
+                    android:textOn="Flask"
+                    android:textOff="Flask"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -230,42 +287,61 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
+                android:layout_marginBottom="16dp"
                 android:orientation="horizontal">
 
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Node_js"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Node_js"
+                    android:layout_width="83dp"
+                    android:layout_height="24dp"
+                    android:stateListAnimator="@null"
                     android:layout_marginEnd="10dp"
-                    android:text="Node.js"
+                    android:background="@drawable/shape_btn_node"
+                    android:textOn="Node.js"
+                    android:textOff="Node.js"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Java"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Java"
+                    android:layout_width="63dp"
+                    android:stateListAnimator="@null"
+                    android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
-                    android:text="Java"
+                    android:background="@drawable/shape_btn_java"
+                    android:textOn="Java"
+                    android:textOff="Java"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Python"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Python"
+                    android:layout_width="79dp"
+                    android:stateListAnimator="@null"
+                    android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
-                    android:text="Python"
+                    android:background="@drawable/shape_btn_python"
+                    android:textOn="Python"
+                    android:textOff="Python"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Csharp"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+
+                <ToggleButton
+                    android:id="@+id/btn_Csharp"
+                    android:layout_width="49dp"
+                    android:stateListAnimator="@null"
+                    android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
-                    android:text="C#"
+                    android:background="@drawable/shape_btn_csharp"
+                    android:textOn="C#"
+                    android:textOff="C#"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -274,41 +350,59 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
+                android:layout_marginBottom="16dp"
                 android:orientation="horizontal">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Kotlin"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Kotlin"
+                    android:layout_width="71dp"
+                    android:layout_height="24dp"
+                    android:stateListAnimator="@null"
                     android:layout_marginEnd="10dp"
-                    android:text="Kotlin"
+                    android:background="@drawable/shape_btn_kotlin"
+                    android:textOn="Kotlin"
+                    android:textOff="Kotlin"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Swift"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Swift"
+                    android:layout_width="66dp"
+                    android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
-                    android:text="Swift"
+                    android:stateListAnimator="@null"
+                    android:background="@drawable/shape_btn_swift"
+                    android:textOn="Swift"
+                    android:textOff="Swift"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Go"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Go"
+                    android:layout_width="51dp"
+                    android:layout_height="24dp"
+                    android:stateListAnimator="@null"
                     android:layout_marginEnd="10dp"
-                    android:text="Go"
+                    android:background="@drawable/shape_btn_go"
+                    android:textOn="Go"
+                    android:textOff="Go"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_C_Cpp"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_C_Cpp"
+                    android:layout_width="71dp"
+                    android:layout_height="24dp"
+                    android:stateListAnimator="@null"
                     android:layout_marginEnd="10dp"
-                    android:text="C/C++"
+                    android:background="@drawable/shape_btn_c"
+                    android:textOn="C/C++"
+                    android:textOff="C/C++"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -317,43 +411,60 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
+                android:layout_marginBottom="16dp"
                 android:orientation="horizontal">
 
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Design"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Design"
+                    android:layout_width="77dp"
+                    android:stateListAnimator="@null"
+                    android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
-                    android:text="Design"
+                    android:background="@drawable/shape_btn_design"
+                    android:textOn="Design"
+                    android:textOff="Design"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Figma"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Figma"
+                    android:layout_width="73dp"
+                    android:stateListAnimator="@null"
+                    android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
-                    android:text="Figma"
+                    android:background="@drawable/shape_btn_figma"
+                    android:textOn="Figma"
+                    android:textOff="Figma"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Sketch"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Sketch"
+                    android:layout_width="77dp"
+                    android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
-                    android:text="Sketch"
+                    android:stateListAnimator="@null"
+                    android:background="@drawable/shape_btn_sketch"
+                    android:textOn="Sketch"
+                    android:textOff="Sketch"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Git"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Git"
+                    android:stateListAnimator="@null"
+                    android:layout_width="51dp"
+                    android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
-                    android:text="Git"
+                    android:background="@drawable/shape_btn_git"
+                    android:textOn="Git"
+                    android:textOff="Git"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
             </LinearLayout>
 
@@ -362,32 +473,45 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
+                android:layout_marginBottom="16dp"
                 android:orientation="horizontal">
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_AdobeXD"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_AdobeXD"
+                    android:stateListAnimator="@null"
+                    android:layout_width="92dp"
+                    android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
-                    android:text="AdobeXD"
+                    android:background="@drawable/shape_btn_adobe"
+                    android:textOn="AdobeXD"
+                    android:textOff="AdobeXD"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Photoshop"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Photoshop"
+                    android:layout_width="104dp"
+                    android:stateListAnimator="@null"
+                    android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
-                    android:text="Photoshop"
+                    android:background="@drawable/shape_btn_photoshop"
+                    android:textOn="Photoshop"
+                    android:textOff="Photoshop"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_illustrator"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Illustrator"
+                <ToggleButton
+                    android:id="@+id/btn_illustrator"
+                    android:layout_width="96dp"
+                    android:layout_height="24dp"
+                    android:background="@drawable/shape_btn_illustrator"
+                    android:textOn="Illustrator"
+                    android:textOff="Illustrator"
+                    android:stateListAnimator="@null"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
                     android:textSize="14sp" />
 
             </LinearLayout>
@@ -397,64 +521,59 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"
+                android:layout_marginBottom="16dp"
                 android:orientation="horizontal">
 
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_10"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:orientation="horizontal">
-
-
-            </LinearLayout>
-
-            <LinearLayout
-                android:id="@+id/ll_11"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="15dp"
-                android:orientation="horizontal">
-
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_Firebase"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_Firebase"
+                    android:layout_width="88dp"
+                    android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
-                    android:text="Firebase"
-                    android:textSize="14sp" />
+                    android:textOn="Firebase"
+                    android:textOff="Firebase"
+                    android:stateListAnimator="@null"
+                    android:textSize="14sp"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
+                    android:background="@drawable/shape_btn_firebase"/>
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_AWS"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_AWS"
+                    android:layout_width="62dp"
+                    android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
-                    android:text="AWS"
-                    android:textSize="14sp" />
+                    android:textOn="AWS"
+                    android:textOff="AWS"
+                    android:stateListAnimator="@null"
+                    android:textSize="14sp"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
+                    android:background="@drawable/shape_btn_aws"/>
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_GCP"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                <ToggleButton
+                    android:id="@+id/btn_GCP"
+                    android:layout_width="60dp"
+                    android:layout_height="24dp"
                     android:layout_marginEnd="10dp"
-                    android:text="GCP"
-                    android:textSize="14sp" />
+                    android:stateListAnimator="@null"
+                    android:textOn="GCP"
+                    android:textOff="GCP"
+                    android:textSize="14sp"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
+                    android:background="@drawable/shape_btn_gcp"/>
 
-                <com.google.android.material.chip.Chip
-                    android:id="@+id/chip_ect"
-                    style="@style/Widget.MaterialComponents.Chip.Choice"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="ect"
-                    android:textSize="14sp" />
-
-
+                <ToggleButton
+                    android:id="@+id/btn_ect"
+                    android:layout_width="53dp"
+                    android:layout_height="24dp"
+                    android:textOn="ect"
+                    android:textOff="ect"
+                    android:textSize="14sp"
+                    android:stateListAnimator="@null"
+                    android:textAllCaps="false"
+                    android:textColor="@drawable/btn_text_color"
+                    android:background="@drawable/shape_btn_etc"/>
             </LinearLayout>
 
 
