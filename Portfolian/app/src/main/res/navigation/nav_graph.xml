@@ -11,9 +11,6 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment_to_filterFragment"
-            app:destination="@id/filterFragment" />
-        <action
             android:id="@+id/action_homeFragment_to_newProjectFragment"
             app:destination="@id/newProjectFragment" />
     </fragment>
@@ -33,12 +30,11 @@
         android:label="UserFragment"
         tools:layout="@layout/fragment_user"/>
     <fragment
-        android:id="@+id/filterFragment"
-        android:name="com.example.portfolian.view.main.home.FilterFragment"
-        android:label="@null"
-        tools:layout="@layout/fragment_filter" />
-    <fragment
         android:id="@+id/newProjectFragment"
         android:name="com.example.portfolian.view.main.home.NewProjectFragment"
-        android:label="NewProjectFragment" />
+        android:label="NewProjectFragment" >
+        <action
+            android:id="@+id/action_newProjectFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>
