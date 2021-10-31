@@ -11,8 +11,8 @@
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
         <action
-            android:id="@+id/action_homeFragment_to_newProjectFragment"
-            app:destination="@id/newProjectFragment" />
+            android:id="@+id/action_homeFragment_to_filterFragment"
+            app:destination="@id/filterFragment" />
     </fragment>
     <fragment
         android:id="@+id/bookmarkFragment"
@@ -30,8 +30,12 @@
         android:label="UserFragment"
         tools:layout="@layout/fragment_user"/>
     <fragment
-        android:id="@+id/newProjectFragment"
-        android:name="com.example.portfolian.view.main.home.NewProjectFragment"
-        android:label="fragment_newproject"
-        tools:layout="@layout/fragment_newproject" />
+        android:id="@+id/filterFragment"
+        android:name="com.example.portfolian.view.main.home.FilterFragment"
+        android:label="@null"
+        tools:layout="@layout/fragment_filter" >
+        <action
+            android:id="@+id/action_filterFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
 </navigation>

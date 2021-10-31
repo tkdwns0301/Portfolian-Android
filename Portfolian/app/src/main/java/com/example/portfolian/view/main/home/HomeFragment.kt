@@ -1,6 +1,7 @@
 package com.example.portfolian.view.main.home
 
 import android.annotation.SuppressLint
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -28,8 +29,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var rv_Project: RecyclerView
     private lateinit var adapter: ProjectAdapter
     private lateinit var sl_Swipe: SwipeRefreshLayout
-    private lateinit var dl_Main: DrawerLayout
-    private lateinit var cl_Drawer: LinearLayout
+    private lateinit var dl_Home: DrawerLayout
+    private lateinit var ll_Drawer: LinearLayout
     private lateinit var toolbar: Toolbar
     private lateinit var btn_AllClick: Button
     private lateinit var btn_AllNonClick: Button
@@ -103,9 +104,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.toolbar_Filter -> {
-                    dl_Main = view.findViewById(R.id.dl_Main)
-                    cl_Drawer = requireView().findViewById(R.id.ll_Drawer)
-                    dl_Main.openDrawer(cl_Drawer)
+                    findNavController().navigate(R.id.action_homeFragment_to_filterFragment)
+/*
+                    dl_Home = view.findViewById(R.id.dl_Home)
+                    ll_Drawer = requireView().findViewById(R.id.ll_Drawer)
+                    dl_Home.openDrawer(ll_Drawer)
+*/
 
 
                     true
@@ -144,7 +148,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         btn_Close = view.findViewById(R.id.img_btn_Close)
         btn_Close.setOnClickListener {
             Log.d("Close", "success")
-            dl_Main.closeDrawers()
+            dl_Home.closeDrawers()
         }
     }
 
@@ -152,7 +156,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         btn_NewProject = view.findViewById(R.id.btn_NewProject)
 
         btn_NewProject.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_newProjectFragment)
+            val intent = Intent(context, NewProjectActivity::class.java)
+            startActivity(intent)
+            //findNavController().navigate(R.id.action_homeFragment_to_newProjectFragment)
         }
     }
 
