@@ -70,7 +70,7 @@ class NewProjectActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        flexContainer = findViewById(R.id.fbl_StackContainer)
+        flexContainer = findViewById(R.id.fbl_CheckedStack)
 
         initToolbar()
         initStackChoice()
@@ -165,7 +165,7 @@ class NewProjectActivity : AppCompatActivity() {
         btn_Ect = findViewById(R.id.btn_New_ect)
 
         btnArray = arrayListOf(
-            //btn_Front,
+            btn_Front,
             btn_Back,
             btn_React,
             btn_Vue,

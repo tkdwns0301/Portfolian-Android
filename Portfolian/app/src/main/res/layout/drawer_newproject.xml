@@ -71,7 +71,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@id/fbl_StackContainer"
+                app:layout_constraintBottom_toTopOf="@id/fbl_CheckedStack"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider1">
@@ -99,11 +99,14 @@
             </LinearLayout>
 
             <com.google.android.flexbox.FlexboxLayout
-                android:id="@+id/fbl_StackContainer"
+                android:id="@+id/fbl_CheckedStack"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
+                app:alignItems="stretch"
+                app:alignContent="stretch"
+                app:flexWrap="wrap"
                 app:layout_constraintBottom_toTopOf="@id/divider2"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -115,7 +118,7 @@
                 android:layout_marginTop="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/fbl_StackContainer" />
+                app:layout_constraintTop_toBottomOf="@id/fbl_CheckedStack" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

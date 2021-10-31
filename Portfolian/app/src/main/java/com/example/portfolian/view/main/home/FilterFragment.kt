@@ -10,9 +10,11 @@ import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
 import android.widget.ImageButton
+import android.widget.LinearLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -29,6 +31,10 @@ class FilterFragment : Fragment(R.layout.fragment_filter) {
     private lateinit var chips: ArrayList<Chip>
     private lateinit var btn_AllNonClick: Button
 
+
+
+
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -43,7 +49,7 @@ class FilterFragment : Fragment(R.layout.fragment_filter) {
     private fun initTopView(view: View) {
         btn_Close = view.findViewById(R.id.btn_Close)
         btn_Close.setOnClickListener {
-            findNavController().navigate(R.id.action_filterFragment_to_homeFragment)
+
         }
 
 
@@ -80,10 +86,10 @@ class FilterFragment : Fragment(R.layout.fragment_filter) {
             "Flask",
             "Node.js",
             "Java",
+            "Go",
             "Python",
             "Kotlin",
             "Swift",
-            "Go",
             "C/C++",
             "C#",
             "Design",
@@ -95,7 +101,7 @@ class FilterFragment : Fragment(R.layout.fragment_filter) {
             "Firebase",
             "AWS",
             "GCP",
-            "Git",
+            "Git"
         )
 
         StackView.addItem(nameArray)
