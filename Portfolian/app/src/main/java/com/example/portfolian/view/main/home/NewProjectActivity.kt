@@ -11,6 +11,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
@@ -31,17 +32,37 @@ class NewProjectActivity :AppCompatActivity() {
     private lateinit var checkedChips: MutableList<Chip>
     private var myColor: Int = 0
     private lateinit var checkedStackView: FlexboxLayout
+    private lateinit var toolbar: Toolbar
     private lateinit var et_Title: EditText
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_newproject)
+        initToolbar()
         initDrawer()
         initStackView()
         initStackChoice()
     }
 
+    private fun initToolbar() {
+        toolbar = findViewById(R.id.toolbar_NewProject)
+
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.toolbar_Save -> {
+                    //TODO 저장 버튼을 눌렀을 때 게시물 업로드
+                    true
+                }
+                else -> {
+                    super.onOptionsItemSelected(it)
+                }
+            }
+        }
+        toolbar.setNavigationOnClickListener {
+            finish()
+        }
+    }
 
     private fun initDrawer() {
         btn_AllNonClick = findViewById(R.id.btn_AllNonClick)
