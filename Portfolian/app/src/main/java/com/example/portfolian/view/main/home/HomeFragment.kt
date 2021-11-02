@@ -113,7 +113,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         btn_NewProject = view.findViewById(R.id.btn_NewProject)
 
         btn_NewProject.setOnClickListener {
-            findNavController().navigate(R.id.action_homeFragment_to_newProjectFragment)
+            val intent = Intent(activity, NewProjectActivity::class.java)
+            startActivity(intent)
+            //findNavController().navigate(R.id.action_homeFragment_to_newProjectFragment)
         }
     }
 

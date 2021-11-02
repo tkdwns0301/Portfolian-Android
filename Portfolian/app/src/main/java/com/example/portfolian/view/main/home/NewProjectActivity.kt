@@ -1,5 +1,6 @@
 package com.example.portfolian.view.main.home
 
+import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -8,19 +9,18 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.ImageButton
-import android.widget.LinearLayout
-import android.widget.TextView
+import android.widget.*
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.example.portfolian.R
 import com.google.android.flexbox.FlexboxLayout
+import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.chip.Chip
 import kotlin.math.roundToInt
 
-class NewProjectFragment : Fragment(R.layout.fragment_newproject) {
+class NewProjectActivity :AppCompatActivity() {
     private lateinit var ll_StackChoice: LinearLayout
     private lateinit var StackView: FlexboxLayout
     private lateinit var dl_NewProject: DrawerLayout
@@ -31,18 +31,20 @@ class NewProjectFragment : Fragment(R.layout.fragment_newproject) {
     private lateinit var checkedChips: MutableList<Chip>
     private var myColor: Int = 0
     private lateinit var checkedStackView: FlexboxLayout
+    private lateinit var et_Title: EditText
 
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        initDrawer(view)
-        initStackView(view)
-        initStackChoice(view)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setContentView(R.layout.activity_newproject)
+        initDrawer()
+        initStackView()
+        initStackChoice()
     }
 
-    private fun initDrawer(view: View) {
-        btn_AllNonClick = view.findViewById(R.id.btn_AllNonClick)
+
+    private fun initDrawer() {
+        btn_AllNonClick = findViewById(R.id.btn_AllNonClick)
 
         btn_AllNonClick.setOnClickListener {
             for (chip in chips) {
@@ -53,26 +55,26 @@ class NewProjectFragment : Fragment(R.layout.fragment_newproject) {
             checkedStackView.removeAllViews()
         }
 
-        btn_Close = view.findViewById(R.id.img_btn_Close)
+        btn_Close = findViewById(R.id.img_btn_Close)
         btn_Close.setOnClickListener {
             Log.d("Close", "success")
             dl_NewProject.closeDrawers()
         }
     }
 
-    private fun initStackChoice(view: View) {
-        ll_StackChoice = view.findViewById(R.id.ll_StackChoice)
+    private fun initStackChoice() {
+        ll_StackChoice = findViewById(R.id.ll_StackChoice)
 
         ll_StackChoice.setOnClickListener {
-            dl_NewProject = view.findViewById(R.id.dl_NewProject)
-            ll_Drawer = view.findViewById(R.id.ll_Drawer)
+            dl_NewProject = findViewById(R.id.dl_NewProject)
+            ll_Drawer = findViewById(R.id.ll_Drawer)
             dl_NewProject.openDrawer(ll_Drawer)
         }
     }
 
-    private fun initStackView(view: View) {
-        StackView = view.findViewById(R.id.fl_Stack)
-        checkedStackView = view.findViewById(R.id.fbl_CheckedStack)
+    private fun initStackView() {
+        StackView = findViewById(R.id.fl_Stack)
+        checkedStackView = findViewById(R.id.fbl_CheckedStack)
         chips = ArrayList()
         val nameArray = arrayOf(
             "Front-end",
@@ -224,100 +226,100 @@ class NewProjectFragment : Fragment(R.layout.fragment_newproject) {
     private fun stackColor(name: String) {
         when (name) {
             "Front-end" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.front_end) }!!
+                myColor = ContextCompat.getColor(this, R.color.front_end)
             }
             "Back-end" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.back_end) }!!
+                myColor = ContextCompat.getColor(this, R.color.back_end)
             }
             "React" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.react) }!!
+                myColor = ContextCompat.getColor(this, R.color.react)
             }
             "Vue" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.vue) }!!
+                myColor = ContextCompat.getColor(this, R.color.vue)
             }
             "Spring" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.spring) }!!
+                myColor = ContextCompat.getColor(this, R.color.spring)
             }
             "Django" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.django) }!!
+                myColor = ContextCompat.getColor(this, R.color.django)
             }
             "iOS" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.ios) }!!
+                myColor = ContextCompat.getColor(this, R.color.ios)
             }
             "Typescript" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.typescript) }!!
+                myColor = ContextCompat.getColor(this, R.color.typescript)
             }
             "Javascript" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.javascript) }!!
+                myColor = ContextCompat.getColor(this, R.color.javascript)
             }
             "Android" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.android) }!!
+                myColor = ContextCompat.getColor(this, R.color.android)
             }
             "Angular" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.angular) }!!
+                myColor = ContextCompat.getColor(this, R.color.angular)
             }
             "HTML/CSS" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.html_css) }!!
+                myColor = ContextCompat.getColor(this, R.color.html_css)
             }
             "Flask" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.flask) }!!
+                myColor = ContextCompat.getColor(this, R.color.flask)
             }
             "Node.js" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.node) }!!
+                myColor = ContextCompat.getColor(this, R.color.node)
             }
             "Java" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.java) }!!
+                myColor = ContextCompat.getColor(this, R.color.java)
             }
             "Python" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.python) }!!
+                myColor = ContextCompat.getColor(this, R.color.python)
             }
             "C#" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.c_sharp) }!!
+                myColor = ContextCompat.getColor(this, R.color.c_sharp)
             }
             "Kotlin" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.kotlin) }!!
+                myColor = ContextCompat.getColor(this, R.color.kotlin)
             }
             "Swift" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.swift) }!!
+                myColor = ContextCompat.getColor(this, R.color.swift)
             }
             "Go" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.go) }!!
+                myColor = ContextCompat.getColor(this, R.color.go)
             }
             "C/C++" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.c_cpp) }!!
+                myColor = ContextCompat.getColor(this, R.color.c_cpp)
             }
             "Design" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.design) }!!
+                myColor = ContextCompat.getColor(this, R.color.design)
             }
             "Figma" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.figma) }!!
+                myColor = ContextCompat.getColor(this, R.color.figma)
             }
             "Sketch" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.sketch) }!!
+                myColor = ContextCompat.getColor(this, R.color.sketch)
             }
             "Git" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.git) }!!
+                myColor = ContextCompat.getColor(this, R.color.git)
             }
             "AdobeXD" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.adobexd) }!!
+                myColor = ContextCompat.getColor(this, R.color.adobexd)
             }
             "Photoshop" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.photoShop) }!!
+                myColor = ContextCompat.getColor(this, R.color.photoShop)
             }
             "Illustrator" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.illustrator) }!!
+                myColor = ContextCompat.getColor(this, R.color.illustrator)
             }
             "Firebase" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.firebase) }!!
+                myColor = ContextCompat.getColor(this, R.color.firebase)
             }
             "AWS" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.aws) }!!
+                myColor = ContextCompat.getColor(this, R.color.aws)
             }
             "GCP" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.gcp) }!!
+                myColor = ContextCompat.getColor(this, R.color.gcp)
             }
             "ect" -> {
-                myColor = context?.let { ContextCompat.getColor(it, R.color.ect) }!!
+                myColor = ContextCompat.getColor(this, R.color.ect)
             }
 
         }
