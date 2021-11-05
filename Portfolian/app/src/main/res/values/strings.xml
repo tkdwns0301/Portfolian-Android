@@ -3,4 +3,12 @@
     <string name="OneLineIntroduction">팀원모집부터 프로젝트 관리까지\n포트폴리안에서 시작해보세요!</string>
     <string name="social">소셜계정으로 시작하기</string>
     <string name="nickname_setting">반가워요!\n닉네임을 설정해주세요. (10자 이내)</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search">제목을 검색해보세요.</string>
+    <string name="filter_recent">최신순</string>
+    <string name="filter_view">조회순</string>
+    <string name="title">React를 활용한 간단한 로그인 기능 구현하기</string>
+    <string name="view">조회 %1$s</string>
+    <string name="stack">+3</string>
 </resources>

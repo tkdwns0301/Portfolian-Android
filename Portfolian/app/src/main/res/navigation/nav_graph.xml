@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/homeFragment">
+    <fragment
+        android:id="@+id/homeFragment"
+        android:name="com.example.portfolian.view.main.home.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
+        <action
+            android:id="@+id/action_homeFragment_to_newProjectFragment"
+            app:destination="@id/newProjectFragment" />
+    </fragment>
+    <fragment
+        android:id="@+id/bookmarkFragment"
+        android:name="com.example.portfolian.view.main.BookmarkFragment"
+        android:label="BookmarkFragment"
+        tools:layout="@layout/fragment_bookmark"/>
+    <fragment
+        android:id="@+id/chatFragment"
+        android:name="com.example.portfolian.view.main.ChatFragment"
+        android:label="ChatFragment"
+        tools:layout="@layout/fragment_chat"/>
+    <fragment
+        android:id="@+id/userFragment"
+        android:name="com.example.portfolian.view.main.UserFragment"
+        android:label="UserFragment"
+        tools:layout="@layout/fragment_user"/>
+    <fragment
+        android:id="@+id/newProjectFragment"
+        android:name="com.example.portfolian.view.main.home.NewProjectFragment"
+        android:label="NewProjectFragment" >
+        <action
+            android:id="@+id/action_newProjectFragment_to_homeFragment"
+            app:destination="@id/homeFragment" />
+    </fragment>
+</navigation>

@@ -11,19 +11,13 @@ import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.portfolian.R
 
-class LogInFragment  : Fragment() {
+class LogInFragment  : Fragment(R.layout.fragment_login) {
     private lateinit var navController: NavController
     private lateinit var btn_Google: ImageButton
     private lateinit var btn_Kakao: ImageButton
     private lateinit var btn_Git: ImageButton
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        return inflater.inflate(R.layout.fragment_login, container, false)
-    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         navController = Navigation.findNavController(view)

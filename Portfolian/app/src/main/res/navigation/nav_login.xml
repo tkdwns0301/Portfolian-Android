@@ -25,7 +25,7 @@
     </fragment>
     <activity
         android:id="@+id/mainActivity"
-        android:name="com.example.portfolian.view.MainActivity"
+        android:name="com.example.portfolian.view.main.MainActivity"
         android:label="activity_main"
         tools:layout="@layout/activity_main" />
 </navigation>
