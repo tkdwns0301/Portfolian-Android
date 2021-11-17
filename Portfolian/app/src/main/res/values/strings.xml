@@ -11,4 +11,7 @@
     <string name="title">React를 활용한 간단한 로그인 기능 구현하기</string>
     <string name="view">조회 %1$s</string>
     <string name="stack">+3</string>
+    <string name="server_client_id">1083263618420-h64dmhckpltu1fkj1pnprg4aicavm13d.apps.googleusercontent.com</string>
+    <string name="BASE_URL">3.36.84.11:3000</string>
+    <string name="kakao_app_key">8ab6cd6b8425d701ee369a5b461275a8</string>
 </resources>

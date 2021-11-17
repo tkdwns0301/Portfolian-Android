@@ -1,6 +1,5 @@
 package com.example.portfolian.view.main.home
 
-import android.annotation.SuppressLint
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -10,11 +9,9 @@ import android.util.TypedValue
 import android.view.*
 import android.widget.*
 import androidx.appcompat.widget.Toolbar
-import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
-import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -23,7 +20,10 @@ import com.example.portfolian.adapter.ProjectAdapter
 import com.example.portfolian.data.Project
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
+import com.kakao.usermgmt.UserManagement
+import com.kakao.usermgmt.callback.LogoutResponseCallback
 import kotlin.math.roundToInt
+
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
 
@@ -82,6 +82,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 }
                 R.id.toolbar_Alert -> {
                     Log.d("HomeFragment: ", "Alert Button Click")
+                    UserManagement.getInstance().requestLogout(object : LogoutResponseCallback() {
+                        override fun onCompleteLogout() {
+                            //로그아웃에 성공하면: LoginActivity로 이동
+                            Log.d("Logout::, ", "Success")
+                        }
+                    })
                     true
                 }
                 else -> {
