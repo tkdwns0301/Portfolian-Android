@@ -1,12 +1,10 @@
 package com.example.portfolian.service
 
 import com.example.portfolian.data.Article
+import com.example.portfolian.data.ReadProjectResponse
 import com.example.portfolian.data.WriteProjectResponse
 import retrofit2.Call
-import retrofit2.http.Field
-import retrofit2.http.FormUrlEncoded
-import retrofit2.http.POST
-import retrofit2.http.Query
+import retrofit2.http.*
 
 interface ProjectService {
     @FormUrlEncoded
@@ -14,6 +12,16 @@ interface ProjectService {
     fun writeProject(
         @Field("userId") userId: String,
         @Field("article") article: Article,
-        @Field("ownerStack") ownerStack: String )
+        @Field("ownerStack") ownerStack: String
+    )
     : Call<WriteProjectResponse>
+
+    @FormUrlEncoded
+    @GET("protects")
+    fun readAllProject(
+        @Query("stack") stack: String,
+        @Query("keyword") keyword: String,
+        @Query("sort") sort: String
+    )
+    : Call<ReadProjectResponse>
 }
