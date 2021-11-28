@@ -16,8 +16,7 @@ interface ProjectService {
     )
     : Call<WriteProjectResponse>
 
-    @FormUrlEncoded
-    @GET("protects")
+    @GET("projects")
     fun readAllProject(
         @Query("stack") stack: String,
         @Query("keyword") keyword: String,

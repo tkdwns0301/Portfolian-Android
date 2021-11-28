@@ -331,7 +331,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun readProject() {
         //TODO retrofit 으로 데이터 받아와서 표시
-        val callProjects = projectService.readAllProject("stack", "keyword", "sort")
+        val callProjects = projectService.readAllProject("default", "default", "default")
         callProjects.enqueue(object: Callback<ReadProjectResponse> {
             override fun onResponse(call: Call<ReadProjectResponse>, response: Response<ReadProjectResponse>) {
                 if(response.isSuccessful) {

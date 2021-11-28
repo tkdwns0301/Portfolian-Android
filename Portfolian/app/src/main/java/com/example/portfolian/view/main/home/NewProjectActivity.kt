@@ -16,12 +16,18 @@ import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.example.portfolian.R
+import com.example.portfolian.network.RetrofitClient
+import com.example.portfolian.service.ProjectService
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.chip.Chip
+import retrofit2.Retrofit
 import kotlin.math.roundToInt
 
 class NewProjectActivity :AppCompatActivity() {
+    private lateinit var retrofit: Retrofit
+    private lateinit var projectService: ProjectService
+
     private lateinit var ll_StackChoice: LinearLayout
     private lateinit var StackView: FlexboxLayout
     private lateinit var dl_NewProject: DrawerLayout
@@ -39,12 +45,18 @@ class NewProjectActivity :AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_newproject)
+
+        initRetrofit()
         initToolbar()
         initDrawer()
         initStackView()
         initStackChoice()
     }
 
+    private fun initRetrofit() {
+        retrofit = RetrofitClient.getInstance()
+        projectService = retrofit.create(ProjectService::class.java)
+    }
     private fun initToolbar() {
         toolbar = findViewById(R.id.toolbar_NewProject)
 

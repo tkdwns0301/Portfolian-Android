@@ -11,7 +11,7 @@ object RetrofitClient {
     private var instance: Retrofit? = null
     private val gson = GsonBuilder().setLenient().create()
 
-    private const val BASE_URL = "3.36.84.11:3000/"
+    private const val BASE_URL = "http://3.36.84.11:3000/"
     private const val CONNECT_TIMEOUT_SEC = 20000L
 
     fun getInstance(): Retrofit {
