@@ -59,10 +59,58 @@
                 android:id="@+id/divider1"
                 style="@style/Divider.Horizontal"
                 android:layout_marginTop="15dp"
-                app:layout_constraintBottom_toTopOf="@id/ll_StackChoice"
+                app:layout_constraintBottom_toTopOf="@id/ll_OwnerStackChoice"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/et_Title" />
+
+
+            <LinearLayout
+                android:id="@+id/ll_OwnerStackChoice"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:orientation="horizontal"
+                app:layout_constraintBottom_toTopOf="@id/fbl_OwnerCheckedStack"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/divider1">
+
+                <TextView
+                    android:id="@+id/tv_OwnerStackChoice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="본인의 사용기술을 선택해주세요. (최대 1개)"
+                    android:textColor="@color/base"
+                    android:textSize="14sp" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+                <androidx.constraintlayout.utils.widget.ImageFilterButton
+                    android:id="@+id/btn_OwnerStackChoice"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:src="@drawable/ic_next" />
+
+            </LinearLayout>
+
+            <com.google.android.flexbox.FlexboxLayout
+                android:id="@+id/fbl_OwnerCheckedStack"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+                app:alignContent="stretch"
+                app:alignItems="stretch"
+                app:flexWrap="wrap"
+                app:layout_constraintBottom_toTopOf="@id/ll_StackChoice"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_OwnerStackChoice" />
 
             <LinearLayout
                 android:id="@+id/ll_StackChoice"
@@ -73,7 +121,7 @@
                 app:layout_constraintBottom_toTopOf="@id/fbl_CheckedStack"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider1">
+                app:layout_constraintTop_toBottomOf="@id/ll_OwnerStackChoice">
 
                 <TextView
                     android:id="@+id/tv_StackChoice"
