@@ -16,12 +16,19 @@ import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import androidx.fragment.app.Fragment
 import com.example.portfolian.R
+import com.example.portfolian.data.Article
+import com.example.portfolian.data.WriteProjectResponse
+import com.example.portfolian.data.test
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.ProjectService
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.chip.Chip
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
+import java.util.Collections.list
 import kotlin.math.roundToInt
 
 class NewProjectActivity :AppCompatActivity() {
@@ -38,8 +45,17 @@ class NewProjectActivity :AppCompatActivity() {
     private lateinit var checkedChips: MutableList<Chip>
     private var myColor: Int = 0
     private lateinit var checkedStackView: FlexboxLayout
+
     private lateinit var toolbar: Toolbar
+
     private lateinit var et_Title: EditText
+    private lateinit var et_Topic: EditText
+    private lateinit var et_ProjectTime: EditText
+    private lateinit var et_Condition: EditText
+    private lateinit var et_Progress: EditText
+    private lateinit var et_Description: EditText
+    private lateinit var et_Capacity: EditText
+
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -47,16 +63,23 @@ class NewProjectActivity :AppCompatActivity() {
         setContentView(R.layout.activity_newproject)
 
         initRetrofit()
+        initView()
+    }
+
+    private fun initView() {
         initToolbar()
         initDrawer()
         initStackView()
         initStackChoice()
     }
 
+    //레트로핏 설정
     private fun initRetrofit() {
         retrofit = RetrofitClient.getInstance()
         projectService = retrofit.create(ProjectService::class.java)
     }
+
+    //새로운프로젝트 툴바 설정
     private fun initToolbar() {
         toolbar = findViewById(R.id.toolbar_NewProject)
 
@@ -64,6 +87,7 @@ class NewProjectActivity :AppCompatActivity() {
             when (it.itemId) {
                 R.id.toolbar_Save -> {
                     //TODO 저장 버튼을 눌렀을 때 게시물 업로드
+                    saveProject()
                     true
                 }
                 else -> {
@@ -76,6 +100,67 @@ class NewProjectActivity :AppCompatActivity() {
         }
     }
 
+    private fun saveProject() {
+        var stackList = mutableListOf<String>()
+
+        for(chip in checkedChips) {
+            var stackName = chip.text.toString().trim()
+            stackList.add(stackName)
+        }
+
+        /*et_Title = findViewById(R.id.et_Title)
+        var title = et_Title.text.toString()
+
+
+
+
+
+        et_Topic = findViewById(R.id.et_Topic)
+        var subjectDescription = et_Topic.text.toString()
+
+        et_ProjectTime = findViewById(R.id.et_Period)
+        var projectTime = et_ProjectTime.text.toString()
+
+        et_Condition = findViewById(R.id.et_Condition)
+        var condition = et_Condition.text.toString()
+
+        et_Progress = findViewById(R.id.et_Way)
+        var progress = et_Progress.text.toString()
+
+        var description = "상세설명입니다!"
+
+        et_Capacity = findViewById(R.id.et_UserCount)
+        var capacity = et_Capacity.text.toString().toInt()*/
+
+
+        //var article = Article(title, stackList, subjectDescription, projectTime, condition, progress, description, capacity)
+
+        var article = Article("아무거나", stackList, "test", "test", "test", "test", "test", 1)
+        Log.d("test", "${article.title}")
+
+        var textJson = test("testUser1", article, "spring")
+        //if(!et_Title.text.isNullOrEmpty() || stackList.isNotEmpty() || !et_Topic.text.isNullOrEmpty()|| !et_ProjectTime.text.isNullOrEmpty() || !et_Condition.text.isNullOrEmpty() || !et_Progress.text.isNullOrEmpty() || !et_Capacity.text.isNullOrEmpty()) {
+
+            val saveProject = projectService.writeProject(textJson)
+
+            saveProject.enqueue(object: Callback<WriteProjectResponse> {
+                override fun onResponse(call: Call<WriteProjectResponse>, response: Response<WriteProjectResponse>) {
+                    if(response.isSuccessful) {
+                        var code = response.body()!!.code
+                        var message = response.body()!!.message
+                        var newProjectID = response.body()!!.newProjectID
+
+                        Log.d("saveProject: ", "${code}, ${message}, ${newProjectID}")
+                    }
+                }
+
+                override fun onFailure(call: Call<WriteProjectResponse>, t: Throwable) {
+                    Log.e("saveProject: ", "${t}")
+                }
+            })
+    }
+
+    //기술 선택창 설정
     private fun initDrawer() {
         btn_AllNonClick = findViewById(R.id.btn_AllNonClick)
 
@@ -91,10 +176,12 @@ class NewProjectActivity :AppCompatActivity() {
         btn_Close = findViewById(R.id.img_btn_Close)
         btn_Close.setOnClickListener {
             Log.d("Close", "success")
+            //TODO 닫기 버튼을 눌렀을 때, 서버에 스택을 GET으로 쿼리 보내고 홈화면 재배치
             dl_NewProject.closeDrawers()
         }
     }
 
+    //기술 선택시 이벤트 처리
     private fun initStackChoice() {
         ll_StackChoice = findViewById(R.id.ll_StackChoice)
 
@@ -105,6 +192,7 @@ class NewProjectActivity :AppCompatActivity() {
         }
     }
 
+    //drawer안에 기술 설정
     private fun initStackView() {
         StackView = findViewById(R.id.fl_Stack)
         checkedStackView = findViewById(R.id.fbl_CheckedStack)
@@ -149,6 +237,7 @@ class NewProjectActivity :AppCompatActivity() {
 
     }
 
+    //flexbox layout 아이템 동적추가
     private fun FlexboxLayout.addItems(names: Array<String>) {
         checkedChips = mutableListOf()
 
@@ -215,6 +304,7 @@ class NewProjectActivity :AppCompatActivity() {
 
     }
 
+    // 홈화면에 하나씩 동적추가
     private fun FlexboxLayout.addItem(name: String) {
         val chip = LayoutInflater.from(context).inflate(R.layout.view_chip, null) as Chip
         chip.apply {

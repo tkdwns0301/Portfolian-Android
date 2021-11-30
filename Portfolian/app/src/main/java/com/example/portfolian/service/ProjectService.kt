@@ -3,16 +3,15 @@ package com.example.portfolian.service
 import com.example.portfolian.data.Article
 import com.example.portfolian.data.ReadProjectResponse
 import com.example.portfolian.data.WriteProjectResponse
+import com.example.portfolian.data.test
 import retrofit2.Call
 import retrofit2.http.*
 
 interface ProjectService {
-    @FormUrlEncoded
+    @Headers("content-type: application/json")
     @POST("projects")
     fun writeProject(
-        @Field("userId") userId: String,
-        @Field("article") article: Article,
-        @Field("ownerStack") ownerStack: String
+        @Body jsonParm: test
     )
     : Call<WriteProjectResponse>
 
