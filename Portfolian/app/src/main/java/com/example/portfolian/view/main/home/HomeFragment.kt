@@ -49,18 +49,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var btn_NewProject: ImageButton
     private lateinit var chips: ArrayList<Chip>
 
+    private lateinit var checkedChips: MutableList<Chip>
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         initRetrofit()
+        initStackView(view)
         initSwipeRefreshLayout(view)
         initRecyclerView(view)
         initToolbar(view)
         initDrawer(view)
         initNewProject(view)
-        initStackView(view)
-
     }
 
     private fun initRetrofit() {
@@ -127,6 +128,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         btn_Close = view.findViewById(R.id.img_btn_Close)
         btn_Close.setOnClickListener {
             Log.d("Close", "success")
+            readProject()
             dl_Home.closeDrawers()
         }
     }
@@ -184,6 +186,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun FlexboxLayout.addItem(names: Array<String>) {
+        checkedChips = mutableListOf()
+
         for (name in names) {
             val chip = LayoutInflater.from(context).inflate(R.layout.view_chip, null) as Chip
 
@@ -314,6 +318,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     )
 
                 )
+
+                setOnCheckedChangeListener { buttonView, isChecked ->
+                    if(isChecked) {
+                        checkedChips.add(this)
+                    } else {
+                        val chipIdx = checkedChips.indexOf(this)
+                        checkedChips.removeAt(chipIdx)
+                    }
+
+                }
             }
 
             val layoutParams = ViewGroup.MarginLayoutParams(
@@ -331,7 +345,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun readProject() {
         //TODO retrofit 으로 데이터 받아와서 표시
-        val callProjects = projectService.readAllProject("default", "default", "default")
+        var stackList = mutableListOf<String>()
+
+        for (chip in checkedChips) {
+            var stackName = chip.text.toString().trim()
+            stackList.add(stackName)
+        }
+        val callProjects = projectService.readAllProject(stackList, "default", "default")
         callProjects.enqueue(object: Callback<ReadProjectResponse> {
             override fun onResponse(call: Call<ReadProjectResponse>, response: Response<ReadProjectResponse>) {
                 if(response.isSuccessful) {

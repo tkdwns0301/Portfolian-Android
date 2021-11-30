@@ -17,7 +17,7 @@ interface ProjectService {
 
     @GET("projects")
     fun readAllProject(
-        @Query("stack") stack: String,
+        @Query("stack") stack: List<String>,
         @Query("keyword") keyword: String,
         @Query("sort") sort: String
     )
