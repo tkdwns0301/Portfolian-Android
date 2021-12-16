@@ -36,15 +36,22 @@ class NewProjectActivity :AppCompatActivity() {
     private lateinit var projectService: ProjectService
 
     private lateinit var ll_StackChoice: LinearLayout
+    private lateinit var ll_OwnerStackChoice: LinearLayout
     private lateinit var StackView: FlexboxLayout
     private lateinit var dl_NewProject: DrawerLayout
     private lateinit var ll_Drawer: LinearLayout
+    private lateinit var ll_OwnerDrawer: LinearLayout
     private lateinit var btn_AllNonClick: Button
+    private lateinit var btn_OwnerAllNonClick: Button
     private lateinit var btn_Close: ImageButton
+    private lateinit var btn_OwnerClose: ImageButton
     private lateinit var chips: ArrayList<Chip>
+    private lateinit var ownerChips: ArrayList<Chip>
     private lateinit var checkedChips: MutableList<Chip>
+    private lateinit var checkedOwnerChips: MutableList<Chip>
     private var myColor: Int = 0
     private lateinit var checkedStackView: FlexboxLayout
+    private lateinit var checkedOwnerStackView: FlexboxLayout
 
     private lateinit var toolbar: Toolbar
 
@@ -163,6 +170,7 @@ class NewProjectActivity :AppCompatActivity() {
     //기술 선택창 설정
     private fun initDrawer() {
         btn_AllNonClick = findViewById(R.id.btn_AllNonClick)
+        btn_OwnerAllNonClick = findViewById(R.id.btn_OwnerAllNonClick)
 
         btn_AllNonClick.setOnClickListener {
             for (chip in chips) {
@@ -173,10 +181,24 @@ class NewProjectActivity :AppCompatActivity() {
             checkedStackView.removeAllViews()
         }
 
+        btn_OwnerAllNonClick.setOnClickListener {
+            for (chip in ownerChips) {
+                chip.apply {
+                    isChecked = false
+                }
+            }
+            checkedOwnerStackView.removeAllViews()
+        }
+
         btn_Close = findViewById(R.id.img_btn_Close)
         btn_Close.setOnClickListener {
             Log.d("Close", "success")
             //TODO 닫기 버튼을 눌렀을 때, 서버에 스택을 GET으로 쿼리 보내고 홈화면 재배치
+            dl_NewProject.closeDrawers()
+        }
+
+        btn_OwnerClose = findViewById(R.id.img_btn_OwnerClose)
+        btn_OwnerClose.setOnClickListener {
             dl_NewProject.closeDrawers()
         }
     }
@@ -184,10 +206,16 @@ class NewProjectActivity :AppCompatActivity() {
     //기술 선택시 이벤트 처리
     private fun initStackChoice() {
         ll_StackChoice = findViewById(R.id.ll_StackChoice)
+        ll_OwnerStackChoice = findViewById(R.id.ll_OwnerStackChoice)
+        dl_NewProject = findViewById(R.id.dl_NewProject)
 
         ll_StackChoice.setOnClickListener {
-            dl_NewProject = findViewById(R.id.dl_NewProject)
             ll_Drawer = findViewById(R.id.ll_Drawer)
+            dl_NewProject.openDrawer(ll_Drawer)
+        }
+
+        ll_OwnerStackChoice.setOnClickListener {
+            ll_OwnerDrawer = findViewById(R.id.ll_OwnerDrawer)
             dl_NewProject.openDrawer(ll_Drawer)
         }
     }
@@ -453,6 +481,5 @@ class NewProjectActivity :AppCompatActivity() {
             TypedValue.COMPLEX_UNIT_DIP,
             dp.toFloat(),
             resources.displayMetrics
-        )
-            .roundToInt()
+        ).roundToInt()
 }

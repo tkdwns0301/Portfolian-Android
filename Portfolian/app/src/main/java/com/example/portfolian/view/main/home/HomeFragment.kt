@@ -51,10 +51,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private lateinit var checkedChips: MutableList<Chip>
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        init(view)
+    }
+
+    private fun init(view: View) {
         initRetrofit()
         initStackView(view)
         initSwipeRefreshLayout(view)
@@ -63,7 +66,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         initDrawer(view)
         initNewProject(view)
     }
-
     private fun initRetrofit() {
         retrofit = RetrofitClient.getInstance()
         projectService = retrofit.create(ProjectService::class.java)
@@ -79,8 +81,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun initRecyclerView(view: View) {
         rv_Project = view.findViewById(R.id.rv_Project)
-        val layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         rv_Project.layoutManager = layoutManager
         readProject()
     }
@@ -354,8 +355,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         val callProjects = projectService.readAllProject(stackList, "default", "default")
         callProjects.enqueue(object: Callback<ReadProjectResponse> {
             override fun onResponse(call: Call<ReadProjectResponse>, response: Response<ReadProjectResponse>) {
-                if(response.isSuccessful) {
-                    val projects = response.body()?.projectList
+                if(response.isSuccessful ) {
+                    val projects = response.body()?.articleList
+                    Log.d("callProject: code", "${response.body()?.code}")
+                    Log.d("callProject: response", "${response.body()?.articleList}")
+                    Log.d("callProject: Success: ", "$projects")
                     setProjectAdapter(projects)
                 }
             }
@@ -369,9 +373,13 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun setProjectAdapter(projects: ArrayList<Project>?) {
         if (projects != null) {
+            Log.d("asdasd", "1")
             adapter = ProjectAdapter(requireContext(), projects, 0)
+            Log.d("asdasd", "0")
             rv_Project.adapter = adapter
+            Log.d("asdasd", "2")
             adapter.notifyDataSetChanged()
+            Log.d("asdasd", "3")
         }
     }
 
