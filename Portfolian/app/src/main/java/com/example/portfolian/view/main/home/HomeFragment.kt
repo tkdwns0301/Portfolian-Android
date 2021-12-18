@@ -128,7 +128,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         btn_Close = view.findViewById(R.id.img_btn_Close)
         btn_Close.setOnClickListener {
-            Log.d("Close", "success")
+            //TODO 닫기 버튼을 눌렀을 때, 서버에 스택을 GET으로 쿼리 보내고 홈화면 재배치
             readProject()
             dl_Home.closeDrawers()
         }

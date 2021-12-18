@@ -1,43 +1,39 @@
 package com.example.portfolian.view.main.home
 
-import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
-import androidx.fragment.app.Fragment
 import com.example.portfolian.R
 import com.example.portfolian.data.Article
+import com.example.portfolian.data.WriteProject
 import com.example.portfolian.data.WriteProjectResponse
-import com.example.portfolian.data.test
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.ProjectService
 import com.google.android.flexbox.FlexboxLayout
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.chip.Chip
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import java.util.Collections.list
 import kotlin.math.roundToInt
 
-class NewProjectActivity :AppCompatActivity() {
+class NewProjectActivity : AppCompatActivity() {
     private lateinit var retrofit: Retrofit
     private lateinit var projectService: ProjectService
 
     private lateinit var ll_StackChoice: LinearLayout
     private lateinit var ll_OwnerStackChoice: LinearLayout
     private lateinit var StackView: FlexboxLayout
+    private lateinit var ownerStackView: FlexboxLayout
     private lateinit var dl_NewProject: DrawerLayout
     private lateinit var ll_Drawer: LinearLayout
     private lateinit var ll_OwnerDrawer: LinearLayout
@@ -45,15 +41,15 @@ class NewProjectActivity :AppCompatActivity() {
     private lateinit var btn_OwnerAllNonClick: Button
     private lateinit var btn_Close: ImageButton
     private lateinit var btn_OwnerClose: ImageButton
-    private lateinit var chips: ArrayList<Chip>
-    private lateinit var ownerChips: ArrayList<Chip>
     private lateinit var checkedChips: MutableList<Chip>
     private lateinit var checkedOwnerChips: MutableList<Chip>
-    private var myColor: Int = 0
     private lateinit var checkedStackView: FlexboxLayout
     private lateinit var checkedOwnerStackView: FlexboxLayout
 
     private lateinit var toolbar: Toolbar
+
+    private var myStack: String = ""
+    private var myColor: Int = 0
 
     private lateinit var et_Title: EditText
     private lateinit var et_Topic: EditText
@@ -63,6 +59,8 @@ class NewProjectActivity :AppCompatActivity() {
     private lateinit var et_Description: EditText
     private lateinit var et_Capacity: EditText
 
+    private lateinit var ownerStack: ArrayList<String>
+    private lateinit var memberStack: ArrayList<String>
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -95,6 +93,7 @@ class NewProjectActivity :AppCompatActivity() {
                 R.id.toolbar_Save -> {
                     //TODO 저장 버튼을 눌렀을 때 게시물 업로드
                     saveProject()
+                    finish()
                     true
                 }
                 else -> {
@@ -108,19 +107,18 @@ class NewProjectActivity :AppCompatActivity() {
     }
 
     private fun saveProject() {
-        var stackList = mutableListOf<String>()
 
-        for(chip in checkedChips) {
-            var stackName = chip.text.toString().trim()
-            stackList.add(stackName)
-        }
+        var ownerStack = bigToSmall(checkedOwnerChips[0].text.toString().trim())
 
-        /*et_Title = findViewById(R.id.et_Title)
+
+        et_Title = findViewById(R.id.et_Title)
         var title = et_Title.text.toString()
 
-
-
-
+        var stackList = mutableListOf<String>()
+        for (chip in checkedChips) {
+            var stackName = bigToSmall(chip.text.toString().trim())
+            stackList.add(stackName)
+        }
 
         et_Topic = findViewById(R.id.et_Topic)
         var subjectDescription = et_Topic.text.toString()
@@ -134,25 +132,36 @@ class NewProjectActivity :AppCompatActivity() {
         et_Progress = findViewById(R.id.et_Way)
         var progress = et_Progress.text.toString()
 
-        var description = "상세설명입니다!"
+        et_Description = findViewById(R.id.et_Description)
+        var description = et_Description.text.toString()
 
         et_Capacity = findViewById(R.id.et_UserCount)
-        var capacity = et_Capacity.text.toString().toInt()*/
+        var capacity = et_Capacity.text.toString().toInt()
 
+        var article = Article(
+            title,
+            stackList,
+            subjectDescription,
+            projectTime,
+            condition,
+            progress,
+            description,
+            capacity
+        )
 
-        //var article = Article(title, stackList, subjectDescription, projectTime, condition, progress, description, capacity)
+        Log.d("test", "$article")
 
-        var article = Article("아무거나", stackList, "test", "test", "test", "test", "test", 1)
-        Log.d("test", "${article.title}")
-
-        var textJson = test("testUser1", article, "spring")
-        //if(!et_Title.text.isNullOrEmpty() || stackList.isNotEmpty() || !et_Topic.text.isNullOrEmpty()|| !et_ProjectTime.text.isNullOrEmpty() || !et_Condition.text.isNullOrEmpty() || !et_Progress.text.isNullOrEmpty() || !et_Capacity.text.isNullOrEmpty()) {
+        var textJson = WriteProject("testUser1", article, ownerStack)
+        if (!et_Title.text.isNullOrEmpty() || stackList.isNotEmpty() || !et_Topic.text.isNullOrEmpty() || !et_ProjectTime.text.isNullOrEmpty() || !et_Condition.text.isNullOrEmpty() || !et_Progress.text.isNullOrEmpty() || !et_Capacity.text.isNullOrEmpty()) {
 
             val saveProject = projectService.writeProject(textJson)
 
-            saveProject.enqueue(object: Callback<WriteProjectResponse> {
-                override fun onResponse(call: Call<WriteProjectResponse>, response: Response<WriteProjectResponse>) {
-                    if(response.isSuccessful) {
+            saveProject.enqueue(object : Callback<WriteProjectResponse> {
+                override fun onResponse(
+                    call: Call<WriteProjectResponse>,
+                    response: Response<WriteProjectResponse>
+                ) {
+                    if (response.isSuccessful) {
                         var code = response.body()!!.code
                         var message = response.body()!!.message
                         var newProjectID = response.body()!!.newProjectID
@@ -165,6 +174,7 @@ class NewProjectActivity :AppCompatActivity() {
                     Log.e("saveProject: ", "${t}")
                 }
             })
+        }
     }
 
     //기술 선택창 설정
@@ -173,7 +183,7 @@ class NewProjectActivity :AppCompatActivity() {
         btn_OwnerAllNonClick = findViewById(R.id.btn_OwnerAllNonClick)
 
         btn_AllNonClick.setOnClickListener {
-            for (chip in chips) {
+            for (chip in checkedChips) {
                 chip.apply {
                     isChecked = false
                 }
@@ -182,7 +192,7 @@ class NewProjectActivity :AppCompatActivity() {
         }
 
         btn_OwnerAllNonClick.setOnClickListener {
-            for (chip in ownerChips) {
+            for (chip in checkedOwnerChips) {
                 chip.apply {
                     isChecked = false
                 }
@@ -192,8 +202,6 @@ class NewProjectActivity :AppCompatActivity() {
 
         btn_Close = findViewById(R.id.img_btn_Close)
         btn_Close.setOnClickListener {
-            Log.d("Close", "success")
-            //TODO 닫기 버튼을 눌렀을 때, 서버에 스택을 GET으로 쿼리 보내고 홈화면 재배치
             dl_NewProject.closeDrawers()
         }
 
@@ -216,52 +224,55 @@ class NewProjectActivity :AppCompatActivity() {
 
         ll_OwnerStackChoice.setOnClickListener {
             ll_OwnerDrawer = findViewById(R.id.ll_OwnerDrawer)
-            dl_NewProject.openDrawer(ll_Drawer)
+            dl_NewProject.openDrawer(ll_OwnerDrawer)
         }
     }
 
     //drawer안에 기술 설정
     private fun initStackView() {
         StackView = findViewById(R.id.fl_Stack)
+        ownerStackView = findViewById(R.id.fl_OwnerStack)
+
         checkedStackView = findViewById(R.id.fbl_CheckedStack)
-        chips = ArrayList()
+        checkedOwnerStackView = findViewById(R.id.fbl_OwnerCheckedStack)
+
         val nameArray = arrayOf(
-            "Front-end",
-            "Back-end",
-            "C#",
-            "React",
-            "Vue",
-            "Spring",
-            "Django",
-            "Javascript",
-            "Git",
-            "Typescript",
-            "iOS",
-            "Android",
-            "Angular",
-            "HTML/CSS",
-            "Flask",
-            "Node.js",
-            "Java",
-            "Go",
-            "Python",
-            "Kotlin",
-            "Swift",
-            "C/C++",
-            "Design",
-            "Figma",
-            "Sketch",
-            "AdobeXD",
-            "GCP",
-            "Photoshop",
-            "Illustrator",
-            "Firebase",
-            "AWS",
-            "ect"
+            "frontEnd",
+            "backEnd",
+            "cCsharp",
+            "react",
+            "vue",
+            "spring",
+            "django",
+            "javascript",
+            "git",
+            "typescript",
+            "ios",
+            "android",
+            "angular",
+            "htmlCss",
+            "flask",
+            "nodeJs",
+            "java",
+            "go",
+            "python",
+            "kotlin",
+            "swift",
+            "cCpp",
+            "design",
+            "figma",
+            "sketch",
+            "adobeXD",
+            "gcp",
+            "photoshop",
+            "illustrator",
+            "firebase",
+            "aws",
+            "etc"
         )
 
         StackView.addItems(nameArray)
-
+        ownerStackView.addOwnerItems(nameArray)
 
     }
 
@@ -275,7 +286,7 @@ class NewProjectActivity :AppCompatActivity() {
             chip.apply {
                 stackColor(name)
 
-                text = "  $name  "
+                text = "  $myStack  "
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
 
                 val nonClickColor = ContextCompat.getColor(context, R.color.nonClick_tag)
@@ -311,7 +322,6 @@ class NewProjectActivity :AppCompatActivity() {
                         }
                     } else {
                         val chipIdx = checkedChips.indexOf(this)
-                        Log.d("idx: ", "$chipIdx")
                         checkedStackView.removeViewAt(chipIdx)
                         checkedChips.removeAt(chipIdx)
 
@@ -325,7 +335,70 @@ class NewProjectActivity :AppCompatActivity() {
             )
 
             layoutParams.rightMargin = dpToPx(6)
-            chips.add(chip)
+            addView(chip, layoutParams)
+        }
+
+
+    }
+
+    private fun FlexboxLayout.addOwnerItems(names: Array<String>) {
+        checkedOwnerChips = mutableListOf()
+
+        for (name in names) {
+            val chip = LayoutInflater.from(context).inflate(R.layout.view_chip, null) as Chip
+
+            chip.apply {
+                stackColor(name)
+
+                text = "  $myStack  "
+                setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
+
+                val nonClickColor = ContextCompat.getColor(context, R.color.nonClick_tag)
+
+                chipBackgroundColor = ColorStateList(
+                    arrayOf(
+                        intArrayOf(-android.R.attr.state_checked),
+                        intArrayOf(android.R.attr.state_checked)
+                    ),
+                    intArrayOf(nonClickColor, myColor)
+                )
+
+                val nonClickTextColor = ContextCompat.getColor(context, R.color.gray1)
+                //텍스트
+                setTextColor(
+                    ColorStateList(
+                        arrayOf(
+                            intArrayOf(-android.R.attr.state_checked),
+                            intArrayOf(android.R.attr.state_checked)
+                        ),
+                        intArrayOf(nonClickTextColor, Color.BLACK)
+                    )
+
+                )
+
+                setOnCheckedChangeListener { buttonView, isChecked ->
+                    if (isChecked) {
+                        if (checkedOwnerChips.size < 1) {
+                            checkedOwnerChips.add(this)
+                            checkedOwnerStackView.addItem(name)
+                        } else {
+                            this.isChecked = false
+                        }
+                    } else {
+                        val chipIdx = checkedOwnerChips.indexOf(this)
+                        checkedOwnerStackView.removeViewAt(chipIdx)
+                        checkedOwnerChips.removeAt(chipIdx)
+
+                    }
+                }
+            }
+
+            val layoutParams = ViewGroup.MarginLayoutParams(
+                ViewGroup.MarginLayoutParams.WRAP_CONTENT,
+                ViewGroup.MarginLayoutParams.WRAP_CONTENT
+            )
+
+            layoutParams.rightMargin = dpToPx(6)
             addView(chip, layoutParams)
         }
 
@@ -338,7 +411,7 @@ class NewProjectActivity :AppCompatActivity() {
         chip.apply {
             stackColor(name)
 
-            text = "  $name  "
+            text = "  $myStack  "
             setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
 
             val nonClickColor = ContextCompat.getColor(context, R.color.nonClick_tag)
@@ -376,103 +449,138 @@ class NewProjectActivity :AppCompatActivity() {
 
     private fun stackColor(name: String) {
         when (name) {
-            "Front-end" -> {
+            "frontEnd" -> {
                 myColor = ContextCompat.getColor(this, R.color.front_end)
+                myStack = "Front-end"
             }
-            "Back-end" -> {
+            "backEnd" -> {
                 myColor = ContextCompat.getColor(this, R.color.back_end)
+                myStack = "Back-end"
             }
-            "React" -> {
+            "react" -> {
                 myColor = ContextCompat.getColor(this, R.color.react)
+                myStack = "React"
             }
-            "Vue" -> {
+            "vue" -> {
                 myColor = ContextCompat.getColor(this, R.color.vue)
+                myStack = "Vue"
+            }
+            "spring" -> {
+                myColor = ContextCompat.getColor(this, R.color.spring)
+                myStack = "Spring"
             }
             "Spring" -> {
                 myColor = ContextCompat.getColor(this, R.color.spring)
+                myStack = "Spring"
             }
-            "Django" -> {
+            "django" -> {
                 myColor = ContextCompat.getColor(this, R.color.django)
+                myStack = "Django"
             }
-            "iOS" -> {
+            "ios" -> {
                 myColor = ContextCompat.getColor(this, R.color.ios)
+                myStack = "iOS"
             }
-            "Typescript" -> {
+            "typescript" -> {
                 myColor = ContextCompat.getColor(this, R.color.typescript)
+                myStack = "Typescript"
             }
-            "Javascript" -> {
+            "javascript" -> {
                 myColor = ContextCompat.getColor(this, R.color.javascript)
+                myStack = "Javascript"
             }
-            "Android" -> {
+            "android" -> {
                 myColor = ContextCompat.getColor(this, R.color.android)
+                myStack = "Android"
             }
-            "Angular" -> {
+            "angular" -> {
                 myColor = ContextCompat.getColor(this, R.color.angular)
+                myStack = "Angular"
             }
-            "HTML/CSS" -> {
+            "htmlCss" -> {
                 myColor = ContextCompat.getColor(this, R.color.html_css)
+                myStack = "HTML/CSS"
             }
-            "Flask" -> {
+            "flask" -> {
                 myColor = ContextCompat.getColor(this, R.color.flask)
+                myStack = "Flask"
             }
-            "Node.js" -> {
+            "nodeJs" -> {
                 myColor = ContextCompat.getColor(this, R.color.node)
+                myStack = "Node.js"
             }
-            "Java" -> {
+            "java" -> {
                 myColor = ContextCompat.getColor(this, R.color.java)
+                myStack = "Java"
             }
-            "Python" -> {
+            "python" -> {
                 myColor = ContextCompat.getColor(this, R.color.python)
+                myStack = "Python"
             }
-            "C#" -> {
+            "cCsharp" -> {
                 myColor = ContextCompat.getColor(this, R.color.c_sharp)
+                myStack = "C#"
             }
-            "Kotlin" -> {
+            "kotlin" -> {
                 myColor = ContextCompat.getColor(this, R.color.kotlin)
+                myStack = "Kotlin"
             }
-            "Swift" -> {
+            "swift" -> {
                 myColor = ContextCompat.getColor(this, R.color.swift)
+                myStack = "Swift"
             }
-            "Go" -> {
+            "go" -> {
                 myColor = ContextCompat.getColor(this, R.color.go)
+                myStack = "Go"
             }
-            "C/C++" -> {
+            "cCpp" -> {
                 myColor = ContextCompat.getColor(this, R.color.c_cpp)
+                myStack = "C/C++"
             }
-            "Design" -> {
+            "design" -> {
                 myColor = ContextCompat.getColor(this, R.color.design)
+                myStack = "Design"
             }
-            "Figma" -> {
+            "figma" -> {
                 myColor = ContextCompat.getColor(this, R.color.figma)
+                myStack = "Figma"
             }
-            "Sketch" -> {
+            "sketch" -> {
                 myColor = ContextCompat.getColor(this, R.color.sketch)
+                myStack = "Sketch"
             }
-            "Git" -> {
+            "git" -> {
                 myColor = ContextCompat.getColor(this, R.color.git)
+                myStack = "Git"
             }
-            "AdobeXD" -> {
+            "adobeXD" -> {
                 myColor = ContextCompat.getColor(this, R.color.adobexd)
+                myStack = "AdobeXD"
             }
-            "Photoshop" -> {
+            "photoshop" -> {
                 myColor = ContextCompat.getColor(this, R.color.photoShop)
+                myStack = "Photoshop"
             }
-            "Illustrator" -> {
+            "illustrator" -> {
                 myColor = ContextCompat.getColor(this, R.color.illustrator)
+                myStack = "Illustrator"
             }
-            "Firebase" -> {
+            "firebase" -> {
                 myColor = ContextCompat.getColor(this, R.color.firebase)
+                myStack = "Firebase"
             }
-            "AWS" -> {
+            "aws" -> {
                 myColor = ContextCompat.getColor(this, R.color.aws)
+                myStack = "AWS"
             }
-            "GCP" -> {
+            "gcp" -> {
                 myColor = ContextCompat.getColor(this, R.color.gcp)
+                myStack = "GCP"
             }
-            "ect" -> {
+            "etc" -> {
                 myColor = ContextCompat.getColor(this, R.color.ect)
+                myStack = "etc"
             }
-
         }
     }
 
@@ -482,4 +590,45 @@ class NewProjectActivity :AppCompatActivity() {
             dp.toFloat(),
             resources.displayMetrics
         ).roundToInt()
+
+
+    private fun bigToSmall(big: String): String {
+        when (big) {
+            "Front-end" -> return "frontEnd"
+            "Back-end" -> return "backEnd"
+            "C#" -> return "cCsharp"
+            "React" -> return "react"
+            "Vue" -> return "vue"
+            "Spring" -> return "spring"
+            "Django" -> return "django"
+            "Javascript" -> return "javascript"
+            "Git" -> return "git"
+            "Typescript" -> return "typescript"
+            "iOS" -> return "ios"
+            "Android" -> return "android"
+            "Angular" -> return "angular"
+            "HTML/CSS" -> return "htmlCss"
+            "Flask" -> return "flask"
+            "Node.js" -> return "nodeJs"
+            "Java" -> return "java"
+            "Go" -> return "go"
+            "Python" -> return "python"
+            "Kotlin" -> return "kotlin"
+            "Swift" -> return "swift"
+            "C/C++" -> return "cCpp"
+            "Design" -> return "design"
+            "Figma" -> return "figma"
+            "Sketch" -> return "sketch"
+            "AdobeXD" -> return "adobeXD"
+            "GCP" -> return "gcp"
+            "Photoshop" -> return "photoshop"
+            "Illustrator" -> return "illustrator"
+            "Firebase" -> return "firebase"
+            "AWS" -> return "aws"
+            "etc" -> return "etc"
+
+        }
+
+        return ""
+    }
 }
