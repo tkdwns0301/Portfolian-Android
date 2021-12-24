@@ -1,5 +1,6 @@
 package com.example.portfolian.service
 
+import com.example.portfolian.data.DetailProjectResponse
 import com.example.portfolian.data.ReadProjectResponse
 import com.example.portfolian.data.WriteProjectResponse
 import com.example.portfolian.data.WriteProject
@@ -21,4 +22,10 @@ interface ProjectService {
         @Query("sort") sort: String
     )
     : Call<ReadProjectResponse>
+
+    @GET("projects/{projectId}")
+    fun readDetailProject(
+        @Path("projectId") projectId: String
+    )
+    : Call<DetailProjectResponse>
 }

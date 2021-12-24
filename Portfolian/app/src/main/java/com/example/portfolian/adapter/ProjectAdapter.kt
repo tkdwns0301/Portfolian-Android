@@ -1,6 +1,7 @@
 package com.example.portfolian.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.DisplayMetrics
@@ -19,12 +20,17 @@ import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.portfolian.R
+import com.example.portfolian.data.DetailProjectResponse
 import com.example.portfolian.data.Project
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.ProjectService
+import com.example.portfolian.view.main.home.DetailProjectActivity
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import de.hdodenhof.circleimageview.CircleImageView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import java.text.NumberFormat
 import java.util.*
@@ -91,6 +97,9 @@ class ProjectAdapter(
         //bookmark
         holder.bookmark.isChecked = project.bookMark == true
 
+        holder.container.setOnClickListener {
+            moveDetail(project.projectId)
+        }
 
     }
 
@@ -286,8 +295,24 @@ class ProjectAdapter(
 
     override fun getItemCount(): Int = dataSet.size
 
-    private fun moveDetail(position: Int) {
-        //TODO 상세보기 화면으로 전환
+    private fun moveDetail(projectId: String) {
+        val callDetailProject = projectService.readDetailProject(projectId)
+        callDetailProject.enqueue(object: Callback<DetailProjectResponse> {
+            override fun onResponse(call: Call<DetailProjectResponse>, response: Response<DetailProjectResponse>) {
+                if(response.isSuccessful) {
+                    val detailProject = response.body()?.contents
+                    val intent = Intent(context, DetailProjectActivity::class.java)
+                    intent.putExtra("detailProject", detailProject)
+                    context.startActivity(intent)
+                }
+            }
+
+            override fun onFailure(call: Call<DetailProjectResponse>, t: Throwable) {
+                Log.e("moveDetail: ", "$t")
+            }
+        })
+
+
     }
 
     class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {

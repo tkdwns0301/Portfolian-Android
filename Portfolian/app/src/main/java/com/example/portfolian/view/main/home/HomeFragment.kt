@@ -373,13 +373,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun setProjectAdapter(projects: ArrayList<Project>?) {
         if (projects != null) {
-            Log.d("asdasd", "1")
             adapter = ProjectAdapter(requireContext(), projects, 0)
-            Log.d("asdasd", "0")
             rv_Project.adapter = adapter
-            Log.d("asdasd", "2")
             adapter.notifyDataSetChanged()
-            Log.d("asdasd", "3")
         }
     }
 
