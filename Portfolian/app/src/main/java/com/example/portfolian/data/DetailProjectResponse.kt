@@ -4,6 +4,7 @@ import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.parcelize.Parcelize
 
+@Parcelize
 data class DetailProjectResponse (
     @SerializedName("code")
     var code: Int,
@@ -25,8 +26,8 @@ data class DetailProjectResponse (
     var status: Int,
     @SerializedName("leader")
     var leader: LeaderContent
+): Parcelable
 
-)
 @Parcelize
 data class DetailContent(
     //주제설명
@@ -54,8 +55,8 @@ data class LeaderContent(
     var nickName: String,
     @SerializedName("description")
     var description: String,
-    @SerializedName("stackList")
-    var stackList: List<String>,
+    @SerializedName("stack")
+    var stack: String,
     @SerializedName("photo")
     var photo: String
 ) : Parcelable

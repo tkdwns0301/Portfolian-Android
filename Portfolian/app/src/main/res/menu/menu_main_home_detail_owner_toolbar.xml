@@ -6,4 +6,10 @@
         android:title="공유"
         app:showAsAction="always"
         android:icon="@drawable/ic_baseline_share_24"/>
+
+    <item
+        android:id="@+id/toolbar_Bookmark"
+        android:title="북마크"
+        app:showAsAction="always"
+        android:icon="@drawable/ic_baseline_more_vert_24"/>
 </menu>

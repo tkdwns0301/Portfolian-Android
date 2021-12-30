@@ -81,7 +81,7 @@ class ProjectAdapter(
         //조회수
         holder.view.text = context.getString(
             R.string.view,
-            NumberFormat.getNumberInstance(Locale.KOREA).format(project?.view)
+            NumberFormat.getNumberInstance(Locale.KOREA).format(project.view)
         )
 
         //stack
@@ -89,13 +89,14 @@ class ProjectAdapter(
         holder.stack.addItems(project.stackList)
 
         //stackCount
-        if(project.stackList.size.toInt() > 3)
-            holder.stackCount.text = "+" + "${(project.stackList.size-3).toString()}"
+        if(project.stackList.size > 3)
+            holder.stackCount.text = "+" + "${(project.stackList.size-3)}"
         else
             holder.stackCount.text = ""
 
         //bookmark
-        holder.bookmark.isChecked = project.bookMark == true
+        holder.bookmark.isChecked = project.bookMark
+        Log.d("bookmark", "${project.bookMark}")
 
         holder.container.setOnClickListener {
             moveDetail(project.projectId)
@@ -300,7 +301,8 @@ class ProjectAdapter(
         callDetailProject.enqueue(object: Callback<DetailProjectResponse> {
             override fun onResponse(call: Call<DetailProjectResponse>, response: Response<DetailProjectResponse>) {
                 if(response.isSuccessful) {
-                    val detailProject = response.body()?.contents
+                    val detailProject = response.body()!!
+
                     val intent = Intent(context, DetailProjectActivity::class.java)
                     intent.putExtra("detailProject", detailProject)
                     context.startActivity(intent)

@@ -10,7 +10,7 @@
     <color name="front_end">#AACFF2</color>
     <color name="back_end">#FFE58A</color>
     <color name="design">#FBE1F8</color>
-    <color name="spring">#B0FFB4</color>
+    <color name="spring">#C5F8C7</color>
     <color name="team_tag">#E5F0FE</color>
     <color name="nonClick_tag">#EAEAEA</color>
     <color name="font">#343A40</color>
@@ -18,7 +18,7 @@
     <color name="gray2">#CCCCCC</color>
     <color name="django">#93C59B</color>
     <color name="react">#D0FDFD</color>
-    <color name="javascript">#FAFC9F</color>
+    <color name="javascript">#FFF38A</color>
     <color name="typescript">#C9E3FB</color>
     <color name="flask">#ACACB4</color>
     <color name="node">#D5F6C1</color>
@@ -40,7 +40,7 @@
     <color name="gcp">#F9E686</color>
     <color name="figma">#C1B7FF</color>
     <color name="sketch">#FFF9C3</color>
-    <color name="adobexd">#FFB7F8</color>
+    <color name="adobexd">#FCCAEE</color>
     <color name="photoShop">#C9E3FB</color>
     <color name="illustrator">#CFC3AC</color>
     <color name="ect">#5C5C5C</color>
