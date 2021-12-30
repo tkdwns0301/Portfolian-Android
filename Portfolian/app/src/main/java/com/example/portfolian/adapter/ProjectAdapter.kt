@@ -77,6 +77,7 @@ class ProjectAdapter(
 
         //Title
         holder.title.text = project.title
+        Log.d("title", "${project.title}")
 
         //조회수
         holder.view.text = context.getString(

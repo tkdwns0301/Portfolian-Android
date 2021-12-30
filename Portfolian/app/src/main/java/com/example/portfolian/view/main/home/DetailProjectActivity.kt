@@ -114,6 +114,7 @@ class DetailProjectActivity : AppCompatActivity() {
         ownerName.text = detailProject.leader.nickName
 
         bookmark = findViewById(R.id.toggle_Bookmark)
+        Log.d("bookmark", "${detailProject.bookMark}")
         bookmark.isChecked = detailProject.bookMark
     }
 

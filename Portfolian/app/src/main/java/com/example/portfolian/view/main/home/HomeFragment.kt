@@ -357,9 +357,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             override fun onResponse(call: Call<ReadProjectResponse>, response: Response<ReadProjectResponse>) {
                 if(response.isSuccessful ) {
                     val projects = response.body()?.articleList
-                    Log.d("callProject: code", "${response.body()?.code}")
-                    Log.d("callProject: response", "${response.body()?.articleList}")
-                    Log.d("callProject: Success: ", "$projects")
                     setProjectAdapter(projects)
                 }
             }
