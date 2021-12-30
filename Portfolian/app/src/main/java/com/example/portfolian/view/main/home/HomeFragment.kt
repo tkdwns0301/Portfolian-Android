@@ -18,14 +18,24 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.portfolian.R
 import com.example.portfolian.adapter.ProjectAdapter
 import com.example.portfolian.data.Project
+import com.example.portfolian.data.ReadProjectResponse
+import com.example.portfolian.network.RetrofitClient
+import com.example.portfolian.service.ProjectService
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import com.kakao.usermgmt.UserManagement
 import com.kakao.usermgmt.callback.LogoutResponseCallback
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 import kotlin.math.roundToInt
 
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
+
+    private lateinit var retrofit: Retrofit
+    private lateinit var projectService: ProjectService
 
     private lateinit var StackView: FlexboxLayout
     private lateinit var rv_Project: RecyclerView
@@ -39,17 +49,26 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var btn_NewProject: ImageButton
     private lateinit var chips: ArrayList<Chip>
 
+    private lateinit var checkedChips: MutableList<Chip>
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        init(view)
+    }
+
+    private fun init(view: View) {
+        initRetrofit()
+        initStackView(view)
         initSwipeRefreshLayout(view)
         initRecyclerView(view)
         initToolbar(view)
         initDrawer(view)
         initNewProject(view)
-        initStackView(view)
-
+    }
+    private fun initRetrofit() {
+        retrofit = RetrofitClient.getInstance()
+        projectService = retrofit.create(ProjectService::class.java)
     }
 
 
@@ -62,8 +81,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun initRecyclerView(view: View) {
         rv_Project = view.findViewById(R.id.rv_Project)
-        val layoutManager =
-            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         rv_Project.layoutManager = layoutManager
         readProject()
     }
@@ -110,7 +128,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         btn_Close = view.findViewById(R.id.img_btn_Close)
         btn_Close.setOnClickListener {
-            Log.d("Close", "success")
+            //TODO 닫기 버튼을 눌렀을 때, 서버에 스택을 GET으로 쿼리 보내고 홈화면 재배치
+            readProject()
             dl_Home.closeDrawers()
         }
     }
@@ -168,6 +187,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun FlexboxLayout.addItem(names: Array<String>) {
+        checkedChips = mutableListOf()
+
         for (name in names) {
             val chip = LayoutInflater.from(context).inflate(R.layout.view_chip, null) as Chip
 
@@ -298,6 +319,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     )
 
                 )
+
+                setOnCheckedChangeListener { buttonView, isChecked ->
+                    if(isChecked) {
+                        checkedChips.add(this)
+                    } else {
+                        val chipIdx = checkedChips.indexOf(this)
+                        checkedChips.removeAt(chipIdx)
+                    }
+
+                }
             }
 
             val layoutParams = ViewGroup.MarginLayoutParams(
@@ -315,8 +346,26 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun readProject() {
         //TODO retrofit 으로 데이터 받아와서 표시
+        var stackList = mutableListOf<String>()
 
-        //setProjectAdapter()
+        for (chip in checkedChips) {
+            var stackName = chip.text.toString().trim()
+            stackList.add(stackName)
+        }
+        val callProjects = projectService.readAllProject(stackList, "default", "default")
+        callProjects.enqueue(object: Callback<ReadProjectResponse> {
+            override fun onResponse(call: Call<ReadProjectResponse>, response: Response<ReadProjectResponse>) {
+                if(response.isSuccessful ) {
+                    val projects = response.body()?.articleList
+                    setProjectAdapter(projects)
+                }
+            }
+
+            override fun onFailure(call: Call<ReadProjectResponse>, t: Throwable) {
+                Log.e("HomeFragment: ", "readProjects: $t")
+            }
+        })
+
     }
 
     private fun setProjectAdapter(projects: ArrayList<Project>?) {

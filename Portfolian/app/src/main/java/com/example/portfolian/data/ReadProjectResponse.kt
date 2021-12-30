@@ -8,14 +8,14 @@ data class ReadProjectResponse(
     @SerializedName("code")
     var code: Int,
 
-    @SerializedName("projectList")
-    var projectList: ArrayList<Project>
+    @SerializedName("articleList")
+    var articleList: ArrayList<Project>
 )
 
 @Parcelize
 data class Project(
-    @SerializedName("projectIdx")
-    var projectIdx: Long,
+    @SerializedName("projectId")
+    var projectId: String,
 
     @SerializedName("title")
     var title: String,
@@ -38,6 +38,12 @@ data class Project(
     @SerializedName("status")
     var status: Int,
 
-    @SerializedName("Profile")
-    var profile: ArrayList<Image> = arrayListOf()
+    @SerializedName("leader")
+    var leader: Leader
+) : Parcelable
+
+@Parcelize
+data class Leader(
+    var userId: String,
+    var photo: String
 ) : Parcelable
