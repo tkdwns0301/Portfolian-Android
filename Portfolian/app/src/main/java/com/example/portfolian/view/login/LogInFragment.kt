@@ -7,40 +7,31 @@ import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.widget.ImageButton
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.portfolian.R
 import com.example.portfolian.data.KakaoToken
 import com.example.portfolian.data.OauthResponse
+import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
-import com.example.portfolian.service.OauthService
+import com.example.portfolian.service.OAuthService
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import com.kakao.auth.AuthType
-import com.kakao.auth.ISessionCallback
-import com.kakao.auth.Session
-import com.kakao.network.ErrorResult
 import com.kakao.sdk.auth.model.OAuthToken
-import com.kakao.sdk.common.model.AuthErrorCause
 import com.kakao.sdk.common.model.AuthErrorCause.*
 import com.kakao.sdk.user.UserApiClient
-import com.kakao.usermgmt.UserManagement
-import com.kakao.usermgmt.callback.MeV2ResponseCallback
-import com.kakao.usermgmt.response.MeV2Response
-import com.kakao.util.exception.KakaoException
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 
 class LogInFragment : Fragment(R.layout.fragment_login) {
-    private lateinit var logInService: OauthService
+    private lateinit var logInService: OAuthService
     private lateinit var retrofit: Retrofit
 
     private lateinit var navController: NavController
@@ -75,7 +66,7 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
 
     private fun initRetrofit() {
         retrofit = RetrofitClient.getInstance()
-        logInService = retrofit.create(OauthService::class.java)
+        logInService = retrofit.create(OAuthService::class.java)
     }
 
     private fun initClient() {
@@ -217,14 +208,16 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
                     val accessToken = response.body()!!.accessToken
                     val userId = response.body()!!.userId
 
-                    Log.d("code: ", "$code")
-                    Log.d("isNew: ", "$isNew")
-                    Log.d("refreshToken: ", "$refreshToken")
-                    Log.d("accessToken: ", "$accessToken")
-                    Log.d("userId: ", "$userId")
+                    GlobalApplication.prefs.accessToken = accessToken
+                    GlobalApplication.prefs.refreshToken = refreshToken
+                    GlobalApplication.prefs.userId = userId
+
+                    Log.e("refreshToken!!:", "${response.body()!!.refreshToken}")
+                    Log.e("refreshToken: ", "${GlobalApplication.prefs.refreshToken}")
 
                     if (!isNew) {
                         navController.navigate(R.id.action_logInFragment_to_mainActivity)
+                        activity?.finish()
                     } else {
                         nickname()
                     }

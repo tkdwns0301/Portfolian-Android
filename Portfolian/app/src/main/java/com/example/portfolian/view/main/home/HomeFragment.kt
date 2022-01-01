@@ -19,8 +19,12 @@ import com.example.portfolian.R
 import com.example.portfolian.adapter.ProjectAdapter
 import com.example.portfolian.data.Project
 import com.example.portfolian.data.ReadProjectResponse
+import com.example.portfolian.data.RenewalTokenRequest
+import com.example.portfolian.data.TokenResponse
+import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.ProjectService
+import com.example.portfolian.service.TokenService
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import com.kakao.usermgmt.UserManagement
@@ -36,6 +40,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private lateinit var retrofit: Retrofit
     private lateinit var projectService: ProjectService
+    private lateinit var tokenService: TokenService
 
     private lateinit var StackView: FlexboxLayout
     private lateinit var rv_Project: RecyclerView
@@ -65,10 +70,37 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         initToolbar(view)
         initDrawer(view)
         initNewProject(view)
+
+        renewal()
+    }
+
+    private fun renewal() {
+        val renewalTokenRequest = RenewalTokenRequest(GlobalApplication.prefs.refreshToken.toString(), GlobalApplication.prefs.userId.toString())
+
+        val renewalService = tokenService.getAccessToken(renewalTokenRequest)
+
+        renewalService.enqueue(object : Callback<TokenResponse> {
+            override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
+                if(response.isSuccessful) {
+                    if(response.body()!!.code == 1) {
+                        GlobalApplication.prefs.accessToken = response.body()!!.accessToken
+                    }
+                    else {
+                        Log.e("RenewalToken: ", "토큰갱신 오류: ${response.body()!!.message}")
+                    }
+
+                }
+            }
+
+            override fun onFailure(call: Call<TokenResponse>, t: Throwable) {
+                Log.e("RenewalToken: ", "$t")
+            }
+        })
     }
     private fun initRetrofit() {
         retrofit = RetrofitClient.getInstance()
         projectService = retrofit.create(ProjectService::class.java)
+        tokenService = retrofit.create(TokenService::class.java)
     }
 
 
