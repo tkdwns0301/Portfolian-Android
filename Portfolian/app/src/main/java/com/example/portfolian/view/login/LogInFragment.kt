@@ -11,24 +11,29 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.portfolian.R
+import com.example.portfolian.data.KakaoToken
+import com.example.portfolian.data.OauthResponse
+import com.example.portfolian.network.GlobalApplication
+import com.example.portfolian.network.RetrofitClient
+import com.example.portfolian.service.OAuthService
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
 import com.google.android.gms.auth.api.signin.GoogleSignInClient
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.Task
-import com.kakao.auth.AuthType
-import com.kakao.auth.ISessionCallback
-import com.kakao.auth.Session
-import com.kakao.network.ErrorResult
 import com.kakao.sdk.auth.model.OAuthToken
+import com.kakao.sdk.common.model.AuthErrorCause.*
 import com.kakao.sdk.user.UserApiClient
-import com.kakao.usermgmt.UserManagement
-import com.kakao.usermgmt.callback.MeV2ResponseCallback
-import com.kakao.usermgmt.response.MeV2Response
-import com.kakao.util.exception.KakaoException
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 
-class LogInFragment  : Fragment(R.layout.fragment_login) {
+class LogInFragment : Fragment(R.layout.fragment_login) {
+    private lateinit var logInService: OAuthService
+    private lateinit var retrofit: Retrofit
+
     private lateinit var navController: NavController
     private lateinit var btn_Google: ImageButton
     private lateinit var btn_Kakao: ImageButton
@@ -39,8 +44,6 @@ class LogInFragment  : Fragment(R.layout.fragment_login) {
     private val RC_SIGN_IN = 123
 
     private lateinit var LogInActivity: LogInActivity
-    private lateinit var callback: SessionCallback
-
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -55,14 +58,15 @@ class LogInFragment  : Fragment(R.layout.fragment_login) {
         LogInActivity = context as LogInActivity
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
-        Session.getCurrentSession().removeCallback(callback)
-    }
-
     private fun init() {
+        initRetrofit()
         initClient()
         initView()
+    }
+
+    private fun initRetrofit() {
+        retrofit = RetrofitClient.getInstance()
+        logInService = retrofit.create(OAuthService::class.java)
     }
 
     private fun initClient() {
@@ -93,22 +97,57 @@ class LogInFragment  : Fragment(R.layout.fragment_login) {
     }
 
     private fun initKakao() {
-        callback = SessionCallback()
-        Session.getCurrentSession().addCallback(callback)
-        Session.getCurrentSession().checkAndImplicitOpen()
-
+        val callback: (OAuthToken?, Throwable?) -> Unit = { token, error ->
+            if (error != null) {
+                when {
+                    error.toString() == AccessDenied.toString() -> {
+                        Log.e("LogIn Error: ", "접근이 거부 됨(동의 취소)")
+                    }
+                    error.toString() == InvalidClient.toString() -> {
+                        Log.e("LogIn Error: ", "유효하지 않은 앱")
+                    }
+                    error.toString() == InvalidGrant.toString() -> {
+                        Log.e("LogIn Error: ", "인증 수단이 유효하지 않아 인증할 수 없는 상태")
+                    }
+                    error.toString() == InvalidRequest.toString() -> {
+                        Log.e("LogIn Error: ", "요청 파라미터 오류")
+                    }
+                    error.toString() == InvalidScope.toString() -> {
+                        Log.e("LogIn Error: ", "유효하지 않은 scope ID")
+                    }
+                    error.toString() == Misconfigured.toString() -> {
+                        Log.e("LogIn Error: ", "설정이 올바르지 않음(android key hash)")
+                    }
+                    error.toString() == ServerError.toString() -> {
+                        Log.e("LogIn Error: ", "서버 내부 에러")
+                    }
+                    error.toString() == Unauthorized.toString() -> {
+                        Log.e("LogIn Error: ", "앱이 요청 권한이 없음")
+                    }
+                    else -> {
+                        Log.e("LogIn Error: ", "기타 에러")
+                    }
+                }
+            } else if (token != null) {
+                tokenToServer(token.accessToken)
+                Log.d("token", "${token.accessToken}")
+            }
+        }
         btn_Kakao = requireView().findViewById(R.id.btn_Kakao)
         btn_Kakao.setOnClickListener {
             //TODO Kakao 로그인 실행
-            Log.d("LogInFragment:: ", "btn_Kakao: Clicked")
-
-            Session.getCurrentSession().open(AuthType.KAKAO_LOGIN_ALL, LogInActivity)
+            if (UserApiClient.instance.isKakaoTalkLoginAvailable(requireContext())) {
+                UserApiClient.instance.loginWithKakaoTalk(requireContext(), callback = callback)
+            } else {
+                UserApiClient.instance.loginWithKakaoAccount(requireContext(), callback = callback)
+            }
 
         }
     }
 
     private fun initGit() {
-        btn_Git= requireView().findViewById(R.id.btn_Git)
+
+        btn_Git = requireView().findViewById(R.id.btn_Git)
         btn_Git.setOnClickListener {
             //TODO Git 로그인 실행
             Log.d("LogInFragment:: ", "btn_Git: Clicked")
@@ -145,6 +184,8 @@ class LogInFragment  : Fragment(R.layout.fragment_login) {
                 Log.d(TAG, "handleSignInResult:personPhoto $personPhoto")
                 Log.d(TAG, "handleSignInResult:idToken $idToken")
 
+
+                tokenToServer(idToken)
             }
         } catch (e: ApiException) {
             // The ApiException status code indicates the detailed failure reason.
@@ -154,38 +195,47 @@ class LogInFragment  : Fragment(R.layout.fragment_login) {
         }
     }
 
-    private fun tokenToServer() {
-        //TODO 서버로 토큰 보내기
+    private fun tokenToServer(idToken: String) {
+        val kakaoToken = KakaoToken(idToken)
+        val tokenService = logInService.getToken(kakaoToken)
+
+        tokenService.enqueue(object : Callback<OauthResponse> {
+            override fun onResponse(call: Call<OauthResponse>, response: Response<OauthResponse>) {
+                if (response.isSuccessful) {
+                    val code = response.body()!!.code
+                    val isNew = response.body()!!.isNew
+                    val refreshToken = response.body()!!.refreshToken
+                    val accessToken = response.body()!!.accessToken
+                    val userId = response.body()!!.userId
+
+                    GlobalApplication.prefs.accessToken = accessToken
+                    GlobalApplication.prefs.refreshToken = refreshToken
+                    GlobalApplication.prefs.userId = userId
+
+                    Log.e("refreshToken!!:", "${response.body()!!.refreshToken}")
+                    Log.e("refreshToken: ", "${GlobalApplication.prefs.refreshToken}")
+
+                    if (!isNew) {
+                        navController.navigate(R.id.action_logInFragment_to_mainActivity)
+                        activity?.finish()
+                    } else {
+                        nickname()
+                    }
+                }
+            }
+            override fun onFailure(call: Call<OauthResponse>, t: Throwable) {
+                Log.e("LogInService: ", "$t")
+            }
+        })
     }
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
 
-        if(requestCode == RC_SIGN_IN) {
+        if (requestCode == RC_SIGN_IN) {
             val task = GoogleSignIn.getSignedInAccountFromIntent(data)
             handleSignInResult(task)
             nickname()
-        }
-    }
-
-    private inner class SessionCallback: ISessionCallback {
-        override fun onSessionOpened() {
-            UserManagement.getInstance().me(object: MeV2ResponseCallback() {
-                override fun onSuccess(result: MeV2Response?) {
-                    nickname()
-                }
-
-                override fun onSessionClosed(errorResult: ErrorResult?) {
-                    Log.e("Kakao:: ", "세션이 닫혔습니다.")
-                }
-            })
-        }
-
-        override fun onSessionOpenFailed(exception: KakaoException?) {
-            if(exception != null) {
-                com.kakao.util.helper.log.Logger.e(exception)
-                Log.e("Kakao:: ", "로그인 도중 오류가 발생했습니다.")
-            }
         }
     }
 
