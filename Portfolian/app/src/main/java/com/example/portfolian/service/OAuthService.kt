@@ -11,7 +11,7 @@ interface OAuthService {
     fun getToken(
         @Body token: KakaoTokenRequest
     )
-    : Call<OauthResponse>
+    : Call<OAuthResponse>
 
     @Headers("content-type: application/json")
     @PATCH("users/{userId}/nickName")
