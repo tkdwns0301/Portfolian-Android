@@ -9,7 +9,7 @@ interface OAuthService {
     @Headers("content-type: application/json")
     @POST("oauth/kakao/access")
     fun getToken(
-        @Body token: KakaoToken
+        @Body token: KakaoTokenRequest
     )
     : Call<OauthResponse>
 
@@ -18,7 +18,7 @@ interface OAuthService {
     fun setNickName(
         @Header("Authorization") Authorization: String?,
         @Path("userId") userId: String?,
-        @Body nickName: NickName
+        @Body nickName: NickNameRequest
     )
     : Call<NickNameResponse>
 

@@ -11,8 +11,8 @@ import androidx.fragment.app.Fragment
 import androidx.navigation.NavController
 import androidx.navigation.Navigation
 import com.example.portfolian.R
-import com.example.portfolian.data.KakaoToken
-import com.example.portfolian.data.OauthResponse
+import com.example.portfolian.data.KakaoTokenRequest
+import com.example.portfolian.data.OAuthResponse
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.OAuthService
@@ -196,11 +196,11 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun tokenToServer(idToken: String) {
-        val kakaoToken = KakaoToken(idToken)
+        val kakaoToken = KakaoTokenRequest(idToken)
         val tokenService = logInService.getToken(kakaoToken)
 
-        tokenService.enqueue(object : Callback<OauthResponse> {
-            override fun onResponse(call: Call<OauthResponse>, response: Response<OauthResponse>) {
+        tokenService.enqueue(object : Callback<OAuthResponse> {
+            override fun onResponse(call: Call<OAuthResponse>, response: Response<OAuthResponse>) {
                 if (response.isSuccessful) {
                     val code = response.body()!!.code
                     val isNew = response.body()!!.isNew
@@ -223,7 +223,7 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
                     }
                 }
             }
-            override fun onFailure(call: Call<OauthResponse>, t: Throwable) {
+            override fun onFailure(call: Call<OAuthResponse>, t: Throwable) {
                 Log.e("LogInService: ", "$t")
             }
         })

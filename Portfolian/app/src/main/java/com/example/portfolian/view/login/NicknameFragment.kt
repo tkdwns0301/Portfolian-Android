@@ -67,14 +67,14 @@ class NicknameFragment : Fragment(R.layout.fragment_nickname) {
             Log.e("NicknameFragment:: ", "Null Or Blank")
         } else {
             //메인페이지로 이동
-            val nickname = NickName(et_Nickname.text.toString())
+            val nickname = NickNameRequest(et_Nickname.text.toString())
             val nickName = nickNameService.setNickName(
                 "Bearer ${GlobalApplication.prefs.accessToken}",
                 GlobalApplication.prefs.userId,
                 nickname
             )
 
-            /*nickName.enqueue(object : Callback<NickNameResponse> {
+            nickName.enqueue(object : Callback<NickNameResponse> {
                 override fun onResponse(
                     call: Call<NickNameResponse>,
                     response: Response<NickNameResponse>
@@ -91,7 +91,7 @@ class NicknameFragment : Fragment(R.layout.fragment_nickname) {
                 override fun onFailure(call: Call<NickNameResponse>, t: Throwable) {
                     Log.e("NickName: ", "$t")
                 }
-            })*/
+            })
 
         }
     }
