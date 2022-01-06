@@ -1,9 +1,6 @@
 package com.example.portfolian.service
 
-import com.example.portfolian.data.DetailProjectResponse
-import com.example.portfolian.data.ReadProjectResponse
-import com.example.portfolian.data.WriteProjectResponse
-import com.example.portfolian.data.WriteProject
+import com.example.portfolian.data.*
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -11,7 +8,7 @@ interface ProjectService {
     @Headers("content-type: application/json")
     @POST("projects")
     fun writeProject(
-        @Body write: WriteProject
+        @Body write: WriteProjectRequest
     )
     : Call<WriteProjectResponse>
 

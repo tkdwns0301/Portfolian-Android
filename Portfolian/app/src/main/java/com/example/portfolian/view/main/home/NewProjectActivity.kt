@@ -14,7 +14,7 @@ import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.portfolian.R
 import com.example.portfolian.data.Article
-import com.example.portfolian.data.WriteProject
+import com.example.portfolian.data.WriteProjectRequest
 import com.example.portfolian.data.WriteProjectResponse
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.ProjectService
@@ -151,7 +151,7 @@ class NewProjectActivity : AppCompatActivity() {
 
         Log.d("test", "$article")
 
-        var textJson = WriteProject("testUser1", article, ownerStack)
+        var textJson = WriteProjectRequest("testUser1", article, ownerStack)
         if (!et_Title.text.isNullOrEmpty() || stackList.isNotEmpty() || !et_Topic.text.isNullOrEmpty() || !et_ProjectTime.text.isNullOrEmpty() || !et_Condition.text.isNullOrEmpty() || !et_Progress.text.isNullOrEmpty() || !et_Capacity.text.isNullOrEmpty()) {
 
             val saveProject = projectService.writeProject(textJson)

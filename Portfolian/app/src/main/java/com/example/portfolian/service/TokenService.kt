@@ -7,6 +7,7 @@ import retrofit2.http.Headers
 import retrofit2.http.POST
 
 interface TokenService {
+    //38 accessToken 갱신
     @Headers("content-type: application/json")
     @POST("oauth/refresh")
     fun getAccessToken(
