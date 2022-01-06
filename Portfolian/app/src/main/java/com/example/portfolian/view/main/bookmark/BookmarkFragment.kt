@@ -10,6 +10,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
@@ -43,7 +44,7 @@ class BookmarkFragment : Fragment(R.layout.fragment_bookmark) {
     private lateinit var drawer: DrawerLayout
     private lateinit var linearBookmark: LinearLayout
     private lateinit var allNonClick: Button
-    private lateinit var close: Button
+    private lateinit var close: ImageButton
 
     private lateinit var stackView: FlexboxLayout
     private lateinit var chips: ArrayList<Chip>
@@ -110,7 +111,7 @@ class BookmarkFragment : Fragment(R.layout.fragment_bookmark) {
 
     private fun initDrawer(view: View) {
         allNonClick = view.findViewById(R.id.btn_AllNonClick)
-        close = view.findViewById(R.id.btn_Close)
+        close = view.findViewById(R.id.img_btn_Close)
 
         allNonClick.setOnClickListener {
             for (chip in chips) {
