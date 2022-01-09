@@ -25,4 +25,9 @@ interface ProjectService {
         @Path("projectId") projectId: String
     )
     : Call<DetailProjectResponse>
+
+    @GET("users/{userId}/bookMark")
+    fun readAllBookmark(
+    )
+    : Call<ReadProjectResponse>
 }
