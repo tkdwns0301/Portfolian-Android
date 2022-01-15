@@ -62,7 +62,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
 
     private var search = ""
-    private var radio = ""
+    private var radio = "default"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
