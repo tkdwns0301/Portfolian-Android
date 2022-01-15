@@ -125,7 +125,7 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
                         Log.e("LogIn Error: ", "앱이 요청 권한이 없음")
                     }
                     else -> {
-                        Log.e("LogIn Error: ", "기타 에러")
+                        Log.e("LogIn Error: ", "기타 에러: $error")
                     }
                 }
             } else if (token != null) {
@@ -238,6 +238,8 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
             nickname()
         }
     }
+
+
 
 
 }

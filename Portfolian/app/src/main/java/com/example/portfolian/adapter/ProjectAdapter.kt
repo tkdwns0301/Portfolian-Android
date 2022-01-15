@@ -62,8 +62,7 @@ class ProjectAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        var dataSetReverse = dataSet.reversed()
-        val project = dataSetReverse[position]
+        val project = dataSet[position]
 
         //Profile Image
         if (project.leader.photo.isEmpty()) {
