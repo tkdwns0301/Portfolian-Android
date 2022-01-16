@@ -110,6 +110,66 @@ data class LeaderContent(
 ) : Parcelable
 //------------------------------------
 
+// 6 프로젝트 모집글 수정하기
+@Parcelize
+data class ModifyProjectResponse (
+    @SerializedName("code")
+    var code: Int
+) : Parcelable
+//------------------------------------
+
+// 13 나의 정보 보기
+@Parcelize
+data class MyProfileResponse (
+    @SerializedName("code")
+    var code: Int,
+    @SerializedName("userId")
+    var userId: String,
+    @SerializedName("nickName")
+    var nickName: String,
+    @SerializedName("description")
+    var description: String,
+    @SerializedName("stackList")
+    var stackList: List<String>,
+    @SerializedName("photo")
+    var photo: String,
+    @SerializedName("github")
+    var github: String,
+    @SerializedName("mail")
+    var mail: String
+
+) : Parcelable
+//------------------------------------
+
+// 14 나의 정보 수정
+@Parcelize
+data class ModifyProfileResponse(
+    @SerializedName("nickName")
+    var nickName: String,
+    @SerializedName("description")
+    var description: String,
+    @SerializedName("stack")
+    var stack: List<String>,
+    @SerializedName("photo")
+    var photo: String,
+    @SerializedName("github")
+    var github: String,
+    @SerializedName("mail")
+    var mail: String
+) : Parcelable
+//------------------------------------
+
+// 26 로그아웃
+@Parcelize
+data class LogoutResponse(
+    @SerializedName("code")
+    var code: Int,
+    @SerializedName("message")
+    var message: String
+): Parcelable
+//------------------------------------
+
+
 // 29 모집글 생성
 data class WriteProjectResponse(
     @SerializedName("code")

@@ -8,6 +8,7 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.*
 import android.widget.*
+import androidx.appcompat.widget.SearchView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
@@ -53,8 +54,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private lateinit var btn_Close: ImageButton
     private lateinit var btn_NewProject: ImageButton
     private lateinit var chips: ArrayList<Chip>
+    private lateinit var searchView: SearchView
+    private lateinit var orderRadioGroup: RadioGroup
 
     private lateinit var checkedChips: MutableList<Chip>
+    private lateinit var nameMap: Map<String, String>
+
+
+    private var search = ""
+    private var radio = "default"
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -64,6 +72,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun init(view: View) {
         initRetrofit()
+        initSearchView(view)
+        initRadioGroup(view)
         initStackView(view)
         initSwipeRefreshLayout(view)
         initRecyclerView(view)
@@ -71,21 +81,23 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         initDrawer(view)
         initNewProject(view)
 
-        renewal()
+        //renewal()
     }
 
     private fun renewal() {
-        val renewalTokenRequest = RenewalTokenRequest(GlobalApplication.prefs.refreshToken.toString(), GlobalApplication.prefs.userId.toString())
+        val renewalTokenRequest = RenewalTokenRequest(
+            GlobalApplication.prefs.refreshToken.toString(),
+            GlobalApplication.prefs.userId.toString()
+        )
 
         val renewalService = tokenService.getAccessToken(renewalTokenRequest)
 
         renewalService.enqueue(object : Callback<TokenResponse> {
             override fun onResponse(call: Call<TokenResponse>, response: Response<TokenResponse>) {
-                if(response.isSuccessful) {
-                    if(response.body()!!.code == 1) {
+                if (response.isSuccessful) {
+                    if (response.body()!!.code == 1) {
                         GlobalApplication.prefs.accessToken = response.body()!!.accessToken
-                    }
-                    else {
+                    } else {
                         Log.e("RenewalToken: ", "토큰갱신 오류: ${response.body()!!.message}")
                     }
 
@@ -97,6 +109,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         })
     }
+
     private fun initRetrofit() {
         retrofit = RetrofitClient.getInstance()
         projectService = retrofit.create(ProjectService::class.java)
@@ -111,9 +124,42 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
+    private fun initSearchView(view: View) {
+        searchView = view.findViewById(R.id.searchView)
+
+        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+            override fun onQueryTextChange(p0: String?): Boolean {
+                search = p0.toString()
+
+                readProject()
+
+                return true
+            }
+
+            override fun onQueryTextSubmit(p0: String?): Boolean {
+                return true
+            }
+        })
+    }
+
+    private fun initRadioGroup(view: View) {
+        orderRadioGroup = view.findViewById(R.id.rg_Order)
+
+        orderRadioGroup.setOnCheckedChangeListener { group, checkedId ->
+            when(checkedId) {
+                R.id.radio_Recent -> radio = "bookMark"
+
+                R.id.radio_View -> radio = "view"
+            }
+
+            readProject()
+        }
+    }
+
     private fun initRecyclerView(view: View) {
         rv_Project = view.findViewById(R.id.rv_Project)
-        val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
+        val layoutManager =
+            LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
         rv_Project.layoutManager = layoutManager
         readProject()
     }
@@ -123,7 +169,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.toolbar_Filter -> {
-                    //findNavController().navigate(R.id.action_homeFragment_to_filterFragment)
                     dl_Home = view.findViewById(R.id.dl_Home)
                     ll_Drawer = requireView().findViewById(R.id.ll_Drawer)
                     dl_Home.openDrawer(ll_Drawer)
@@ -160,7 +205,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         btn_Close = view.findViewById(R.id.img_btn_Close)
         btn_Close.setOnClickListener {
-            //TODO 닫기 버튼을 눌렀을 때, 서버에 스택을 GET으로 쿼리 보내고 홈화면 재배치
             readProject()
             dl_Home.closeDrawers()
         }
@@ -179,55 +223,57 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun initStackView(view: View) {
         StackView = view.findViewById(R.id.fl_Stack)
         chips = ArrayList()
-        val nameArray = arrayOf(
-            "ect",
-            "Front-end",
-            "Back-end",
-            "C#",
-            "React",
-            "Vue",
-            "Spring",
-            "Django",
-            "Javascript",
-            "Git",
-            "Typescript",
-            "iOS",
-            "Android",
-            "Angular",
-            "HTML/CSS",
-            "Flask",
-            "Node.js",
-            "Java",
-            "Go",
-            "Python",
-            "Kotlin",
-            "Swift",
-            "C/C++",
-            "Design",
-            "Figma",
-            "Sketch",
-            "AdobeXD",
-            "GCP",
-            "Photoshop",
-            "Illustrator",
-            "Firebase",
-            "AWS"
+
+        nameMap = mapOf<String, String>(
+            "etc" to "etc",
+            "Front-end" to "frontEnd",
+            "Back-end" to "backEnd",
+            "C#" to "cCsharp",
+            "React" to "react",
+            "Vue" to "vue",
+            "Spring" to "spring",
+            "Django" to "django",
+            "Javascript" to "javascript",
+            "Git" to "git",
+            "Typescript" to "typescript",
+            "iOS" to "ios",
+            "Android" to "android",
+            "Angular" to "angular",
+            "HTML/CSS" to "htmlCss",
+            "Flask" to "flask",
+            "Node.js" to "nodeJs",
+            "Java" to "java",
+            "Go" to "go",
+            "Python" to "python",
+            "Kotlin" to "kotlin",
+            "Swift" to "swift",
+            "C/C++" to "cCpp",
+            "Design" to "design",
+            "Figma" to "figma",
+            "Sketch" to "sketch",
+            "AdobeXD" to "adobeXD",
+            "GCP" to "gcp",
+            "Photoshop" to "photoshop",
+            "Illustrator" to "illustrator",
+            "Firebase" to "firebase",
+            "AWS" to "aws"
         )
 
-        StackView.addItem(nameArray)
+        StackView.addItem(nameMap)
 
     }
 
-    private fun FlexboxLayout.addItem(names: Array<String>) {
+    private fun FlexboxLayout.addItem(names: Map<String, String>) {
         checkedChips = mutableListOf()
 
-        for (name in names) {
+
+        for ((key, value) in names) {
             val chip = LayoutInflater.from(context).inflate(R.layout.view_chip, null) as Chip
 
             chip.apply {
                 var myColor = 0
 
-                when (name) {
+                when (key) {
                     "Front-end" -> {
                         myColor = ContextCompat.getColor(context, R.color.front_end)
                     }
@@ -324,10 +370,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     "ect" -> {
                         myColor = ContextCompat.getColor(context, R.color.ect)
                     }
-
                 }
 
-                text = "  $name  "
+                text = "  $key  "
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
 
                 val nonClickColor = ContextCompat.getColor(context, R.color.nonClick_tag)
@@ -353,7 +398,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 )
 
                 setOnCheckedChangeListener { buttonView, isChecked ->
-                    if(isChecked) {
+                    if (isChecked) {
                         checkedChips.add(this)
                     } else {
                         val chipIdx = checkedChips.indexOf(this)
@@ -372,22 +417,33 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             chips.add(chip)
             addView(chip, childCount - 1, layoutParams)
         }
-
-
     }
 
     private fun readProject() {
         //TODO retrofit 으로 데이터 받아와서 표시
         var stackList = mutableListOf<String>()
 
+
         for (chip in checkedChips) {
-            var stackName = chip.text.toString().trim()
+            var stackName = nameMap[chip.text.toString().trim()].toString()
             stackList.add(stackName)
         }
-        val callProjects = projectService.readAllProject(stackList, "default", "default")
-        callProjects.enqueue(object: Callback<ReadProjectResponse> {
-            override fun onResponse(call: Call<ReadProjectResponse>, response: Response<ReadProjectResponse>) {
-                if(response.isSuccessful ) {
+
+        if(stackList.isNullOrEmpty()) {
+            stackList.add("default")
+        }
+
+        if(search == "")
+            search = "default"
+
+        val callProjects = projectService.readAllProject("Bearer ${GlobalApplication.prefs.accessToken}", stackList, search, radio)
+
+        callProjects.enqueue(object : Callback<ReadProjectResponse> {
+            override fun onResponse(
+                call: Call<ReadProjectResponse>,
+                response: Response<ReadProjectResponse>
+            ) {
+                if (response.isSuccessful) {
                     val projects = response.body()?.articleList
                     setProjectAdapter(projects)
                 }
@@ -409,6 +465,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun refresh() {
+        renewal()
         readProject()
         sl_Swipe.isRefreshing = false
     }

@@ -4,6 +4,22 @@ import com.google.gson.annotations.SerializedName
 
 data class Request (val request: String)
 
+// 6 프로젝트 모집글 수정하기
+data class ModifyProjectRequest (
+    var article: Article,
+    var ownerStack: String
+    )
+//------------------------------------
+// 14 나의 정보 수정
+data class ModifyProfile (
+    var nickName: String,
+    var description: String,
+    var stack: List<String>,
+    var photo: String,
+    var github: String,
+    var mail: String
+        )
+//------------------------------------
 
 // 29 모집글 생성
 data class WriteProjectRequest (
