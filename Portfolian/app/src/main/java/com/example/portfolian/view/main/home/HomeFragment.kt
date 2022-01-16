@@ -465,6 +465,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun refresh() {
+        renewal()
         readProject()
         sl_Swipe.isRefreshing = false
     }
