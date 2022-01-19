@@ -1,5 +1,6 @@
 package com.example.portfolian.view.main.home
 
+import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -35,6 +36,10 @@ import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import kotlin.math.roundToInt
+import android.content.SharedPreferences
+
+
+
 
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -85,9 +90,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun renewal() {
+
         val renewalTokenRequest = RenewalTokenRequest(
-            GlobalApplication.prefs.refreshToken.toString(),
-            GlobalApplication.prefs.userId.toString()
+            "${GlobalApplication.prefs.userId}"
         )
 
         val renewalService = tokenService.getAccessToken(renewalTokenRequest)
@@ -97,6 +102,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 if (response.isSuccessful) {
                     if (response.body()!!.code == 1) {
                         GlobalApplication.prefs.accessToken = response.body()!!.accessToken
+
+                        Log.d("accessToken", "${response.body()!!.accessToken}")
                     } else {
                         Log.e("RenewalToken: ", "토큰갱신 오류: ${response.body()!!.message}")
                     }
@@ -176,13 +183,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     true
                 }
                 R.id.toolbar_Alert -> {
-                    Log.d("HomeFragment: ", "Alert Button Click")
-                    UserManagement.getInstance().requestLogout(object : LogoutResponseCallback() {
-                        override fun onCompleteLogout() {
-                            //로그아웃에 성공하면: LoginActivity로 이동
-                            Log.d("Logout::, ", "Success")
-                        }
-                    })
+                    renewal()
                     true
                 }
                 else -> {
@@ -477,4 +478,5 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             resources.displayMetrics
         )
             .roundToInt()
+
 }

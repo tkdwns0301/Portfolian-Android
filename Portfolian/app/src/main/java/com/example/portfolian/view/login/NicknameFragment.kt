@@ -97,7 +97,7 @@ class NicknameFragment : Fragment(R.layout.fragment_nickname) {
     }
 
     private fun renewal() {
-        val renewalTokenRequest = RenewalTokenRequest(GlobalApplication.prefs.refreshToken.toString(), GlobalApplication.prefs.userId.toString())
+        val renewalTokenRequest = RenewalTokenRequest("${GlobalApplication.prefs.userId}")
 
         val renewalService = tokenService.getAccessToken(renewalTokenRequest)
 

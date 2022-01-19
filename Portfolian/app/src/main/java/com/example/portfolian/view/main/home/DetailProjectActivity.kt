@@ -55,7 +55,6 @@ class DetailProjectActivity : AppCompatActivity() {
         detailProject = intent.getParcelableExtra("detailProject")!!
         initToolbar()
         initView()
-        //initMarkdown()
     }
 
     private fun initToolbar() {
