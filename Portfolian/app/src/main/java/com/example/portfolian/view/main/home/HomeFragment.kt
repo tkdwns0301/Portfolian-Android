@@ -85,8 +85,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         initToolbar(view)
         initDrawer(view)
         initNewProject(view)
-
-        //renewal()
     }
 
     private fun renewal() {
@@ -217,7 +215,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         btn_NewProject.setOnClickListener {
             val intent = Intent(activity, NewProjectActivity::class.java)
             startActivity(intent)
-            //findNavController().navigate(R.id.action_homeFragment_to_newProjectFragment)
         }
     }
 
@@ -421,9 +418,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
     private fun readProject() {
-        //TODO retrofit 으로 데이터 받아와서 표시
         var stackList = mutableListOf<String>()
-
 
         for (chip in checkedChips) {
             var stackName = nameMap[chip.text.toString().trim()].toString()
