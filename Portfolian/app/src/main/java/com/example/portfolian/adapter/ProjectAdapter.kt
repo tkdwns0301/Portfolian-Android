@@ -68,10 +68,10 @@ class ProjectAdapter(
         if (project.leader.photo.isEmpty()) {
             holder.photo.setImageDrawable(context.getDrawable(R.drawable.avatar_1_raster))
         } else {
-            holder.photo.setImageDrawable(context.getDrawable(R.drawable.avatar_1_raster))
-            /*Glide.with(holder.itemView.context)
+            //holder.photo.setImageDrawable(context.getDrawable(R.drawable.avatar_1_raster))
+            Glide.with(holder.itemView.context)
                 .load(project.leader.photo)
-                .into(holder.photo)*/
+                .into(holder.photo)
         }
 
         //Title

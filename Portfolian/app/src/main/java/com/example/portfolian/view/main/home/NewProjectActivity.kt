@@ -16,6 +16,7 @@ import com.example.portfolian.R
 import com.example.portfolian.data.Article
 import com.example.portfolian.data.WriteProjectRequest
 import com.example.portfolian.data.WriteProjectResponse
+import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.ProjectService
 import com.google.android.flexbox.FlexboxLayout
@@ -151,10 +152,10 @@ class NewProjectActivity : AppCompatActivity() {
 
         Log.d("test", "$article")
 
-        var textJson = WriteProjectRequest("testUser1", article, ownerStack)
+        var textJson = WriteProjectRequest(article, ownerStack)
         if (!et_Title.text.isNullOrEmpty() || stackList.isNotEmpty() || !et_Topic.text.isNullOrEmpty() || !et_ProjectTime.text.isNullOrEmpty() || !et_Condition.text.isNullOrEmpty() || !et_Progress.text.isNullOrEmpty() || !et_Capacity.text.isNullOrEmpty()) {
 
-            val saveProject = projectService.writeProject(textJson)
+            val saveProject = projectService.writeProject("Bearer ${GlobalApplication.prefs.accessToken}", textJson)
 
             saveProject.enqueue(object : Callback<WriteProjectResponse> {
                 override fun onResponse(

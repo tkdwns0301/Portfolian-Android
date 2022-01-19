@@ -8,13 +8,14 @@ interface ProjectService {
     @Headers("content-type: application/json")
     @POST("projects")
     fun writeProject(
+        @Header("Authorization") Authorization: String,
         @Body write: WriteProjectRequest
     )
     : Call<WriteProjectResponse>
 
     @GET("projects")
     fun readAllProject(
-        @Header("Authorization") Authorization: String?,
+        @Header("Authorization") Authorization: String,
         @Query("stack") stack: List<String>,
         @Query("keyword") keyword: String,
         @Query("sort") sort: String

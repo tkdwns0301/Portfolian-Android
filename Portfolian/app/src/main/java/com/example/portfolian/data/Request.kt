@@ -23,7 +23,6 @@ data class ModifyProfile (
 
 // 29 모집글 생성
 data class WriteProjectRequest (
-    var userId: String,
     var article: Article,
     var ownerStack: String
     )
@@ -53,7 +52,6 @@ data class NickNameRequest(
 
 // 38 accessToken 갱신
 data class RenewalTokenRequest(
-    val refreshToken: String,
     val userId: String
     )
 //------------------------------------
