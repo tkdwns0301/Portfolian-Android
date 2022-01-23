@@ -32,4 +32,13 @@ interface ProjectService {
     fun readAllBookmark(
     )
     : Call<ReadProjectResponse>
+
+    @Headers("content-type: application/json")
+    @POST("users/{userId}/bookMark")
+    fun setBookmark(
+        @Header ("Authorization") Authorization: String,
+        @Path("userId") userId: String,
+        @Body set: SetBookmarkRequest
+    )
+    : Call<SetBookmarkResponse>
 }

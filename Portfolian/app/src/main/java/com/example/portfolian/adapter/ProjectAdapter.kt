@@ -22,6 +22,8 @@ import com.bumptech.glide.Glide
 import com.example.portfolian.R
 import com.example.portfolian.data.DetailProjectResponse
 import com.example.portfolian.data.Project
+import com.example.portfolian.data.SetBookmarkRequest
+import com.example.portfolian.data.SetBookmarkResponse
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.ProjectService
@@ -102,6 +104,22 @@ class ProjectAdapter(
 
         //bookmark
         holder.bookmark.isChecked = project.bookMark
+        holder.bookmark.setOnCheckedChangeListener { buttonView, isChecked ->
+            var bookmarkJson = SetBookmarkRequest(project.projectId, isChecked)
+            val setBookmark = projectService.setBookmark("Bearer ${GlobalApplication.prefs.accessToken}", "${GlobalApplication.prefs.userId}", bookmarkJson)
+
+            setBookmark.enqueue(object: Callback<SetBookmarkResponse> {
+                override fun onResponse(callback: Call<SetBookmarkResponse>, response: Response<SetBookmarkResponse>) {
+                    if(response.isSuccessful) {
+                        Log.d("SetBookmark:: ", "${response.body()!!.code}")
+                    }
+                }
+
+                override fun onFailure(call: Call<SetBookmarkResponse>, t: Throwable) {
+                    Log.e("SetBookmark:: ", "$t")
+                }
+            })
+        }
 
         holder.container.setOnClickListener {
             moveDetail(project.projectId)

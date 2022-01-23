@@ -18,16 +18,27 @@ import com.bumptech.glide.Glide
 import com.example.portfolian.R
 import com.example.portfolian.data.DetailContent
 import com.example.portfolian.data.DetailProjectResponse
+import com.example.portfolian.data.SetBookmarkRequest
+import com.example.portfolian.data.SetBookmarkResponse
+import com.example.portfolian.network.GlobalApplication
+import com.example.portfolian.network.RetrofitClient
+import com.example.portfolian.service.ProjectService
+import com.example.portfolian.service.TokenService
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import de.hdodenhof.circleimageview.CircleImageView
 import org.w3c.dom.Text
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import us.feras.mdv.MarkdownView
 import kotlin.math.roundToInt
 
 class DetailProjectActivity : AppCompatActivity() {
     private lateinit var retrofit: Retrofit
+    private lateinit var bookmarkService: ProjectService
+
     private lateinit var detailProject: DetailProjectResponse
     private lateinit var toolbar: Toolbar
     private lateinit var title: TextView
@@ -57,6 +68,7 @@ class DetailProjectActivity : AppCompatActivity() {
 
     private fun init() {
         detailProject = intent.getParcelableExtra("detailProject")!!
+        initRetrofit()
         initToolbar()
         initView()
     }
@@ -82,7 +94,8 @@ class DetailProjectActivity : AppCompatActivity() {
     }
 
     private fun initRetrofit() {
-
+        retrofit = RetrofitClient.getInstance()
+        bookmarkService = retrofit.create(ProjectService::class.java)
     }
 
     private fun initView() {
@@ -120,6 +133,23 @@ class DetailProjectActivity : AppCompatActivity() {
         bookmark = findViewById(R.id.toggle_Bookmark)
         Log.d("bookmark", "${detailProject.bookMark}")
         bookmark.isChecked = detailProject.bookMark
+
+        bookmark.setOnCheckedChangeListener { buttonView, isChecked ->
+            var bookmarkJson = SetBookmarkRequest(detailProject.projectId, isChecked)
+            val setBookmark = bookmarkService.setBookmark("Bearer ${GlobalApplication.prefs.accessToken}", "${GlobalApplication.prefs.userId}", bookmarkJson)
+
+            setBookmark.enqueue(object: Callback<SetBookmarkResponse> {
+                override fun onResponse(callback: Call<SetBookmarkResponse>, response: Response<SetBookmarkResponse>) {
+                    if(response.isSuccessful) {
+                        Log.d("SetBookmark:: ", "${response.body()!!.code}")
+                    }
+                }
+
+                override fun onFailure(call: Call<SetBookmarkResponse>, t: Throwable) {
+                    Log.e("SetBookmark:: ", "$t")
+                }
+            })
+        }
 
         photo = findViewById(R.id.cv_OwnerProfile)
 
@@ -186,7 +216,7 @@ class DetailProjectActivity : AppCompatActivity() {
                 stackColor(name)
 
                 text = "  $myStack  "
-                setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12f)
+                setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
 
                 val nonClickColor = ContextCompat.getColor(context, R.color.nonClick_tag)
 

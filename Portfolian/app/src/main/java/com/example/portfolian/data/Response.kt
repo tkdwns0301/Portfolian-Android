@@ -110,6 +110,12 @@ data class LeaderContent(
 ) : Parcelable
 //------------------------------------
 
+// 5 북마크하기/ 취소하기
+@Parcelize
+data class SetBookmarkResponse (
+    @SerializedName("code")
+    var code: Int,
+) : Parcelable
 // 6 프로젝트 모집글 수정하기
 @Parcelize
 data class ModifyProjectResponse (
