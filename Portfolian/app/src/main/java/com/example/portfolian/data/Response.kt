@@ -54,8 +54,6 @@ data class Leader(
 // 3 프로젝트 모집글 보기
 @Parcelize
 data class DetailProjectResponse (
-    @SerializedName("code")
-    var code: Int,
     @SerializedName("projectId")
     var projectId: String,
     @SerializedName("title")
@@ -72,6 +70,8 @@ data class DetailProjectResponse (
     var bookMark: Boolean,
     @SerializedName("status")
     var status: Int,
+    @SerializedName("createdAt")
+    var createdAt: String,
     @SerializedName("leader")
     var leader: LeaderContent
 ): Parcelable
@@ -110,6 +110,12 @@ data class LeaderContent(
 ) : Parcelable
 //------------------------------------
 
+// 5 북마크하기/ 취소하기
+@Parcelize
+data class SetBookmarkResponse (
+    @SerializedName("code")
+    var code: Int,
+) : Parcelable
 // 6 프로젝트 모집글 수정하기
 @Parcelize
 data class ModifyProjectResponse (

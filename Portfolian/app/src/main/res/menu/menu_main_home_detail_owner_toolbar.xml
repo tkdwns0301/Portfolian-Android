@@ -8,8 +8,10 @@
         android:icon="@drawable/ic_baseline_share_24"/>
 
     <item
-        android:id="@+id/toolbar_Bookmark"
-        android:title="북마크"
-        app:showAsAction="always"
-        android:icon="@drawable/ic_baseline_more_vert_24"/>
+        android:id="@+id/toolbar_Modify"
+        android:title="수정하기"/>
+
+    <item
+        android:id="@+id/toolbar_Delete"
+        android:title="삭제하기"/>
 </menu>
