@@ -3,12 +3,10 @@ package com.example.portfolian.view.main.home
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
@@ -16,17 +14,16 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import com.bumptech.glide.Glide
 import com.example.portfolian.R
-import com.example.portfolian.data.DetailContent
 import com.example.portfolian.data.DetailProjectResponse
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import de.hdodenhof.circleimageview.CircleImageView
-import org.w3c.dom.Text
 import retrofit2.Retrofit
 import us.feras.mdv.MarkdownView
 import kotlin.math.roundToInt
 
-class DetailProjectActivity : AppCompatActivity() {
+class DetailOwnerProjectActivity : AppCompatActivity() {
+
     private lateinit var retrofit: Retrofit
     private lateinit var detailProject: DetailProjectResponse
     private lateinit var toolbar: Toolbar
@@ -50,25 +47,35 @@ class DetailProjectActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detailproject_user)
+        setContentView(R.layout.activity_detailproject_owner)
 
         init()
     }
 
     private fun init() {
-        detailProject = intent.getParcelableExtra("detailProject")!!
+        detailProject = intent.getParcelableExtra("detailOwnerProject")!!
         initToolbar()
         initView()
     }
 
     private fun initToolbar() {
-        toolbar = findViewById(R.id.toolbar_DetailUserProject)
+        toolbar = findViewById(R.id.toolbar_DetailOwnerProject)
 
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.toolbar_Sharing -> {
                     //TODO 공유버튼을 눌렸을 때 메뉴표시
                     Log.d("Sharing", "공유버튼을 눌렀습니다.")
+                    true
+                }
+                R.id.toolbar_Modify -> {
+                    //TODO 수정하기 버튼 눌렸을 때 표시
+                    Log.d("Modify", "수정하기 버튼을 눌렀습니다.")
+                    true
+                }
+                R.id.toolbar_Delete -> {
+                    //TODO 삭제하기 버튼 눌렀을 때 표시
+                    Log.d("Delete", "삭제하기 버튼을 눌렀습니다.")
                     true
                 }
                 else -> {
@@ -116,10 +123,6 @@ class DetailProjectActivity : AppCompatActivity() {
 
         ownerName = findViewById(R.id.tv_OwnerName)
         ownerName.text = detailProject.leader.nickName
-
-        bookmark = findViewById(R.id.toggle_Bookmark)
-        Log.d("bookmark", "${detailProject.bookMark}")
-        bookmark.isChecked = detailProject.bookMark
 
         photo = findViewById(R.id.cv_OwnerProfile)
 

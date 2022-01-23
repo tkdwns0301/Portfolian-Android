@@ -100,8 +100,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 if (response.isSuccessful) {
                     if (response.body()!!.code == 1) {
                         GlobalApplication.prefs.accessToken = response.body()!!.accessToken
-
-                        Log.d("accessToken", "${response.body()!!.accessToken}")
                     } else {
                         Log.e("RenewalToken: ", "토큰갱신 오류: ${response.body()!!.message}")
                     }
@@ -152,9 +150,15 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
         orderRadioGroup.setOnCheckedChangeListener { group, checkedId ->
             when(checkedId) {
-                R.id.radio_Recent -> radio = "bookMark"
+                R.id.radio_Recent -> {
+                    radio = "default"
+                    readProject()
+                }
 
-                R.id.radio_View -> radio = "view"
+                R.id.radio_View -> {
+                    radio = "view"
+                    readProject()
+                }
             }
 
             readProject()
@@ -398,9 +402,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                 setOnCheckedChangeListener { buttonView, isChecked ->
                     if (isChecked) {
                         checkedChips.add(this)
+                        readProject()
                     } else {
                         val chipIdx = checkedChips.indexOf(this)
                         checkedChips.removeAt(chipIdx)
+                        readProject()
                     }
 
                 }

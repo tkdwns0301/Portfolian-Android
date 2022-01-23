@@ -22,8 +22,10 @@ import com.bumptech.glide.Glide
 import com.example.portfolian.R
 import com.example.portfolian.data.DetailProjectResponse
 import com.example.portfolian.data.Project
+import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.ProjectService
+import com.example.portfolian.view.main.home.DetailOwnerProjectActivity
 import com.example.portfolian.view.main.home.DetailProjectActivity
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
@@ -75,8 +77,12 @@ class ProjectAdapter(
         }
 
         //Title
-        holder.title.text = project.title
-        Log.d("title", "${project.title}")
+        if(project.title.length >= 20) {
+            var titleSub = project.title.substring(0, 20)
+            holder.title.text = "$titleSub..."
+        } else {
+            holder.title.text = project.title
+        }
 
         //조회수
         holder.view.text = context.getString(
@@ -96,7 +102,6 @@ class ProjectAdapter(
 
         //bookmark
         holder.bookmark.isChecked = project.bookMark
-        Log.d("bookmark", "${project.bookMark}")
 
         holder.container.setOnClickListener {
             moveDetail(project.projectId)
@@ -297,15 +302,25 @@ class ProjectAdapter(
     override fun getItemCount(): Int = dataSet.size
 
     private fun moveDetail(projectId: String) {
+        Log.d("moveDetail", "Move!!")
         val callDetailProject = projectService.readDetailProject(projectId)
         callDetailProject.enqueue(object: Callback<DetailProjectResponse> {
             override fun onResponse(call: Call<DetailProjectResponse>, response: Response<DetailProjectResponse>) {
                 if(response.isSuccessful) {
                     val detailProject = response.body()!!
 
-                    val intent = Intent(context, DetailProjectActivity::class.java)
-                    intent.putExtra("detailProject", detailProject)
-                    context.startActivity(intent)
+                    if(detailProject.leader.userId == GlobalApplication.prefs.userId) {
+                        Log.d("Owner", "Owner")
+                        val intent = Intent(context, DetailOwnerProjectActivity::class.java)
+                        intent.putExtra("detailOwnerProject", detailProject)
+                        context.startActivity(intent)
+                    }
+                    else {
+                        Log.d("User", "User")
+                        val intent = Intent(context, DetailProjectActivity::class.java)
+                        intent.putExtra("detailProject", detailProject)
+                        context.startActivity(intent)
+                    }
                 }
             }
 

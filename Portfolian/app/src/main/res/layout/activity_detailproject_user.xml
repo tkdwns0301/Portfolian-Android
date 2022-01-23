@@ -25,24 +25,25 @@
         android:layout_height="wrap_content"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
+        app:layout_constraintBottom_toTopOf="@id/sv_DetailUserProject"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_DetailUserProject"
-        app:layout_constraintBottom_toTopOf="@id/sv_DetailUserProject">
+        app:layout_constraintTop_toBottomOf="@id/toolbar_DetailUserProject">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_TitleAndBookmark"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            app:layout_constraintBottom_toTopOf="@id/tv_UserView"
+            app:layout_constraintBottom_toTopOf="@id/cl_ViewAndCreate"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
+
             <TextView
-                android:id="@+id/tv_UserTitle"
-                android:layout_width="wrap_content"
+                android:id="@+id/tv_Title"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:textColor="@color/base"
                 android:textSize="18sp"
@@ -61,24 +62,50 @@
                 android:background="@drawable/ic_bookmark"
                 android:textOff=""
                 android:textOn=""
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_UserTitle"
+                app:layout_constraintStart_toEndOf="@id/tv_Title"
                 app:layout_constraintTop_toTopOf="parent" />
+
         </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-        <TextView
-            android:id="@+id/tv_UserView"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_ViewAndCreate"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:textColor="@color/gray1"
+
             app:layout_constraintBottom_toTopOf="@id/divider1"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_TitleAndBookmark"
-            tools:text="조회 123" />
+            app:layout_constraintTop_toBottomOf="@id/cl_TitleAndBookmark">
+
+            <TextView
+                android:id="@+id/tv_UserView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray1"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tv_CreateAt"
+                tools:text="조회 123" />
+
+            <TextView
+                android:id="@+id/tv_CreateAt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                tools:text = "2021-01-23"
+                android:textColor="@color/gray1"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_UserView"/>
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <View
             android:id="@+id/divider1"
@@ -87,7 +114,7 @@
             app:layout_constraintBottom_toTopOf="@id/fbl_UserStack"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_UserView" />
+            app:layout_constraintTop_toBottomOf="@id/cl_ViewAndCreate" />
 
         <com.google.android.flexbox.FlexboxLayout
             android:id="@+id/fbl_UserStack"
@@ -198,10 +225,10 @@
                 android:paddingStart="10dp"
                 android:textColor="@color/base"
                 android:textSize="14sp"
+                app:layout_constraintBottom_toTopOf="@id/tv_ProjectTime"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_SubjectDescription"
-                app:layout_constraintBottom_toTopOf="@id/tv_ProjectTime"
                 tools:text="리엑트를 사용하여 네이버의 고르인 기능을 구현합니다." />
 
             <TextView
@@ -241,9 +268,9 @@
                 android:textColor="@color/base"
                 android:textSize="16sp"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@id/tv_RecruitmentCondition"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/tv_RecruitmentCondition"
                 app:layout_constraintTop_toBottomOf="@id/tv_ProjectTimeReceive" />
 
             <TextView
@@ -269,8 +296,8 @@
                 android:textColor="@color/base"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toTopOf="@id/tv_ProgressReceive"
+                app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_RecruitmentConditionReceive" />
 
@@ -319,14 +346,15 @@
         app:layout_constraintBottom_toTopOf="@id/cl_bottomView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sv_DetailUserProject"/>
+        app:layout_constraintTop_toBottomOf="@id/sv_DetailUserProject" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <LinearLayout
         android:id="@+id/cl_bottomView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:paddingStart="15dp"
-        android:paddingEnd="15dp"
+        android:orientation="horizontal"
+        android:paddingStart="20dp"
+        android:paddingEnd="30dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -339,21 +367,14 @@
             android:layout_height="40dp"
             android:layout_marginTop="15dp"
             android:layout_marginBottom="15dp"
-            android:src="@drawable/avatar_1_raster"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/cl_Owner"
-            app:layout_constraintHorizontal_chainStyle="spread_inside"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            android:src="@drawable/avatar_1_raster" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_Owner"
             android:layout_width="140dp"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@id/cl_Button"
-            app:layout_constraintStart_toEndOf="@id/cv_OwnerProfile"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_gravity="center_vertical"
+            android:layout_marginStart="10dp">
 
             <TextView
                 android:id="@+id/tv_Owner"
@@ -379,46 +400,31 @@
                 tools:text="김수한무거북이열글자" />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <View
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:layout_weight="1" />
+
+        <LinearLayout
             android:id="@+id/cl_Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toEndOf="@id/cl_Owner"
-            app:layout_constraintTop_toTopOf="parent">
+            android:layout_gravity="center_vertical">
 
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_Chat"
+                style="@style/Widget.AppCompat.Button.Borderless"
                 android:layout_width="wrap_content"
                 android:layout_height="32dp"
                 android:background="@drawable/background_bottom_button"
                 android:text="채팅하기"
                 android:textColor="@color/thema"
-                android:textSize="14sp"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/btn_Apply"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                android:textSize="14sp" />
 
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_Apply"
-                android:layout_width="wrap_content"
-                style="@style/Widget.AppCompat.Button.Borderless"                android:layout_height="32dp"
-                android:layout_marginStart="10dp"
-                android:background="@drawable/background_bottom_button2"
-                android:text="지원하기"
-                android:textColor="@color/white"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/btn_Chat"
-                app:layout_constraintTop_toTopOf="parent" />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        </LinearLayout>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </LinearLayout>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>
