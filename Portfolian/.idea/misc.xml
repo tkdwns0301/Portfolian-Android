@@ -14,10 +14,11 @@
         <entry key="app/src/main/res/layout/activity_detailproject_user.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_newproject.xml" value="0.25" />
         <entry key="app/src/main/res/layout/activity_setting.xml" value="0.2511584800741427" />
-        <entry key="app/src/main/res/layout/drawer_bookmark.xml" value="0.396875" />
+        <entry key="app/src/main/res/layout/drawer_bookmark.xml" value="0.26869158878504673" />
         <entry key="app/src/main/res/layout/drawer_home.xml" value="0.1" />
         <entry key="app/src/main/res/layout/drawer_newproject.xml" value="0.35648148148148145" />
         <entry key="app/src/main/res/layout/flex_view_stack_item.xml" value="0.10833333333333334" />
+        <entry key="app/src/main/res/layout/fragment_bookmark.xml" value="0.10555555555555556" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.10833333333333334" />
         <entry key="app/src/main/res/layout/fragment_nickname.xml" value="0.10833333333333334" />
         <entry key="app/src/main/res/layout/fragment_user.xml" value="0.22404371584699453" />
@@ -25,6 +26,8 @@
         <entry key="app/src/main/res/layout/view_addprofileimage.xml" value="0.13697916666666668" />
         <entry key="app/src/main/res/layout/view_chip.xml" value="0.10833333333333334" />
         <entry key="app/src/main/res/layout/view_text.xml" value="0.10833333333333334" />
+        <entry key="app/src/main/res/menu/menu_main_bookmark_toolbar.xml" value="0.22552083333333334" />
+        <entry key="app/src/main/res/menu/menu_main_bottom_nav.xml" value="0.22552083333333334" />
         <entry key="app/src/main/res/menu/menu_main_home_detail_owner_toolbar.xml" value="0.396875" />
         <entry key="app/src/main/res/menu/menu_main_home_detail_user_toolbar.xml" value="0.396875" />
         <entry key="app/src/main/res/menu/menu_main_home_new_toolbar.xml" value="0.13697916666666668" />

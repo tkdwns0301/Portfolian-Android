@@ -7,7 +7,7 @@ data class Request (val request: String)
 // 5 북마크하기/ 취소하기
 data class SetBookmarkRequest (
     var projectId: String,
-    var bookMarted: Boolean
+    var bookMarked: Boolean
 )
 // 6 프로젝트 모집글 수정하기
 data class ModifyProjectRequest (

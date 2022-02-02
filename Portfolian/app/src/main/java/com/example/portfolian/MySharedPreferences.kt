@@ -11,10 +11,6 @@ class MySharedPreferences(context: Context) {
         get() = prefs.getString("accessToken", "")
         set(value) = prefs.edit().putString("accessToken", value).apply()
 
-    var refreshToken: String?
-        get() = prefs.getString("refreshToken", "")
-        set(value) = prefs.edit().putString("refreshToken", value).apply()
-
     var userId: String?
         get() = prefs.getString("userId", "")
         set(value) = prefs.edit().putString("userId", value).apply()
