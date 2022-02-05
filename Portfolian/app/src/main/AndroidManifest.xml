@@ -45,7 +45,7 @@
         </activity>
         <activity android:name=".view.main.home.DetailProjectActivity"/>
         <activity android:name=".view.main.chat.ChatRoomActivity"/>
-        <activity android:name=".view.main.user.SettingActivity" />
+        <activity android:name=".view.main.user.ProfileModifyActivity" />
         <activity android:name=".view.main.home.DetailOwnerProjectActivity"/>
     </application>
 

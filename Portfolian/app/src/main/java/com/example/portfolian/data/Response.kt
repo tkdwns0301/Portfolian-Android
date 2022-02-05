@@ -126,7 +126,7 @@ data class ModifyProjectResponse (
 
 // 13 나의 정보 보기
 @Parcelize
-data class MyProfileResponse (
+data class UserInfoResponse (
     @SerializedName("code")
     var code: Int,
     @SerializedName("userId")

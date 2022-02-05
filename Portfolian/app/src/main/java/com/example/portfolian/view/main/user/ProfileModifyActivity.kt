@@ -5,11 +5,11 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.portfolian.R
 
-class SettingActivity : AppCompatActivity() {
+class ProfileModifyActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_setting)
+        setContentView(R.layout.activity_profilemodify)
 
         initView()
     }
