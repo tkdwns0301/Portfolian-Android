@@ -195,8 +195,6 @@ data class OAuthResponse(
     val code: Int,
     @SerializedName("isNew")
     val isNew: Boolean,
-    @SerializedName("refreshToken")
-    val refreshToken: String,
     @SerializedName("accessToken")
     val accessToken: String,
     @SerializedName("userId")

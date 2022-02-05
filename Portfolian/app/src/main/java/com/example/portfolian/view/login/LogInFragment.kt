@@ -204,16 +204,11 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
                 if (response.isSuccessful) {
                     val code = response.body()!!.code
                     val isNew = response.body()!!.isNew
-                    val refreshToken = response.body()!!.refreshToken
                     val accessToken = response.body()!!.accessToken
                     val userId = response.body()!!.userId
 
                     GlobalApplication.prefs.accessToken = accessToken
-                    GlobalApplication.prefs.refreshToken = refreshToken
                     GlobalApplication.prefs.userId = userId
-
-                    Log.e("refreshToken!!:", "${response.body()!!.refreshToken}")
-                    Log.e("refreshToken: ", "${GlobalApplication.prefs.refreshToken}")
 
                     if (!isNew) {
                         navController.navigate(R.id.action_logInFragment_to_mainActivity)

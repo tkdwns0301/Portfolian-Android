@@ -30,6 +30,8 @@ interface ProjectService {
 
     @GET("users/{userId}/bookMark")
     fun readAllBookmark(
+        @Header("Authorization") Authorization: String,
+        @Path("userId") userId: String
     )
     : Call<ReadProjectResponse>
 

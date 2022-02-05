@@ -106,6 +106,7 @@ class ProjectAdapter(
         holder.bookmark.isChecked = project.bookMark
         holder.bookmark.setOnCheckedChangeListener { buttonView, isChecked ->
             var bookmarkJson = SetBookmarkRequest(project.projectId, isChecked)
+            Log.d("bookmark", "$isChecked")
             val setBookmark = projectService.setBookmark("Bearer ${GlobalApplication.prefs.accessToken}", "${GlobalApplication.prefs.userId}", bookmarkJson)
 
             setBookmark.enqueue(object: Callback<SetBookmarkResponse> {
