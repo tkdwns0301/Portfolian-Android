@@ -150,18 +150,8 @@ data class UserInfoResponse (
 // 14 나의 정보 수정
 @Parcelize
 data class ModifyProfileResponse(
-    @SerializedName("nickName")
-    var nickName: String,
-    @SerializedName("description")
-    var description: String,
-    @SerializedName("stack")
-    var stack: List<String>,
-    @SerializedName("photo")
-    var photo: String,
-    @SerializedName("github")
-    var github: String,
-    @SerializedName("mail")
-    var mail: String
+    @SerializedName("code")
+    var code: Int
 ) : Parcelable
 //------------------------------------
 

@@ -29,6 +29,7 @@ import retrofit2.Retrofit
 class UserFragment : Fragment(R.layout.fragment_user) {
     private lateinit var retrofit: Retrofit
     private lateinit var userInfoService: UserService
+    private lateinit var userInfo: UserInfoResponse
 
     private lateinit var toolbar: Toolbar
     private lateinit var profileModify: Button
@@ -102,8 +103,8 @@ class UserFragment : Fragment(R.layout.fragment_user) {
                 response: Response<UserInfoResponse>
             ) {
                 if(response.isSuccessful) {
-                    val userInfo = response.body()
-                    setUserInfo(userInfo!!)
+                    userInfo = response.body()!!
+                    setUserInfo()
                 }
             }
 
@@ -114,7 +115,7 @@ class UserFragment : Fragment(R.layout.fragment_user) {
         )
     }
 
-    private fun setUserInfo(userInfo: UserInfoResponse) {
+    private fun setUserInfo() {
         nickName = requireActivity().findViewById(R.id.tv_UserName)
         profileImage = requireActivity().findViewById(R.id.cv_Profile)
         git = requireActivity().findViewById(R.id.ib_Git)

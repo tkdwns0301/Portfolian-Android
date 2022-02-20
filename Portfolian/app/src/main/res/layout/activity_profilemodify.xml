@@ -4,7 +4,7 @@
     android:layout_height="match_parent"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/dl_Setting"
+    android:id="@+id/dl_ProfileModify"
     tools:context=".view.main.user.ProfileModifyActivity">
 
     <include layout="@layout/drawer_profilemodify" />

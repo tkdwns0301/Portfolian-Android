@@ -150,8 +150,6 @@ class NewProjectActivity : AppCompatActivity() {
             capacity
         )
 
-        Log.d("test", "$article")
-
         var textJson = WriteProjectRequest(article, ownerStack)
         if (!et_Title.text.isNullOrEmpty() || stackList.isNotEmpty() || !et_Topic.text.isNullOrEmpty() || !et_ProjectTime.text.isNullOrEmpty() || !et_Condition.text.isNullOrEmpty() || !et_Progress.text.isNullOrEmpty() || !et_Capacity.text.isNullOrEmpty()) {
 
@@ -189,6 +187,7 @@ class NewProjectActivity : AppCompatActivity() {
                     isChecked = false
                 }
             }
+
             checkedStackView.removeAllViews()
         }
 

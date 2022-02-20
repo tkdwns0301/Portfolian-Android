@@ -1,6 +1,6 @@
 package com.example.portfolian.data
 
-import com.google.gson.annotations.SerializedName
+import android.graphics.Bitmap
 
 data class Request (val request: String)
 
@@ -16,11 +16,11 @@ data class ModifyProjectRequest (
 )
 //------------------------------------
 // 14 나의 정보 수정
-data class ModifyProfile (
+data class ModifyProfileRequest(
     var nickName: String,
     var description: String,
     var stack: List<String>,
-    var photo: String,
+    var photo: Bitmap,
     var github: String,
     var mail: String
  )
