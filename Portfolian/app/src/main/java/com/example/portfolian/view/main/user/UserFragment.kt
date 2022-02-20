@@ -20,6 +20,7 @@ import com.example.portfolian.data.UserInfoResponse
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.UserService
+import com.example.portfolian.view.main.user.setting.SettingActivity
 import de.hdodenhof.circleimageview.CircleImageView
 import retrofit2.Call
 import retrofit2.Callback
@@ -70,6 +71,8 @@ class UserFragment : Fragment(R.layout.fragment_user) {
                 }
 
                 R.id.toolbar_Setting -> {
+                    val intent = Intent(activity, SettingActivity::class.java)
+                    startActivity(intent)
                     true
                 }
 

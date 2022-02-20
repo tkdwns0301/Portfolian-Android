@@ -14,4 +14,5 @@
     <string name="server_client_id">1083263618420-h64dmhckpltu1fkj1pnprg4aicavm13d.apps.googleusercontent.com</string>
     <string name="BASE_URL">3.36.84.11:3000</string>
     <string name="kakao_app_key">8ab6cd6b8425d701ee369a5b461275a8</string>
+    <string name="Version">ver 1.0.0</string>
 </resources>
