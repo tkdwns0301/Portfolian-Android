@@ -1,13 +1,10 @@
 package com.example.portfolian.view.main.chat
 
 import android.os.Bundle
-import android.view.View
 import android.widget.Button
 import android.widget.EditText
 import androidx.appcompat.app.AppCompatActivity
 import com.example.portfolian.R
-import com.example.portfolian.data.Data
-import com.example.portfolian.data.Message
 import com.example.portfolian.network.SocketApplication
 import com.google.gson.Gson
 import io.socket.client.Socket
@@ -58,7 +55,7 @@ class ChatRoomActivity: AppCompatActivity() {
     }
 
     var onConnect = Emitter.Listener {
-        val sendData = Data("홍길동")
+        //val sendData = DetailData("홍길동")
 
     }
 

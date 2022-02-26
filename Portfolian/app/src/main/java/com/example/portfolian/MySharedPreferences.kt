@@ -2,6 +2,7 @@ package com.example.portfolian
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.example.portfolian.data.DetailProjectResponse
 
 class MySharedPreferences(context: Context) {
     private val prefsFilename = "prefs"
