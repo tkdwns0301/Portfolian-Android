@@ -6,7 +6,6 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
-import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -20,7 +19,6 @@ import android.widget.EditText
 import android.widget.ImageButton
 import android.widget.LinearLayout
 import androidx.activity.result.ActivityResultLauncher
-import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
@@ -28,7 +26,6 @@ import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.bumptech.glide.Glide
-import com.esafirm.imagepicker.features.ImagePicker
 import com.example.portfolian.R
 import com.example.portfolian.data.ModifyProfileRequest
 import com.example.portfolian.data.ModifyProfileResponse
@@ -38,15 +35,15 @@ import com.example.portfolian.service.UserService
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import de.hdodenhof.circleimageview.CircleImageView
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
 import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import java.io.*
 import java.lang.Exception
-import java.util.*
-import java.util.jar.Manifest
 import kotlin.math.roundToInt
 
 class ProfileModifyActivity : AppCompatActivity() {
@@ -71,7 +68,7 @@ class ProfileModifyActivity : AppCompatActivity() {
     private lateinit var checkedStackView: FlexboxLayout
     private lateinit var checkedChips: MutableList<Chip>
     private lateinit var bitmap: Bitmap
-
+    private lateinit var filePath: String
     private var myStack = ""
     private var myColor = 0
 
@@ -119,6 +116,7 @@ class ProfileModifyActivity : AppCompatActivity() {
     }
 
     private lateinit var getResult: ActivityResultLauncher<Intent>
+
     private fun initAddPhoto() {
         addPhoto = findViewById(R.id.ib_AddPhoto)
 
@@ -129,15 +127,18 @@ class ProfileModifyActivity : AppCompatActivity() {
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(contentResolver, currentImageUri)
                     var file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                    val filePath = file.path + "/img.png"
-                    /*if(!file.exists()) {
+                    filePath = file.path + "/img.png"
+
+                    if(!file.exists()) {
                         file.mkdirs()
-                    }*/
+                    }
+
                     var out = FileOutputStream(filePath)
 
                     bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
 
                     out.close()
+
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -198,8 +199,12 @@ class ProfileModifyActivity : AppCompatActivity() {
             mailStr
         )
 
+        val file = File(filePath)
+        var requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
+        var body: MultipartBody.Part = MultipartBody.Part.createFormData("photo", "photo", requestFile)
+
         if(!nickNameStr.isNullOrEmpty() || !gitStr.isNullOrEmpty() || mailStr.isNullOrEmpty() || !descriptionStr.isNullOrEmpty() || !stackList.isNullOrEmpty()) {
-            val saveProfile = userService.modifyProfile("Bearer ${GlobalApplication.prefs.accessToken}", "${GlobalApplication.prefs.userId}", userInfoData)
+            val saveProfile = userService.modifyProfile("Bearer ${GlobalApplication.prefs.accessToken}", "${GlobalApplication.prefs.userId}", nickNameStr, descriptionStr, stackList, body, gitStr, mailStr)
 
             saveProfile.enqueue(object: Callback<ModifyProfileResponse> {
                 override fun onResponse(

@@ -1,8 +1,8 @@
 package com.example.portfolian.service
 
-import com.example.portfolian.data.ModifyProfileRequest
 import com.example.portfolian.data.ModifyProfileResponse
 import com.example.portfolian.data.UserInfoResponse
+import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -14,12 +14,18 @@ interface UserService {
     )
     : Call<UserInfoResponse>
 
-    @Headers("content-type: application/json")
+    //@Headers("content-type: application/json")
+    @Multipart
     @PATCH("/users/{userId}/info")
     fun modifyProfile(
         @Header("Authorization") Authorization: String,
         @Path("userId") userId: String,
-        @Body userInfoData: ModifyProfileRequest
+        @Part ("nickName") nickName: String,
+        @Part ("description") description: String,
+        @Part ("stack") stack: List<String>,
+        @Part photo: MultipartBody.Part,
+        @Part ("github") github: String,
+        @Part ("mail") mail: String
     )
     : Call<ModifyProfileResponse>
 }
