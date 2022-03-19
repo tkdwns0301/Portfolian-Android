@@ -20,7 +20,6 @@ data class ModifyProfileRequest(
     var nickName: String,
     var description: String,
     var stack: List<String>,
-    var photo: Bitmap,
     var github: String,
     var mail: String
  )

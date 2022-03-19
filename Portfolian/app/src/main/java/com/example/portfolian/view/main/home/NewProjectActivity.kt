@@ -95,6 +95,7 @@ class NewProjectActivity : AppCompatActivity() {
                     //TODO 저장 버튼을 눌렀을 때 게시물 업로드
                     saveProject()
                     finish()
+
                     true
                 }
                 else -> {

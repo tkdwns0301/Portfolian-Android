@@ -29,6 +29,7 @@ import com.bumptech.glide.Glide
 import com.example.portfolian.R
 import com.example.portfolian.data.ModifyProfileRequest
 import com.example.portfolian.data.ModifyProfileResponse
+import com.example.portfolian.data.UserInfoResponse
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.UserService
@@ -61,7 +62,7 @@ class ProfileModifyActivity : AppCompatActivity() {
 
     private lateinit var stackChoice: LinearLayout
     private lateinit var drawer: DrawerLayout
-    private lateinit var drawerLinear : LinearLayout
+    private lateinit var drawerLinear: LinearLayout
     private lateinit var close: ImageButton
     private lateinit var allNonClick: Button
     private lateinit var stackView: FlexboxLayout
@@ -86,7 +87,7 @@ class ProfileModifyActivity : AppCompatActivity() {
         initDrawer()
         initStackView()
         initStackChoice()
-        setProfile()
+        initUserInfo()
         initAddPhoto()
     }
 
@@ -99,7 +100,7 @@ class ProfileModifyActivity : AppCompatActivity() {
         toolbar = findViewById(R.id.toolbar_Setting)
 
         toolbar.setOnMenuItemClickListener {
-            when(it.itemId) {
+            when (it.itemId) {
                 R.id.toolbar_Save -> {
                     setUserInfo()
                     finish()
@@ -121,15 +122,16 @@ class ProfileModifyActivity : AppCompatActivity() {
         addPhoto = findViewById(R.id.ib_AddPhoto)
 
         getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if(it.resultCode == Activity.RESULT_OK) {
+            if (it.resultCode == Activity.RESULT_OK) {
                 var currentImageUri = it.data?.data
 
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(contentResolver, currentImageUri)
-                    var file = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                    var file =
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
                     filePath = file.path + "/img.png"
 
-                    if(!file.exists()) {
+                    if (!file.exists()) {
                         file.mkdirs()
                     }
 
@@ -139,6 +141,8 @@ class ProfileModifyActivity : AppCompatActivity() {
 
                     out.close()
 
+                    setUserInfo()
+
                 } catch (e: Exception) {
                     e.printStackTrace()
                 }
@@ -147,14 +151,27 @@ class ProfileModifyActivity : AppCompatActivity() {
         }
 
         addPhoto.setOnClickListener {
-            var writePermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.WRITE_EXTERNAL_STORAGE)
-            var readPermission = ContextCompat.checkSelfPermission(this, android.Manifest.permission.READ_EXTERNAL_STORAGE)
+            var writePermission = ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            var readPermission = ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
+            )
 
-            if(writePermission == PackageManager.PERMISSION_DENIED  || readPermission == PackageManager.PERMISSION_DENIED) {
-                ActivityCompat.requestPermissions(this, arrayOf(android.Manifest.permission.WRITE_EXTERNAL_STORAGE, android.Manifest.permission.READ_EXTERNAL_STORAGE), 1)
+            if (writePermission == PackageManager.PERMISSION_DENIED || readPermission == PackageManager.PERMISSION_DENIED) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(
+                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        android.Manifest.permission.READ_EXTERNAL_STORAGE
+                    ),
+                    1
+                )
             } else {
                 var state = Environment.getExternalStorageState()
-                if(TextUtils.equals(state, Environment.MEDIA_MOUNTED)) {
+                if (TextUtils.equals(state, Environment.MEDIA_MOUNTED)) {
                     val intent = Intent(Intent.ACTION_PICK)
                     intent.type = "image/*"
                     getResult.launch(intent)
@@ -167,77 +184,96 @@ class ProfileModifyActivity : AppCompatActivity() {
 
     }
 
+    private fun initUserInfo() {
+        nickName = findViewById(R.id.et_Nickname)
+        git = findViewById(R.id.et_Git)
+        mail = findViewById(R.id.et_Email)
+        description = findViewById(R.id.et_Introduce)
+
+        val callUserInfo = userService.readUserInfo("Bearer ${GlobalApplication.prefs.accessToken}", "${GlobalApplication.prefs.userId}")
+
+        callUserInfo.enqueue(object : Callback<UserInfoResponse> {
+            override fun onResponse(
+                call: Call<UserInfoResponse>,
+                response: Response<UserInfoResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val userInfo = response.body()!!
+
+                    nickName.setText(userInfo.nickName)
+                    git.setText(userInfo.github)
+                    mail.setText(userInfo.mail)
+                    description.setText(userInfo.description)
+
+                    var photo = intent.getStringExtra("profile")
+                    Log.e("photo", "${photo}")
+                    profile = findViewById(R.id.cv_Profile)
+
+                    if (photo.isNullOrEmpty()) {
+                        profile.setImageDrawable(applicationContext.getDrawable(R.drawable.avatar_1_raster))
+                    } else {
+                        Glide.with(applicationContext)
+                            .load(photo)
+                            .into(profile)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<UserInfoResponse>, t: Throwable) {
+                Log.e("UserInfoService: ", "$t")
+            }
+        })
+    }
+
 
 
     private fun setUserInfo() {
-        setProfile()
 
-        nickName = findViewById(R.id.et_Nickname)
         var nickNameStr = nickName.text.toString()
-
-        git = findViewById(R.id.et_Git)
         var gitStr = git.text.toString()
-
-        mail = findViewById(R.id.et_Email)
         var mailStr = mail.text.toString()
-
-        description = findViewById(R.id.et_Introduce)
         var descriptionStr = description.text.toString()
 
         var stackList = mutableListOf<String>()
 
-        for(chip in checkedChips) {
+        for (chip in checkedChips) {
             var stackName = bigToSmall(chip.text.toString().trim())
             stackList.add(stackName)
         }
-        var userInfoData = ModifyProfileRequest(
+
+        val file = File(filePath)
+        var requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
+        var body: MultipartBody.Part =
+            MultipartBody.Part.createFormData("photo", "photo", requestFile)
+
+
+        val saveProfile = userService.modifyProfile(
+            "Bearer ${GlobalApplication.prefs.accessToken}",
+            "${GlobalApplication.prefs.userId}",
             nickNameStr,
             descriptionStr,
             stackList,
-            bitmap,
+            body,
             gitStr,
             mailStr
         )
 
-        val file = File(filePath)
-        var requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
-        var body: MultipartBody.Part = MultipartBody.Part.createFormData("photo", "photo", requestFile)
+        saveProfile.enqueue(object : Callback<ModifyProfileResponse> {
+            override fun onResponse(
+                call: Call<ModifyProfileResponse>,
+                response: Response<ModifyProfileResponse>
+            ) {
+                if (response.isSuccessful) {
+                    var code = response.body()!!.code
 
-        if(!nickNameStr.isNullOrEmpty() || !gitStr.isNullOrEmpty() || mailStr.isNullOrEmpty() || !descriptionStr.isNullOrEmpty() || !stackList.isNullOrEmpty()) {
-            val saveProfile = userService.modifyProfile("Bearer ${GlobalApplication.prefs.accessToken}", "${GlobalApplication.prefs.userId}", nickNameStr, descriptionStr, stackList, body, gitStr, mailStr)
-
-            saveProfile.enqueue(object: Callback<ModifyProfileResponse> {
-                override fun onResponse(
-                    call: Call<ModifyProfileResponse>,
-                    response: Response<ModifyProfileResponse>
-                ) {
-                    if(response.isSuccessful) {
-                        var code = response.body()!!.code
-
-                        Log.d("saveProfile: ", "$code")
-                    }
+                    Log.d("saveProfile: ", "$code")
                 }
+            }
 
-                override fun onFailure(call: Call<ModifyProfileResponse>, t: Throwable) {
-                    Log.e("saveProfile: ", "$t")
-                }
-            })
-        }
-    }
-
-
-    private fun setProfile() {
-        var intent = Intent(this, ProfileModifyActivity::class.java)
-        var profileStr = intent.getStringExtra("profile")
-        profile = findViewById(R.id.cv_Profile)
-
-        if(profileStr.isNullOrEmpty()){
-            profile.setImageDrawable(this.getDrawable(R.drawable.avatar_1_raster))
-        } else {
-            Glide.with(this)
-                .load(profileStr)
-                .into(profile)
-        }
+            override fun onFailure(call: Call<ModifyProfileResponse>, t: Throwable) {
+                Log.e("saveProfile: ", "$t")
+            }
+        })
 
     }
 

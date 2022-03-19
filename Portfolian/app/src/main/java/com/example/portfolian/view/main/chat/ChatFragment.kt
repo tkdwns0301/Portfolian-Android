@@ -22,7 +22,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     }
 
     private fun init(view: View) {
-        initSocket()
         initButton(view)
     }
 
@@ -33,13 +32,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
             startActivity(intent)
         }
     }
-    private fun initSocket() {
-        mSocket = SocketApplication.get()
-        mSocket.connect()
-
-
-    }
-
 
 
 

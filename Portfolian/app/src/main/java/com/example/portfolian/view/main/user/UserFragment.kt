@@ -93,6 +93,8 @@ class UserFragment : Fragment(R.layout.fragment_user) {
 
         profileModify.setOnClickListener {
             val intent = Intent(activity, ProfileModifyActivity::class.java)
+            Log.e("profile", "${userInfo.photo}")
+            intent.putExtra("profile", "${userInfo.photo}")
             startActivity(intent)
         }
     }
@@ -105,7 +107,7 @@ class UserFragment : Fragment(R.layout.fragment_user) {
                 call: Call<UserInfoResponse>,
                 response: Response<UserInfoResponse>
             ) {
-                if(response.isSuccessful) {
+                if (response.isSuccessful) {
                     userInfo = response.body()!!
                     setUserInfo()
                 }
@@ -114,8 +116,7 @@ class UserFragment : Fragment(R.layout.fragment_user) {
             override fun onFailure(call: Call<UserInfoResponse>, t: Throwable) {
                 Log.e("UserInfoService: ", "$t")
             }
-        }
-        )
+        })
     }
 
     private fun setUserInfo() {

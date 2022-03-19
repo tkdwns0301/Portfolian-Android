@@ -14,7 +14,6 @@ interface UserService {
     )
     : Call<UserInfoResponse>
 
-    //@Headers("content-type: application/json")
     @Multipart
     @PATCH("/users/{userId}/info")
     fun modifyProfile(

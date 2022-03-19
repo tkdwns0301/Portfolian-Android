@@ -16,7 +16,8 @@
         android:theme="@style/Theme.Portfolian"
         android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
-        <meta-data
+
+    <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
 
