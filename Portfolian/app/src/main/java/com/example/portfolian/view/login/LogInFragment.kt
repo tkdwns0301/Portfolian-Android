@@ -174,7 +174,7 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
                 val personEmail = acct.email
                 val personId = acct.id
                 val personPhoto = acct.photoUrl
-                val idToken = acct.idToken
+                val idToken = acct.idToken.toString()
 
                 Log.d(TAG, "handleSignInResult:personName $personName")
                 Log.d(TAG, "handleSignInResult:personGivenName $personGivenName")

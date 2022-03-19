@@ -4,26 +4,19 @@ import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
-import android.util.DisplayMetrics
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageButton
-import android.widget.Switch
 import android.widget.TextView
 import android.widget.ToggleButton
-import androidx.appcompat.app.AppCompatActivity
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.portfolian.R
-import com.example.portfolian.data.DetailProjectResponse
-import com.example.portfolian.data.Project
-import com.example.portfolian.data.SetBookmarkRequest
-import com.example.portfolian.data.SetBookmarkResponse
+import com.example.portfolian.data.*
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.ProjectService
@@ -39,7 +32,6 @@ import retrofit2.Retrofit
 import java.text.NumberFormat
 import java.util.*
 import kotlin.collections.ArrayList
-import kotlin.math.roundToInt
 
 class ProjectAdapter(
     private val context: Context,
@@ -327,17 +319,14 @@ class ProjectAdapter(
             override fun onResponse(call: Call<DetailProjectResponse>, response: Response<DetailProjectResponse>) {
                 if(response.isSuccessful) {
                     val detailProject = response.body()!!
+                    DetailData.detailData = detailProject
 
                     if(detailProject.leader.userId == GlobalApplication.prefs.userId) {
-                        Log.d("Owner", "Owner")
                         val intent = Intent(context, DetailOwnerProjectActivity::class.java)
-                        intent.putExtra("detailOwnerProject", detailProject)
                         context.startActivity(intent)
                     }
                     else {
-                        Log.d("User", "User")
                         val intent = Intent(context, DetailProjectActivity::class.java)
-                        intent.putExtra("detailProject", detailProject)
                         context.startActivity(intent)
                     }
                 }

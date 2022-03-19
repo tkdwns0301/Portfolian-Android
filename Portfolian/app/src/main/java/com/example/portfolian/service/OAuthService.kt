@@ -22,4 +22,10 @@ interface OAuthService {
     )
     : Call<NickNameResponse>
 
+    @Headers("content-type: application/json")
+    @PATCH("oauth/logout")
+    fun setLogout(
+        @Header("Authorization") Authorization: String?
+    )
+    : Call<LogoutResponse>
 }

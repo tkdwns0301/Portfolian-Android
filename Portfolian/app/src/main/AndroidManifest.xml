@@ -3,6 +3,8 @@
     package="com.example.portfolian">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
 
     <application
         android:name=".network.GlobalApplication"
@@ -12,8 +14,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.Portfolian"
+        android:requestLegacyExternalStorage="true"
         android:usesCleartextTraffic="true">
-        <meta-data
+
+    <meta-data
             android:name="com.kakao.sdk.AppKey"
             android:value="@string/kakao_app_key" />
 
@@ -45,8 +49,10 @@
         </activity>
         <activity android:name=".view.main.home.DetailProjectActivity"/>
         <activity android:name=".view.main.chat.ChatRoomActivity"/>
-        <activity android:name=".view.main.user.SettingActivity" />
+        <activity android:name=".view.main.user.ProfileModifyActivity" />
         <activity android:name=".view.main.home.DetailOwnerProjectActivity"/>
+        <activity android:name=".view.main.user.setting.NotifyActivity"/>
+        <activity android:name=".view.main.user.setting.SettingActivity"/>
     </application>
 
 </manifest>

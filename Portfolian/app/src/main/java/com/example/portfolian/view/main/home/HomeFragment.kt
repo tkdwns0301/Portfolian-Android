@@ -75,6 +75,11 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         init(view)
     }
 
+    override fun onStart() {
+        super.onStart()
+        refresh()
+    }
+
     private fun init(view: View) {
         initRetrofit()
         initSearchView(view)
@@ -468,7 +473,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun refresh() {
         renewal()
-        //readProject()
+        readProject()
         sl_Swipe.isRefreshing = false
     }
 

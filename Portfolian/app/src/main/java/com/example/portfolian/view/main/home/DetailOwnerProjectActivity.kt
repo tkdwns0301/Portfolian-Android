@@ -2,6 +2,7 @@ package com.example.portfolian.view.main.home
 
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.Point
 import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
@@ -12,14 +13,18 @@ import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import br.tiagohm.markdownview.MarkdownView
+import br.tiagohm.markdownview.css.styles.Github
 import com.bumptech.glide.Glide
 import com.example.portfolian.R
+import com.example.portfolian.data.DetailData
 import com.example.portfolian.data.DetailProjectResponse
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import retrofit2.Retrofit
-import us.feras.mdv.MarkdownView
 import kotlin.math.roundToInt
 
 class DetailOwnerProjectActivity : AppCompatActivity() {
@@ -45,6 +50,8 @@ class DetailOwnerProjectActivity : AppCompatActivity() {
     private var myStack: String = ""
     private var myColor: Int = 0
 
+    private var mStyle = Github()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_detailproject_owner)
@@ -53,7 +60,7 @@ class DetailOwnerProjectActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        detailProject = intent.getParcelableExtra("detailOwnerProject")!!
+        detailProject = DetailData.detailData!!
         initToolbar()
         initView()
     }
@@ -119,6 +126,18 @@ class DetailOwnerProjectActivity : AppCompatActivity() {
         progress.text = detailProject.contents.progress
 
         description = findViewById(R.id.md_Description)
+        //description.loadMarkdown("${detailProject.contents.description}")
+        description.addStyleSheet(mStyle)
+
+        var display = windowManager.defaultDisplay
+        val size = Point()
+        display.getRealSize(size)
+        val width = size.x
+        val height = size.y
+
+        mStyle.addMedia("screen and (min-width: ${width}px")
+        mStyle.endMedia()
+
         description.loadMarkdown("${detailProject.contents.description}")
 
         ownerName = findViewById(R.id.tv_OwnerName)

@@ -1,101 +1,109 @@
-package com.example.portfolian.view.main.home
+package com.example.portfolian.view.main.user
 
+import android.app.Activity
+import android.content.Intent
+import android.content.pm.PackageManager
 import android.content.res.ColorStateList
+import android.graphics.Bitmap
 import android.graphics.Color
 import android.os.Bundle
+import android.os.Environment
+import android.provider.MediaStore
+import android.text.TextUtils
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.*
+import android.widget.Button
+import android.widget.EditText
+import android.widget.ImageButton
+import android.widget.LinearLayout
+import androidx.activity.result.ActivityResultLauncher
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
+import com.bumptech.glide.Glide
 import com.example.portfolian.R
-import com.example.portfolian.data.Article
-import com.example.portfolian.data.WriteProjectRequest
-import com.example.portfolian.data.WriteProjectResponse
+import com.example.portfolian.data.ModifyProfileRequest
+import com.example.portfolian.data.ModifyProfileResponse
+import com.example.portfolian.data.UserInfoResponse
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
-import com.example.portfolian.service.ProjectService
+import com.example.portfolian.service.UserService
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
+import de.hdodenhof.circleimageview.CircleImageView
+import okhttp3.MediaType.Companion.toMediaTypeOrNull
+import okhttp3.MultipartBody
+import okhttp3.RequestBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import java.io.*
+import java.lang.Exception
 import kotlin.math.roundToInt
 
-class NewProjectActivity : AppCompatActivity() {
+class ProfileModifyActivity : AppCompatActivity() {
     private lateinit var retrofit: Retrofit
-    private lateinit var projectService: ProjectService
+    private lateinit var userService: UserService
 
-    private lateinit var ll_StackChoice: LinearLayout
-    private lateinit var ll_OwnerStackChoice: LinearLayout
-    private lateinit var StackView: FlexboxLayout
-    private lateinit var ownerStackView: FlexboxLayout
-    private lateinit var dl_NewProject: DrawerLayout
-    private lateinit var ll_Drawer: LinearLayout
-    private lateinit var ll_OwnerDrawer: LinearLayout
-    private lateinit var btn_AllNonClick: Button
-    private lateinit var btn_OwnerAllNonClick: Button
-    private lateinit var btn_Close: ImageButton
-    private lateinit var btn_OwnerClose: ImageButton
-    private lateinit var checkedChips: MutableList<Chip>
-    private lateinit var checkedOwnerChips: MutableList<Chip>
-    private lateinit var checkedStackView: FlexboxLayout
-    private lateinit var checkedOwnerStackView: FlexboxLayout
+    private lateinit var addPhoto: ImageButton
 
     private lateinit var toolbar: Toolbar
+    private lateinit var profile: CircleImageView
+    private lateinit var nickName: EditText
+    private lateinit var git: EditText
+    private lateinit var mail: EditText
+    private lateinit var description: EditText
 
-    private var myStack: String = ""
-    private var myColor: Int = 0
-
-    private lateinit var et_Title: EditText
-    private lateinit var et_Topic: EditText
-    private lateinit var et_ProjectTime: EditText
-    private lateinit var et_Condition: EditText
-    private lateinit var et_Progress: EditText
-    private lateinit var et_Description: EditText
-    private lateinit var et_Capacity: EditText
-
-    private lateinit var ownerStack: ArrayList<String>
-    private lateinit var memberStack: ArrayList<String>
+    private lateinit var stackChoice: LinearLayout
+    private lateinit var drawer: DrawerLayout
+    private lateinit var drawerLinear: LinearLayout
+    private lateinit var close: ImageButton
+    private lateinit var allNonClick: Button
+    private lateinit var stackView: FlexboxLayout
+    private lateinit var checkedStackView: FlexboxLayout
+    private lateinit var checkedChips: MutableList<Chip>
+    private lateinit var bitmap: Bitmap
+    private lateinit var filePath: String
+    private var myStack = ""
+    private var myColor = 0
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_newproject)
+        setContentView(R.layout.activity_profilemodify)
 
-        initRetrofit()
         initView()
     }
 
     private fun initView() {
+        initRetrofit()
         initToolbar()
         initDrawer()
         initStackView()
         initStackChoice()
+        initUserInfo()
+        initAddPhoto()
     }
 
-    //레트로핏 설정
     private fun initRetrofit() {
         retrofit = RetrofitClient.getInstance()
-        projectService = retrofit.create(ProjectService::class.java)
+        userService = retrofit.create(UserService::class.java)
     }
 
-    //새로운프로젝트 툴바 설정
     private fun initToolbar() {
-        toolbar = findViewById(R.id.toolbar_NewProject)
+        toolbar = findViewById(R.id.toolbar_Setting)
 
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.toolbar_Save -> {
-                    //TODO 저장 버튼을 눌렀을 때 게시물 업로드
-                    saveProject()
+                    setUserInfo()
                     finish()
-
                     true
                 }
                 else -> {
@@ -108,134 +116,201 @@ class NewProjectActivity : AppCompatActivity() {
         }
     }
 
-    private fun saveProject() {
+    private lateinit var getResult: ActivityResultLauncher<Intent>
 
-        var ownerStack = bigToSmall(checkedOwnerChips[0].text.toString().trim())
+    private fun initAddPhoto() {
+        addPhoto = findViewById(R.id.ib_AddPhoto)
+
+        getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                var currentImageUri = it.data?.data
+
+                try {
+                    bitmap = MediaStore.Images.Media.getBitmap(contentResolver, currentImageUri)
+                    var file =
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
+                    filePath = file.path + "/img.png"
+
+                    if (!file.exists()) {
+                        file.mkdirs()
+                    }
+
+                    var out = FileOutputStream(filePath)
+
+                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
+
+                    out.close()
+
+                    setUserInfo()
+
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+
+        }
+
+        addPhoto.setOnClickListener {
+            var writePermission = ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+            )
+            var readPermission = ContextCompat.checkSelfPermission(
+                this,
+                android.Manifest.permission.READ_EXTERNAL_STORAGE
+            )
+
+            if (writePermission == PackageManager.PERMISSION_DENIED || readPermission == PackageManager.PERMISSION_DENIED) {
+                ActivityCompat.requestPermissions(
+                    this,
+                    arrayOf(
+                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                        android.Manifest.permission.READ_EXTERNAL_STORAGE
+                    ),
+                    1
+                )
+            } else {
+                var state = Environment.getExternalStorageState()
+                if (TextUtils.equals(state, Environment.MEDIA_MOUNTED)) {
+                    val intent = Intent(Intent.ACTION_PICK)
+                    intent.type = "image/*"
+                    getResult.launch(intent)
+                }
+            }
 
 
-        et_Title = findViewById(R.id.et_Title)
-        var title = et_Title.text.toString()
+        }
+
+
+    }
+
+    private fun initUserInfo() {
+        nickName = findViewById(R.id.et_Nickname)
+        git = findViewById(R.id.et_Git)
+        mail = findViewById(R.id.et_Email)
+        description = findViewById(R.id.et_Introduce)
+
+        val callUserInfo = userService.readUserInfo("Bearer ${GlobalApplication.prefs.accessToken}", "${GlobalApplication.prefs.userId}")
+
+        callUserInfo.enqueue(object : Callback<UserInfoResponse> {
+            override fun onResponse(
+                call: Call<UserInfoResponse>,
+                response: Response<UserInfoResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val userInfo = response.body()!!
+
+                    nickName.setText(userInfo.nickName)
+                    git.setText(userInfo.github)
+                    mail.setText(userInfo.mail)
+                    description.setText(userInfo.description)
+
+                    var photo = intent.getStringExtra("profile")
+                    Log.e("photo", "${photo}")
+                    profile = findViewById(R.id.cv_Profile)
+
+                    if (photo.isNullOrEmpty()) {
+                        profile.setImageDrawable(applicationContext.getDrawable(R.drawable.avatar_1_raster))
+                    } else {
+                        Glide.with(applicationContext)
+                            .load(photo)
+                            .into(profile)
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<UserInfoResponse>, t: Throwable) {
+                Log.e("UserInfoService: ", "$t")
+            }
+        })
+    }
+
+
+
+    private fun setUserInfo() {
+
+        var nickNameStr = nickName.text.toString()
+        var gitStr = git.text.toString()
+        var mailStr = mail.text.toString()
+        var descriptionStr = description.text.toString()
 
         var stackList = mutableListOf<String>()
+
         for (chip in checkedChips) {
             var stackName = bigToSmall(chip.text.toString().trim())
             stackList.add(stackName)
         }
 
-        et_Topic = findViewById(R.id.et_Topic)
-        var subjectDescription = et_Topic.text.toString()
+        val file = File(filePath)
+        var requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
+        var body: MultipartBody.Part =
+            MultipartBody.Part.createFormData("photo", "photo", requestFile)
 
-        et_ProjectTime = findViewById(R.id.et_Period)
-        var projectTime = et_ProjectTime.text.toString()
 
-        et_Condition = findViewById(R.id.et_Condition)
-        var condition = et_Condition.text.toString()
-
-        et_Progress = findViewById(R.id.et_Way)
-        var progress = et_Progress.text.toString()
-
-        et_Description = findViewById(R.id.et_Description)
-        var description = et_Description.text.toString()
-
-        et_Capacity = findViewById(R.id.et_UserCount)
-        var capacity = et_Capacity.text.toString().toInt()
-
-        var article = Article(
-            title,
+        val saveProfile = userService.modifyProfile(
+            "Bearer ${GlobalApplication.prefs.accessToken}",
+            "${GlobalApplication.prefs.userId}",
+            nickNameStr,
+            descriptionStr,
             stackList,
-            subjectDescription,
-            projectTime,
-            condition,
-            progress,
-            description,
-            capacity
+            body,
+            gitStr,
+            mailStr
         )
 
-        var textJson = WriteProjectRequest(article, ownerStack)
-        if (!et_Title.text.isNullOrEmpty() || stackList.isNotEmpty() || !et_Topic.text.isNullOrEmpty() || !et_ProjectTime.text.isNullOrEmpty() || !et_Condition.text.isNullOrEmpty() || !et_Progress.text.isNullOrEmpty() || !et_Capacity.text.isNullOrEmpty()) {
+        saveProfile.enqueue(object : Callback<ModifyProfileResponse> {
+            override fun onResponse(
+                call: Call<ModifyProfileResponse>,
+                response: Response<ModifyProfileResponse>
+            ) {
+                if (response.isSuccessful) {
+                    var code = response.body()!!.code
 
-            val saveProject = projectService.writeProject("Bearer ${GlobalApplication.prefs.accessToken}", textJson)
-
-            saveProject.enqueue(object : Callback<WriteProjectResponse> {
-                override fun onResponse(
-                    call: Call<WriteProjectResponse>,
-                    response: Response<WriteProjectResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        var code = response.body()!!.code
-                        var message = response.body()!!.message
-                        var newProjectID = response.body()!!.newProjectID
-
-                        Log.d("saveProject: ", "${code}, ${message}, ${newProjectID}")
-                    }
+                    Log.d("saveProfile: ", "$code")
                 }
+            }
 
-                override fun onFailure(call: Call<WriteProjectResponse>, t: Throwable) {
-                    Log.e("saveProject: ", "${t}")
-                }
-            })
-        }
+            override fun onFailure(call: Call<ModifyProfileResponse>, t: Throwable) {
+                Log.e("saveProfile: ", "$t")
+            }
+        })
+
     }
 
     //기술 선택창 설정
     private fun initDrawer() {
-        btn_AllNonClick = findViewById(R.id.btn_AllNonClick)
-        btn_OwnerAllNonClick = findViewById(R.id.btn_OwnerAllNonClick)
+        allNonClick = findViewById(R.id.btn_AllNonClick)
 
-        btn_AllNonClick.setOnClickListener {
-            for (chip in checkedChips) {
-                chip.apply {
-                    isChecked = false
-                }
+        allNonClick.setOnClickListener {
+            var N = checkedChips.size
+
+            for (i in 0 until N) {
+                checkedChips[0].isChecked = false
             }
-
-            checkedStackView.removeAllViews()
         }
 
-        btn_OwnerAllNonClick.setOnClickListener {
-            for (chip in checkedOwnerChips) {
-                chip.apply {
-                    isChecked = false
-                }
-            }
-            checkedOwnerStackView.removeAllViews()
-        }
-
-        btn_Close = findViewById(R.id.img_btn_Close)
-        btn_Close.setOnClickListener {
-            dl_NewProject.closeDrawers()
-        }
-
-        btn_OwnerClose = findViewById(R.id.img_btn_OwnerClose)
-        btn_OwnerClose.setOnClickListener {
-            dl_NewProject.closeDrawers()
+        close = findViewById(R.id.ib_Close)
+        close.setOnClickListener {
+            drawer.closeDrawers()
         }
     }
 
     //기술 선택시 이벤트 처리
     private fun initStackChoice() {
-        ll_StackChoice = findViewById(R.id.ll_StackChoice)
-        ll_OwnerStackChoice = findViewById(R.id.ll_OwnerStackChoice)
-        dl_NewProject = findViewById(R.id.dl_NewProject)
+        stackChoice = findViewById(R.id.ll_ProfileStack)
+        drawer = findViewById(R.id.dl_ProfileModify)
 
-        ll_StackChoice.setOnClickListener {
-            ll_Drawer = findViewById(R.id.ll_Drawer)
-            dl_NewProject.openDrawer(ll_Drawer)
-        }
-
-        ll_OwnerStackChoice.setOnClickListener {
-            ll_OwnerDrawer = findViewById(R.id.ll_OwnerDrawer)
-            dl_NewProject.openDrawer(ll_OwnerDrawer)
+        stackChoice.setOnClickListener {
+            drawerLinear = findViewById(R.id.ll_Drawer)
+            drawer.openDrawer(drawerLinear)
         }
     }
 
     //drawer안에 기술 설정
     private fun initStackView() {
-        StackView = findViewById(R.id.fl_Stack)
-        ownerStackView = findViewById(R.id.fl_OwnerStack)
+        stackView = findViewById(R.id.fl_StackChoice)
 
-        checkedStackView = findViewById(R.id.fbl_CheckedStack)
-        checkedOwnerStackView = findViewById(R.id.fbl_OwnerCheckedStack)
+        checkedStackView = findViewById(R.id.fl_Stack)
 
         val nameArray = arrayOf(
             "frontEnd",
@@ -272,9 +347,7 @@ class NewProjectActivity : AppCompatActivity() {
             "etc"
         )
 
-        StackView.addItems(nameArray)
-        ownerStackView.addOwnerItems(nameArray)
-
+        stackView.addItems(nameArray)
     }
 
     //flexbox layout 아이템 동적추가
@@ -342,69 +415,6 @@ class NewProjectActivity : AppCompatActivity() {
 
     }
 
-    private fun FlexboxLayout.addOwnerItems(names: Array<String>) {
-        checkedOwnerChips = mutableListOf()
-
-        for (name in names) {
-            val chip = LayoutInflater.from(context).inflate(R.layout.view_chip, null) as Chip
-
-            chip.apply {
-                stackColor(name)
-
-                text = "  $myStack  "
-                setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
-
-                val nonClickColor = ContextCompat.getColor(context, R.color.nonClick_tag)
-
-                chipBackgroundColor = ColorStateList(
-                    arrayOf(
-                        intArrayOf(-android.R.attr.state_checked),
-                        intArrayOf(android.R.attr.state_checked)
-                    ),
-                    intArrayOf(nonClickColor, myColor)
-                )
-
-                val nonClickTextColor = ContextCompat.getColor(context, R.color.gray1)
-                //텍스트
-                setTextColor(
-                    ColorStateList(
-                        arrayOf(
-                            intArrayOf(-android.R.attr.state_checked),
-                            intArrayOf(android.R.attr.state_checked)
-                        ),
-                        intArrayOf(nonClickTextColor, Color.BLACK)
-                    )
-
-                )
-
-                setOnCheckedChangeListener { buttonView, isChecked ->
-                    if (isChecked) {
-                        if (checkedOwnerChips.size < 1) {
-                            checkedOwnerChips.add(this)
-                            checkedOwnerStackView.addItem(name)
-                        } else {
-                            this.isChecked = false
-                        }
-                    } else {
-                        val chipIdx = checkedOwnerChips.indexOf(this)
-                        checkedOwnerStackView.removeViewAt(chipIdx)
-                        checkedOwnerChips.removeAt(chipIdx)
-
-                    }
-                }
-            }
-
-            val layoutParams = ViewGroup.MarginLayoutParams(
-                ViewGroup.MarginLayoutParams.WRAP_CONTENT,
-                ViewGroup.MarginLayoutParams.WRAP_CONTENT
-            )
-
-            layoutParams.rightMargin = dpToPx(6)
-            addView(chip, layoutParams)
-        }
-
-
-    }
 
     // 홈화면에 하나씩 동적추가
     private fun FlexboxLayout.addItem(name: String) {
@@ -446,7 +456,6 @@ class NewProjectActivity : AppCompatActivity() {
         layoutParams.rightMargin = dpToPx(6)
         addView(chip, layoutParams)
     }
-
 
     private fun stackColor(name: String) {
         when (name) {
@@ -632,4 +641,5 @@ class NewProjectActivity : AppCompatActivity() {
 
         return ""
     }
+
 }

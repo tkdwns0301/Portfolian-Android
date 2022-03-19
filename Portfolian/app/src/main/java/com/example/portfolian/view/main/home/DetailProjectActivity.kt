@@ -2,6 +2,7 @@ package com.example.portfolian.view.main.home
 
 import android.content.res.ColorStateList
 import android.graphics.Color
+import android.graphics.Point
 import android.os.Bundle
 import android.os.CountDownTimer
 import android.util.Log
@@ -14,12 +15,11 @@ import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import br.tiagohm.markdownview.MarkdownView
+import br.tiagohm.markdownview.css.styles.Github
 import com.bumptech.glide.Glide
 import com.example.portfolian.R
-import com.example.portfolian.data.DetailContent
-import com.example.portfolian.data.DetailProjectResponse
-import com.example.portfolian.data.SetBookmarkRequest
-import com.example.portfolian.data.SetBookmarkResponse
+import com.example.portfolian.data.*
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.ProjectService
@@ -27,12 +27,13 @@ import com.example.portfolian.service.TokenService
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import de.hdodenhof.circleimageview.CircleImageView
+import kotlinx.coroutines.MainScope
+import kotlinx.coroutines.launch
 import org.w3c.dom.Text
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
-import us.feras.mdv.MarkdownView
 import kotlin.math.roundToInt
 
 class DetailProjectActivity : AppCompatActivity() {
@@ -58,6 +59,7 @@ class DetailProjectActivity : AppCompatActivity() {
     private lateinit var checkedChips: MutableList<Chip>
     private var myStack: String = ""
     private var myColor: Int = 0
+    private var mStyle = Github()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -67,7 +69,7 @@ class DetailProjectActivity : AppCompatActivity() {
     }
 
     private fun init() {
-        detailProject = intent.getParcelableExtra("detailProject")!!
+        detailProject = DetailData.detailData!!
         initRetrofit()
         initToolbar()
         initView()
@@ -125,13 +127,28 @@ class DetailProjectActivity : AppCompatActivity() {
         progress.text = detailProject.contents.progress
 
         description = findViewById(R.id.md_Description)
+
+        var display = windowManager.defaultDisplay
+        val size = Point()
+        display.getRealSize(size)
+        val width = size.x
+
+        Log.e("width", "$width")
+        /*mStyle.addMedia("screen and (min-width: ${width-500}px)")
+        mStyle.endMedia()*/
+
+        mStyle.addMedia("screen and (max-width: ${width}px)")
+        mStyle.endMedia()
+
+        description.addStyleSheet(mStyle)
+
         description.loadMarkdown("${detailProject.contents.description}")
 
         ownerName = findViewById(R.id.tv_OwnerName)
         ownerName.text = detailProject.leader.nickName
 
         bookmark = findViewById(R.id.toggle_Bookmark)
-        Log.d("bookmark", "${detailProject.bookMark}")
+        Log.e("bookmark", "${detailProject.bookMark}")
         bookmark.isChecked = detailProject.bookMark
 
         bookmark.setOnCheckedChangeListener { buttonView, isChecked ->
