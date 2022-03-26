@@ -64,7 +64,7 @@ class DetailProjectActivity : AppCompatActivity() {
     private var mStyle = Github()
 
     private var ownerStatusFlag = false
-
+    private lateinit var projectId: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -75,6 +75,8 @@ class DetailProjectActivity : AppCompatActivity() {
     }
 
     private fun init() {
+        projectId = intent.getStringExtra("projectId").toString()
+        Log.e("projectId", "$projectId")
         if (intent.hasExtra("OwnerStatus")) {
             val status = intent.getIntExtra("OwnerStatus", 0)
 
@@ -103,11 +105,14 @@ class DetailProjectActivity : AppCompatActivity() {
                     true
                 }
                 R.id.toolbar_Modify -> {
-                    val projectId = intent.getStringExtra("projectId")
-
                     val intent = Intent(this, NewProjectActivity::class.java)
                     intent.putExtra("projectId", "$projectId")
                     startActivity(intent)
+                    true
+                }
+                R.id.toolbar_Delete -> {
+                    deleteProject()
+                    finish()
                     true
                 }
                 else -> {
@@ -256,6 +261,28 @@ class DetailProjectActivity : AppCompatActivity() {
 
         layoutParams.height = dpToPx(35)
         addView(button, layoutParams)
+    }
+
+    private fun deleteProject() {
+        val deleteProject = bookmarkService.deleteProject("Bearer ${GlobalApplication.prefs.accessToken}", projectId)
+
+        deleteProject.enqueue(object: Callback<ModifyProjectResponse> {
+            override fun onResponse(
+                call: Call<ModifyProjectResponse>,
+                response: Response<ModifyProjectResponse>
+            ) {
+                if(response.isSuccessful) {
+                    val code = response.body()!!.code
+                    val message = response.body()!!.message
+
+                    Log.d("deleteProject: ", "$code, $message")
+                }
+            }
+
+            override fun onFailure(call: Call<ModifyProjectResponse>, t: Throwable) {
+                Log.e("deleteProject: ", "$t")
+            }
+        })
     }
 
     private fun initStackView() {

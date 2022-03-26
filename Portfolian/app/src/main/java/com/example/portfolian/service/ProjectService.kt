@@ -58,4 +58,11 @@ interface ProjectService {
     )
     :Call<ModifyProjectResponse>
 
+    // 7. 프로젝트 삭제하기
+    @DELETE("projects/{projectId}")
+    fun deleteProject(
+        @Header ("Authorization") Authorization: String,
+        @Path("projectId") projectId: String
+    )
+    : Call<ModifyProjectResponse>
 }
