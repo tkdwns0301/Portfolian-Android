@@ -1,5 +1,6 @@
 package com.example.portfolian.view.main.home
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.os.Bundle
@@ -13,12 +14,13 @@ import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
 import androidx.drawerlayout.widget.DrawerLayout
 import com.example.portfolian.R
-import com.example.portfolian.data.Article
-import com.example.portfolian.data.WriteProjectRequest
-import com.example.portfolian.data.WriteProjectResponse
+import com.example.portfolian.data.*
+import com.example.portfolian.databinding.ActivityNewprojectBinding
+import com.example.portfolian.databinding.DrawerNewProjectBinding
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.ProjectService
+import com.example.portfolian.view.main.MainActivity
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import retrofit2.Call
@@ -28,20 +30,22 @@ import retrofit2.Retrofit
 import kotlin.math.roundToInt
 
 class NewProjectActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityNewprojectBinding
+
     private lateinit var retrofit: Retrofit
     private lateinit var projectService: ProjectService
 
-    private lateinit var ll_StackChoice: LinearLayout
-    private lateinit var ll_OwnerStackChoice: LinearLayout
-    private lateinit var StackView: FlexboxLayout
+    private lateinit var stackChoice: LinearLayout
+    private lateinit var ownerStackChoice: LinearLayout
+    private lateinit var stackView: FlexboxLayout
     private lateinit var ownerStackView: FlexboxLayout
-    private lateinit var dl_NewProject: DrawerLayout
-    private lateinit var ll_Drawer: LinearLayout
-    private lateinit var ll_OwnerDrawer: LinearLayout
-    private lateinit var btn_AllNonClick: Button
-    private lateinit var btn_OwnerAllNonClick: Button
-    private lateinit var btn_Close: ImageButton
-    private lateinit var btn_OwnerClose: ImageButton
+    private lateinit var newProject: DrawerLayout
+    private lateinit var linearDrawer: LinearLayout
+    private lateinit var linearOwnerDrawer: LinearLayout
+    private lateinit var allNonClick: Button
+    private lateinit var ownerAllNonClick: Button
+    private lateinit var close: ImageButton
+    private lateinit var ownerClose: ImageButton
     private lateinit var checkedChips: MutableList<Chip>
     private lateinit var checkedOwnerChips: MutableList<Chip>
     private lateinit var checkedStackView: FlexboxLayout
@@ -52,31 +56,64 @@ class NewProjectActivity : AppCompatActivity() {
     private var myStack: String = ""
     private var myColor: Int = 0
 
-    private lateinit var et_Title: EditText
-    private lateinit var et_Topic: EditText
-    private lateinit var et_ProjectTime: EditText
-    private lateinit var et_Condition: EditText
-    private lateinit var et_Progress: EditText
-    private lateinit var et_Description: EditText
-    private lateinit var et_Capacity: EditText
+    private lateinit var title: EditText
+    private lateinit var subjectDescription: EditText
+    private lateinit var projectTime: EditText
+    private lateinit var condition: EditText
+    private lateinit var progress: EditText
+    private lateinit var description: EditText
+    private lateinit var capacity: EditText
 
     private lateinit var ownerStack: ArrayList<String>
     private lateinit var memberStack: ArrayList<String>
 
+    private var isModify = false
+    private lateinit var projectId: String
+    private lateinit var detailData: DetailProjectResponse
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_newproject)
+
+        binding = ActivityNewprojectBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         initRetrofit()
         initView()
     }
 
     private fun initView() {
+        if(DetailData.detailData != null) {
+            isModify = true
+            projectId = intent.getStringExtra("projectId").toString()
+            detailData = DetailData.detailData!!
+        }
+
+        title = binding.drawerLayout.etTitle
+        subjectDescription = binding.drawerLayout.etSubjectDescription
+        projectTime = binding.drawerLayout.etProjectTime
+        condition = binding.drawerLayout.etCondition
+        progress = binding.drawerLayout.etProgress
+        description = binding.drawerLayout.etDescription
+        capacity = binding.drawerLayout.etCapacity
+
         initToolbar()
         initDrawer()
         initStackView()
         initStackChoice()
+
+        setView()
+    }
+
+    private fun setView() {
+        if(isModify) {
+            title.setText(detailData.title)
+            subjectDescription.setText(detailData.contents.subjectDescription)
+            projectTime.setText(detailData.contents.projectTime)
+            condition.setText(detailData.contents.recruitmentCondition)
+            progress.setText(detailData.contents.progress)
+            description.setText(detailData.contents.description)
+            capacity.setText("${detailData.capacity}")
+        }
     }
 
     //레트로핏 설정
@@ -87,15 +124,15 @@ class NewProjectActivity : AppCompatActivity() {
 
     //새로운프로젝트 툴바 설정
     private fun initToolbar() {
-        toolbar = findViewById(R.id.toolbar_NewProject)
+        toolbar = binding.drawerLayout.toolbarNewProject
 
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.toolbar_Save -> {
-                    //TODO 저장 버튼을 눌렀을 때 게시물 업로드
                     saveProject()
                     finish()
-
+                    val intent = Intent(this, MainActivity::class.java)
+                    startActivity(intent)
                     true
                 }
                 else -> {
@@ -113,8 +150,7 @@ class NewProjectActivity : AppCompatActivity() {
         var ownerStack = bigToSmall(checkedOwnerChips[0].text.toString().trim())
 
 
-        et_Title = findViewById(R.id.et_Title)
-        var title = et_Title.text.toString()
+        var titleStr = title.text.toString()
 
         var stackList = mutableListOf<String>()
         for (chip in checkedChips) {
@@ -122,67 +158,87 @@ class NewProjectActivity : AppCompatActivity() {
             stackList.add(stackName)
         }
 
-        et_Topic = findViewById(R.id.et_Topic)
-        var subjectDescription = et_Topic.text.toString()
+        var subjectDescriptionStr = subjectDescription.text.toString()
 
-        et_ProjectTime = findViewById(R.id.et_Period)
-        var projectTime = et_ProjectTime.text.toString()
+        var projectTimeStr = projectTime.text.toString()
 
-        et_Condition = findViewById(R.id.et_Condition)
-        var condition = et_Condition.text.toString()
+        var conditionStr = condition.text.toString()
 
-        et_Progress = findViewById(R.id.et_Way)
-        var progress = et_Progress.text.toString()
+        var progressStr = progress.text.toString()
 
-        et_Description = findViewById(R.id.et_Description)
-        var description = et_Description.text.toString()
+        var descriptionStr = description.text.toString()
 
-        et_Capacity = findViewById(R.id.et_UserCount)
-        var capacity = et_Capacity.text.toString().toInt()
+        var capacityStr = capacity.text.toString().toInt()
 
         var article = Article(
-            title,
+            titleStr,
             stackList,
-            subjectDescription,
-            projectTime,
-            condition,
-            progress,
-            description,
-            capacity
+            subjectDescriptionStr,
+            projectTimeStr,
+            conditionStr,
+            progressStr,
+            descriptionStr,
+            capacityStr
         )
 
-        var textJson = WriteProjectRequest(article, ownerStack)
-        if (!et_Title.text.isNullOrEmpty() || stackList.isNotEmpty() || !et_Topic.text.isNullOrEmpty() || !et_ProjectTime.text.isNullOrEmpty() || !et_Condition.text.isNullOrEmpty() || !et_Progress.text.isNullOrEmpty() || !et_Capacity.text.isNullOrEmpty()) {
+        var writeRequest = WriteProjectRequest(article, ownerStack)
 
-            val saveProject = projectService.writeProject("Bearer ${GlobalApplication.prefs.accessToken}", textJson)
+        if (!title.text.isNullOrEmpty() || stackList.isNotEmpty() || !subjectDescription.text.isNullOrEmpty() || !projectTime.text.isNullOrEmpty() || !condition.text.isNullOrEmpty() || !progress.text.isNullOrEmpty() || !capacity.text.isNullOrEmpty()) {
 
-            saveProject.enqueue(object : Callback<WriteProjectResponse> {
-                override fun onResponse(
-                    call: Call<WriteProjectResponse>,
-                    response: Response<WriteProjectResponse>
-                ) {
-                    if (response.isSuccessful) {
-                        var code = response.body()!!.code
-                        var message = response.body()!!.message
-                        var newProjectID = response.body()!!.newProjectID
+            if(isModify) {
+                val modifyProject = projectService.modifyProject("Bearer ${GlobalApplication.prefs.accessToken}", projectId, writeRequest)
 
-                        Log.d("saveProject: ", "${code}, ${message}, ${newProjectID}")
+                modifyProject.enqueue(object: Callback<ModifyProjectResponse> {
+                    override fun onResponse(
+                        call: Call<ModifyProjectResponse>,
+                        response: Response<ModifyProjectResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            var code = response.body()!!.code
+                            var message = response.body()!!.message
+
+                            Log.d("modifyProject: ", "$code, $message")
+                        }
                     }
-                }
 
-                override fun onFailure(call: Call<WriteProjectResponse>, t: Throwable) {
-                    Log.e("saveProject: ", "${t}")
-                }
-            })
+                    override fun onFailure(call: Call<ModifyProjectResponse>, t: Throwable) {
+                        Log.e("modifyProject: ", "$t")
+                    }
+                })
+            } else {
+                val saveProject = projectService.writeProject(
+                    "Bearer ${GlobalApplication.prefs.accessToken}",
+                    writeRequest
+                )
+
+                saveProject.enqueue(object : Callback<WriteProjectResponse> {
+                    override fun onResponse(
+                        call: Call<WriteProjectResponse>,
+                        response: Response<WriteProjectResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            var code = response.body()!!.code
+                            var message = response.body()!!.message
+                            var newProjectID = response.body()!!.newProjectID
+
+                            Log.d("saveProject: ", "${code}, ${message}, ${newProjectID}")
+                        }
+                    }
+
+                    override fun onFailure(call: Call<WriteProjectResponse>, t: Throwable) {
+                        Log.e("saveProject: ", "${t}")
+                    }
+                })
+            }
         }
     }
 
     //기술 선택창 설정
     private fun initDrawer() {
-        btn_AllNonClick = findViewById(R.id.btn_AllNonClick)
-        btn_OwnerAllNonClick = findViewById(R.id.btn_OwnerAllNonClick)
+        allNonClick = binding.btnAllNonClick
+        ownerAllNonClick = binding.btnOwnerAllNonClick
 
-        btn_AllNonClick.setOnClickListener {
+        allNonClick.setOnClickListener {
             for (chip in checkedChips) {
                 chip.apply {
                     isChecked = false
@@ -192,7 +248,7 @@ class NewProjectActivity : AppCompatActivity() {
             checkedStackView.removeAllViews()
         }
 
-        btn_OwnerAllNonClick.setOnClickListener {
+        ownerAllNonClick.setOnClickListener {
             for (chip in checkedOwnerChips) {
                 chip.apply {
                     isChecked = false
@@ -201,41 +257,43 @@ class NewProjectActivity : AppCompatActivity() {
             checkedOwnerStackView.removeAllViews()
         }
 
-        btn_Close = findViewById(R.id.img_btn_Close)
-        btn_Close.setOnClickListener {
-            dl_NewProject.closeDrawers()
+        close = binding.imgBtnClose
+        close.setOnClickListener {
+            newProject.closeDrawers()
         }
 
-        btn_OwnerClose = findViewById(R.id.img_btn_OwnerClose)
-        btn_OwnerClose.setOnClickListener {
-            dl_NewProject.closeDrawers()
+        ownerClose = binding.imgBtnOwnerClose
+
+        ownerClose.setOnClickListener {
+            newProject.closeDrawers()
         }
     }
 
     //기술 선택시 이벤트 처리
     private fun initStackChoice() {
-        ll_StackChoice = findViewById(R.id.ll_StackChoice)
-        ll_OwnerStackChoice = findViewById(R.id.ll_OwnerStackChoice)
-        dl_NewProject = findViewById(R.id.dl_NewProject)
+        stackChoice = binding.drawerLayout.llStackChoice
+        ownerStackChoice = binding.drawerLayout.llOwnerStackChoice
 
-        ll_StackChoice.setOnClickListener {
-            ll_Drawer = findViewById(R.id.ll_Drawer)
-            dl_NewProject.openDrawer(ll_Drawer)
+        newProject = binding.root
+
+        stackChoice.setOnClickListener {
+            linearDrawer = binding.llDrawer
+            newProject.openDrawer(linearDrawer)
         }
 
-        ll_OwnerStackChoice.setOnClickListener {
-            ll_OwnerDrawer = findViewById(R.id.ll_OwnerDrawer)
-            dl_NewProject.openDrawer(ll_OwnerDrawer)
+        ownerStackChoice.setOnClickListener {
+            linearOwnerDrawer = binding.llOwnerDrawer
+            newProject.openDrawer(linearOwnerDrawer)
         }
     }
 
     //drawer안에 기술 설정
     private fun initStackView() {
-        StackView = findViewById(R.id.fl_Stack)
-        ownerStackView = findViewById(R.id.fl_OwnerStack)
+        stackView = binding.flStack
+        ownerStackView = binding.flOwnerStack
 
-        checkedStackView = findViewById(R.id.fbl_CheckedStack)
-        checkedOwnerStackView = findViewById(R.id.fbl_OwnerCheckedStack)
+        checkedStackView = binding.drawerLayout.fblCheckedStack
+        checkedOwnerStackView = binding.drawerLayout.fblOwnerCheckedStack
 
         val nameArray = arrayOf(
             "frontEnd",
@@ -272,9 +330,8 @@ class NewProjectActivity : AppCompatActivity() {
             "etc"
         )
 
-        StackView.addItems(nameArray)
+        stackView.addItems(nameArray)
         ownerStackView.addOwnerItems(nameArray)
-
     }
 
     //flexbox layout 아이템 동적추가
@@ -312,6 +369,17 @@ class NewProjectActivity : AppCompatActivity() {
                     )
 
                 )
+
+                if(isModify) {
+                    val checkedStack = detailData.stackList
+                    for(stack in checkedStack) {
+                        if(stack == name) {
+                            isChecked = true
+                            checkedChips.add(this)
+                            checkedStackView.addItem(name)
+                        }
+                    }
+                }
 
                 setOnCheckedChangeListener { buttonView, isChecked ->
                     if (isChecked) {
@@ -376,6 +444,15 @@ class NewProjectActivity : AppCompatActivity() {
                     )
 
                 )
+
+                if(isModify) {
+                    val checkedStack = detailData.leader.stack
+                    if(checkedStack == name) {
+                            isChecked = true
+                            checkedOwnerChips.add(this)
+                            checkedOwnerStackView.addItem(name)
+                    }
+                }
 
                 setOnCheckedChangeListener { buttonView, isChecked ->
                     if (isChecked) {

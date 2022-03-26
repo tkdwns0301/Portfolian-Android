@@ -7,7 +7,7 @@
 
 
     <androidx.appcompat.widget.Toolbar
-        android:id="@+id/toolbar_DetailUserProject"
+        android:id="@+id/toolbar_DetailProject"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:paddingEnd="10dp"
@@ -15,7 +15,7 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/menu_main_home_detail_user_toolbar"
+        app:menu="@menu/menu_main_home_detail_toolbar"
         app:navigationIcon="?homeAsUpIndicator" />
 
 
@@ -25,10 +25,10 @@
         android:layout_height="wrap_content"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        app:layout_constraintBottom_toTopOf="@id/sv_DetailUserProject"
+        app:layout_constraintBottom_toTopOf="@id/sv_DetailProject"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_DetailUserProject">
+        app:layout_constraintTop_toBottomOf="@id/toolbar_DetailProject">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_TitleAndBookmark"
@@ -81,7 +81,7 @@
             app:layout_constraintTop_toBottomOf="@id/cl_TitleAndBookmark">
 
             <TextView
-                android:id="@+id/tv_UserView"
+                android:id="@+id/tv_View"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/gray1"
@@ -99,7 +99,7 @@
                 android:textColor="@color/gray1"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_UserView"
+                app:layout_constraintStart_toEndOf="@id/tv_View"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="2021-01-23" />
 
@@ -111,13 +111,13 @@
             android:id="@+id/divider1"
             style="@style/Divider.Horizontal"
             android:layout_marginTop="10dp"
-            app:layout_constraintBottom_toTopOf="@id/fbl_UserStack"
+            app:layout_constraintBottom_toTopOf="@id/fbl_Stack"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cl_ViewAndCreate" />
 
         <com.google.android.flexbox.FlexboxLayout
-            android:id="@+id/fbl_UserStack"
+            android:id="@+id/fbl_Stack"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -125,13 +125,13 @@
             app:alignContent="stretch"
             app:alignItems="stretch"
             app:flexWrap="wrap"
-            app:layout_constraintBottom_toTopOf="@id/cl_UserCounted"
+            app:layout_constraintBottom_toTopOf="@id/cl_Capacity"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/divider1" />
 
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_UserCounted"
+            android:id="@+id/cl_Capacity"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
@@ -139,20 +139,20 @@
             app:layout_constraintBottom_toTopOf="@id/divider2"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/fbl_UserStack">
+            app:layout_constraintTop_toBottomOf="@id/fbl_Stack">
 
             <ImageView
-                android:id="@+id/img_UserCounted"
+                android:id="@+id/img_Capacity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:src="@drawable/ic_user_cnt"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/tv_UserCountedString"
+                app:layout_constraintEnd_toStartOf="@id/tv_CapacityText"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_UserCountedString"
+                android:id="@+id/tv_CapacityText"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
@@ -160,19 +160,19 @@
                 android:textColor="@color/base"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@id/tv_UserCountedInt"
-                app:layout_constraintStart_toEndOf="@id/img_UserCounted"
+                app:layout_constraintEnd_toStartOf="@id/tv_Capacity"
+                app:layout_constraintStart_toEndOf="@id/img_Capacity"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_UserCountedInt"
+                android:id="@+id/tv_Capacity"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="10dp"
                 android:textColor="@color/base"
                 android:textSize="14sp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toEndOf="@id/tv_UserCountedString"
+                app:layout_constraintStart_toEndOf="@id/tv_CapacityText"
                 app:layout_constraintTop_toTopOf="parent"
                 tools:text="4" />
         </androidx.constraintlayout.widget.ConstraintLayout>
@@ -184,11 +184,11 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/cl_UserCounted" />
+            app:layout_constraintTop_toBottomOf="@id/cl_Capacity" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <ScrollView
-        android:id="@+id/sv_DetailUserProject"
+        android:id="@+id/sv_DetailProject"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         app:layout_constraintBottom_toTopOf="@id/cl_bottomView"
@@ -202,7 +202,7 @@
             android:layout_height="wrap_content">
 
             <TextView
-                android:id="@+id/tv_SubjectDescription"
+                android:id="@+id/tv_SubjectDescriptionText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -212,13 +212,13 @@
                 android:textColor="@color/base"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/tv_SubjectDescriptionReceive"
+                app:layout_constraintBottom_toTopOf="@id/tv_SubjectDescription"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
             <TextView
-                android:id="@+id/tv_SubjectDescriptionReceive"
+                android:id="@+id/tv_SubjectDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -226,14 +226,14 @@
                 android:paddingEnd="20dp"
                 android:textColor="@color/base"
                 android:textSize="14sp"
-                app:layout_constraintBottom_toTopOf="@id/tv_ProjectTime"
+                app:layout_constraintBottom_toTopOf="@id/tv_ProjectTimeText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_SubjectDescription"
+                app:layout_constraintTop_toBottomOf="@id/tv_SubjectDescriptionText"
                 tools:text="리엑트를 사용하여 네이버의 고르인 기능을 구현합니다." />
 
             <TextView
-                android:id="@+id/tv_ProjectTime"
+                android:id="@+id/tv_ProjectTimeText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -243,13 +243,13 @@
                 android:textColor="@color/base"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/tv_ProjectTimeReceive"
+                app:layout_constraintBottom_toTopOf="@id/tv_ProjectTime"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_SubjectDescriptionReceive" />
+                app:layout_constraintTop_toBottomOf="@id/tv_SubjectDescription" />
 
             <TextView
-                android:id="@+id/tv_ProjectTimeReceive"
+                android:id="@+id/tv_ProjectTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -257,14 +257,14 @@
                 android:paddingEnd="20dp"
                 android:textColor="@color/base"
                 android:textSize="14sp"
-                app:layout_constraintBottom_toTopOf="@id/tv_RecruitmentCondition"
+                app:layout_constraintBottom_toTopOf="@id/tv_RecruitmentConditionText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_ProjectTime"
+                app:layout_constraintTop_toBottomOf="@id/tv_ProjectTimeText"
                 tools:text="2021.11 ~ 2022.01 (예상입니다.)" />
 
             <TextView
-                android:id="@+id/tv_RecruitmentCondition"
+                android:id="@+id/tv_RecruitmentConditionText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -277,10 +277,10 @@
                 app:layout_constraintBottom_toTopOf="@id/tv_RecruitmentCondition"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_ProjectTimeReceive" />
+                app:layout_constraintTop_toBottomOf="@id/tv_ProjectTime" />
 
             <TextView
-                android:id="@+id/tv_RecruitmentConditionReceive"
+                android:id="@+id/tv_RecruitmentCondition"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -288,14 +288,14 @@
                 android:paddingEnd="20dp"
                 android:textColor="@color/base"
                 android:textSize="14sp"
-                app:layout_constraintBottom_toTopOf="@id/tv_Progress"
+                app:layout_constraintBottom_toTopOf="@id/tv_ProgressText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_RecruitmentCondition"
+                app:layout_constraintTop_toBottomOf="@id/tv_RecruitmentConditionText"
                 tools:text="자바스르립트에 능숙한 분이면 좋습니다." />
 
             <TextView
-                android:id="@+id/tv_Progress"
+                android:id="@+id/tv_ProgressText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -305,13 +305,13 @@
                 android:textColor="@color/base"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/tv_ProgressReceive"
+                app:layout_constraintBottom_toTopOf="@id/tv_Progress"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_RecruitmentConditionReceive" />
+                app:layout_constraintTop_toBottomOf="@id/tv_RecruitmentCondition" />
 
             <TextView
-                android:id="@+id/tv_ProgressReceive"
+                android:id="@+id/tv_Progress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -319,14 +319,14 @@
                 android:paddingEnd="20dp"
                 android:textColor="@color/base"
                 android:textSize="14sp"
-                app:layout_constraintBottom_toTopOf="@id/tv_Description"
+                app:layout_constraintBottom_toTopOf="@id/tv_DescriptionText"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_Progress"
+                app:layout_constraintTop_toBottomOf="@id/tv_ProgressText"
                 tools:text="주 1회 정해진 요일에 구글 미팅을 통해 화상 회의를 진행합니다." />
 
             <TextView
-                android:id="@+id/tv_Description"
+                android:id="@+id/tv_DescriptionText"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
@@ -339,7 +339,7 @@
                 app:layout_constraintBottom_toTopOf="@id/md_Description"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_ProgressReceive" />
+                app:layout_constraintTop_toBottomOf="@id/tv_Progress" />
 
             <br.tiagohm.markdownview.MarkdownView
                 android:id="@+id/md_Description"
@@ -349,7 +349,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_Description" />
+                app:layout_constraintTop_toBottomOf="@id/tv_DescriptionText" />
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 
@@ -359,7 +359,7 @@
         app:layout_constraintBottom_toTopOf="@id/cl_bottomView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sv_DetailUserProject" />
+        app:layout_constraintTop_toBottomOf="@id/sv_DetailProject" />
 
     <LinearLayout
         android:id="@+id/cl_bottomView"
@@ -371,7 +371,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sv_DetailUserProject">
+        app:layout_constraintTop_toBottomOf="@id/sv_DetailProject">
 
 
         <de.hdodenhof.circleimageview.CircleImageView
@@ -419,21 +419,11 @@
             android:layout_weight="1" />
 
         <LinearLayout
-            android:id="@+id/cl_Button"
+            android:id="@+id/ll_Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical">
-
-            <androidx.appcompat.widget.AppCompatButton
-                android:id="@+id/btn_Chat"
-                style="@style/Widget.AppCompat.Button.Borderless"
-                android:layout_width="wrap_content"
-                android:layout_height="32dp"
-                android:background="@drawable/background_bottom_button"
-                android:text="채팅하기"
-                android:textColor="@color/thema"
-                android:textSize="14sp" />
-
+            android:layout_gravity="center_vertical"
+            android:orientation="horizontal">
         </LinearLayout>
 
 
