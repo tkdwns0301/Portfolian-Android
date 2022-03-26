@@ -37,6 +37,10 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import kotlin.math.roundToInt
 import android.content.SharedPreferences
+import android.os.Parcelable
+
+
+
 
 
 
@@ -64,6 +68,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private lateinit var checkedChips: MutableList<Chip>
     private lateinit var nameMap: Map<String, String>
+
+    private val recyclerViewState: Parcelable? = null
 
 
     private var search = ""
@@ -465,8 +471,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun setProjectAdapter(projects: ArrayList<Project>?) {
         if (projects != null) {
+            val recyclerViewState = rv_Project.layoutManager?.onSaveInstanceState()
             adapter = ProjectAdapter(requireContext(), projects, 0)
             rv_Project.adapter = adapter
+            rv_Project.layoutManager?.onRestoreInstanceState(recyclerViewState)
             adapter.notifyDataSetChanged()
         }
     }
