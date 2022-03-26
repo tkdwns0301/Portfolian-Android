@@ -1,6 +1,5 @@
 package com.example.portfolian.view.main.home
 
-import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -29,21 +28,12 @@ import com.example.portfolian.service.ProjectService
 import com.example.portfolian.service.TokenService
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
-import com.kakao.usermgmt.UserManagement
-import com.kakao.usermgmt.callback.LogoutResponseCallback
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import kotlin.math.roundToInt
-import android.content.SharedPreferences
 import android.os.Parcelable
-
-
-
-
-
-
 
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
