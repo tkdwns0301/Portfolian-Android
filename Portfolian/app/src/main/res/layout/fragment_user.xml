@@ -37,7 +37,6 @@
             android:layout_width="80dp"
             android:layout_height="80dp"
             android:padding="5dp"
-            android:src="@drawable/avatar_1_raster"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/cl_NameGitMail"
             app:layout_constraintStart_toStartOf="parent"

@@ -1,35 +1,35 @@
 package com.example.portfolian.view.main.home
 
+import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.graphics.Point
 import android.os.Bundle
-import android.os.CountDownTimer
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.view.get
 import br.tiagohm.markdownview.MarkdownView
 import br.tiagohm.markdownview.css.styles.Github
 import com.bumptech.glide.Glide
 import com.example.portfolian.R
 import com.example.portfolian.data.*
+import com.example.portfolian.databinding.ActivityDetailprojectBinding
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.ProjectService
-import com.example.portfolian.service.TokenService
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import de.hdodenhof.circleimageview.CircleImageView
-import kotlinx.coroutines.MainScope
-import kotlinx.coroutines.launch
-import org.w3c.dom.Text
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -37,13 +37,15 @@ import retrofit2.Retrofit
 import kotlin.math.roundToInt
 
 class DetailProjectActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityDetailprojectBinding
+
     private lateinit var retrofit: Retrofit
     private lateinit var bookmarkService: ProjectService
 
     private lateinit var detailProject: DetailProjectResponse
     private lateinit var toolbar: Toolbar
     private lateinit var title: TextView
-    private lateinit var userView: TextView
+    private lateinit var view: TextView
     private lateinit var stackView: FlexboxLayout
     private lateinit var capacity: TextView
     private lateinit var subjectDescription: TextView
@@ -61,28 +63,56 @@ class DetailProjectActivity : AppCompatActivity() {
     private var myColor: Int = 0
     private var mStyle = Github()
 
+    private var ownerStatusFlag = false
+    private lateinit var projectId: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_detailproject_user)
+
+        binding = ActivityDetailprojectBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         init()
     }
 
     private fun init() {
+        projectId = intent.getStringExtra("projectId").toString()
+        Log.e("projectId", "$projectId")
+        if (intent.hasExtra("OwnerStatus")) {
+            val status = intent.getIntExtra("OwnerStatus", 0)
+
+            ownerStatusFlag = status == 1
+        }
+
         detailProject = DetailData.detailData!!
         initRetrofit()
         initToolbar()
         initView()
+
     }
 
     private fun initToolbar() {
-        toolbar = findViewById(R.id.toolbar_DetailUserProject)
+        toolbar = binding.toolbarDetailProject
 
+        if(!ownerStatusFlag) {
+            toolbar.menu[1].isVisible = false
+            toolbar.menu[2].isVisible = false
+        }
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.toolbar_Sharing -> {
                     //TODO 공유버튼을 눌렸을 때 메뉴표시
                     Log.d("Sharing", "공유버튼을 눌렀습니다.")
+                    true
+                }
+                R.id.toolbar_Modify -> {
+                    val intent = Intent(this, NewProjectActivity::class.java)
+                    intent.putExtra("projectId", "$projectId")
+                    startActivity(intent)
+                    true
+                }
+                R.id.toolbar_Delete -> {
+                    deleteProject()
+                    finish()
                     true
                 }
                 else -> {
@@ -101,41 +131,39 @@ class DetailProjectActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        title = findViewById(R.id.tv_Title)
+        title = binding.tvTitle
         title.text = detailProject.title
 
 
-        userView = findViewById(R.id.tv_UserView)
-        userView.text = "조회 " + "${detailProject.view}"
+        view = binding.tvView
+        view.text = "조회 " + "${detailProject.view}"
 
         initStackView()
         stackView.addItems(detailProject.stackList)
 
-        capacity = findViewById(R.id.tv_UserCountedInt)
+        capacity = binding.tvCapacity
         capacity.text = detailProject.capacity.toString()
 
-        subjectDescription = findViewById(R.id.tv_SubjectDescriptionReceive)
+        subjectDescription = binding.tvSubjectDescription
         subjectDescription.text = detailProject.contents.subjectDescription
 
-        projectTime = findViewById(R.id.tv_ProjectTimeReceive)
+        projectTime = binding.tvProjectTime
         projectTime.text = detailProject.contents.projectTime
 
-        recruitmentCondition = findViewById(R.id.tv_RecruitmentConditionReceive)
+        recruitmentCondition = binding.tvRecruitmentCondition
         recruitmentCondition.text = detailProject.contents.recruitmentCondition
 
-        progress = findViewById(R.id.tv_ProgressReceive)
+        Log.e("condition", "${detailProject.contents.recruitmentCondition}")
+        progress = binding.tvProgress
         progress.text = detailProject.contents.progress
 
-        description = findViewById(R.id.md_Description)
+        description = binding.mdDescription
 
         var display = windowManager.defaultDisplay
+
         val size = Point()
         display.getRealSize(size)
         val width = size.x
-
-        Log.e("width", "$width")
-        /*mStyle.addMedia("screen and (min-width: ${width-500}px)")
-        mStyle.endMedia()*/
 
         mStyle.addMedia("screen and (max-width: ${width}px)")
         mStyle.endMedia()
@@ -144,31 +172,43 @@ class DetailProjectActivity : AppCompatActivity() {
 
         description.loadMarkdown("${detailProject.contents.description}")
 
-        ownerName = findViewById(R.id.tv_OwnerName)
+        ownerName = binding.tvOwnerName
         ownerName.text = detailProject.leader.nickName
 
-        bookmark = findViewById(R.id.toggle_Bookmark)
-        Log.e("bookmark", "${detailProject.bookMark}")
-        bookmark.isChecked = detailProject.bookMark
+        bookmark = binding.toggleBookmark
 
-        bookmark.setOnCheckedChangeListener { buttonView, isChecked ->
-            var bookmarkJson = SetBookmarkRequest(detailProject.projectId, isChecked)
-            val setBookmark = bookmarkService.setBookmark("Bearer ${GlobalApplication.prefs.accessToken}", "${GlobalApplication.prefs.userId}", bookmarkJson)
+        if (ownerStatusFlag) {
+            bookmark.visibility = View.INVISIBLE
+        } else {
+            bookmark.isChecked = detailProject.bookMark
 
-            setBookmark.enqueue(object: Callback<SetBookmarkResponse> {
-                override fun onResponse(callback: Call<SetBookmarkResponse>, response: Response<SetBookmarkResponse>) {
-                    if(response.isSuccessful) {
-                        Log.d("SetBookmark:: ", "${response.body()!!.code}")
+            bookmark.setOnCheckedChangeListener { buttonView, isChecked ->
+                var bookmarkJson = SetBookmarkRequest(detailProject.projectId, isChecked)
+                val setBookmark = bookmarkService.setBookmark(
+                    "Bearer ${GlobalApplication.prefs.accessToken}",
+                    "${GlobalApplication.prefs.userId}",
+                    bookmarkJson
+                )
+
+                setBookmark.enqueue(object : Callback<SetBookmarkResponse> {
+                    override fun onResponse(
+                        callback: Call<SetBookmarkResponse>,
+                        response: Response<SetBookmarkResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            Log.d("SetBookmark:: ", "${response.body()!!.code}")
+                        }
                     }
-                }
 
-                override fun onFailure(call: Call<SetBookmarkResponse>, t: Throwable) {
-                    Log.e("SetBookmark:: ", "$t")
-                }
-            })
+                    override fun onFailure(call: Call<SetBookmarkResponse>, t: Throwable) {
+                        Log.e("SetBookmark:: ", "$t")
+                    }
+                })
+            }
         }
 
-        photo = findViewById(R.id.cv_OwnerProfile)
+
+        photo = binding.cvOwnerProfile
 
         if (detailProject.leader.photo.isEmpty()) {
             photo.setImageDrawable(getDrawable(R.drawable.avatar_1_raster))
@@ -178,13 +218,75 @@ class DetailProjectActivity : AppCompatActivity() {
                 .into(photo)
         }
 
-        createAt = findViewById(R.id.tv_CreateAt)
+        createAt = binding.tvCreateAt
         createAt.text = detailProject.createdAt
+
+        val dynamicView = binding.llButton
+
+        dynamicView.addItem()
 
     }
 
+    private fun LinearLayout.addItem() {
+
+        val button = LayoutInflater.from(context).inflate(R.layout.view_button, null) as Button
+
+        button.apply {
+            if(ownerStatusFlag) {
+                text = "모집마감"
+                setTextColor(ContextCompat.getColor(context, R.color.white))
+                background = ContextCompat.getDrawable(context, R.drawable.background_bottom_button2)
+
+                setOnClickListener {
+                    Log.d("Owner Button::", "OwnerButton Click!!")
+                }
+            }
+            else {
+                text = "채팅하기"
+                setTextColor(ContextCompat.getColor(context, R.color.thema))
+                background = ContextCompat.getDrawable(context, R.drawable.background_bottom_button)
+
+                setOnClickListener {
+                    Log.d("User Button::", "UserButton Click!!")
+                }
+            }
+
+            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12f)
+        }
+
+        val layoutParams = ViewGroup.MarginLayoutParams (
+            ViewGroup.MarginLayoutParams.WRAP_CONTENT,
+            ViewGroup.MarginLayoutParams.WRAP_CONTENT
+        )
+
+        layoutParams.height = dpToPx(35)
+        addView(button, layoutParams)
+    }
+
+    private fun deleteProject() {
+        val deleteProject = bookmarkService.deleteProject("Bearer ${GlobalApplication.prefs.accessToken}", projectId)
+
+        deleteProject.enqueue(object: Callback<ModifyProjectResponse> {
+            override fun onResponse(
+                call: Call<ModifyProjectResponse>,
+                response: Response<ModifyProjectResponse>
+            ) {
+                if(response.isSuccessful) {
+                    val code = response.body()!!.code
+                    val message = response.body()!!.message
+
+                    Log.d("deleteProject: ", "$code, $message")
+                }
+            }
+
+            override fun onFailure(call: Call<ModifyProjectResponse>, t: Throwable) {
+                Log.e("deleteProject: ", "$t")
+            }
+        })
+    }
+
     private fun initStackView() {
-        stackView = findViewById(R.id.fbl_UserStack)
+        stackView = binding.fblStack
 
         val nameArray = arrayOf(
             "frontEnd",

@@ -120,7 +120,8 @@ data class SetBookmarkResponse (
 @Parcelize
 data class ModifyProjectResponse (
     @SerializedName("code")
-    var code: Int
+    var code: Int,
+    var message: String
 ) : Parcelable
 //------------------------------------
 

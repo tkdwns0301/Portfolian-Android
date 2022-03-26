@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/dl_NewProject"
     android:layout_width="match_parent"
     android:layout_height="match_parent">
 
@@ -173,13 +174,13 @@
                 android:id="@+id/divider3"
                 style="@style/Divider.Horizontal"
                 android:layout_marginTop="15dp"
-                app:layout_constraintBottom_toTopOf="@id/ll_UserCount"
+                app:layout_constraintBottom_toTopOf="@id/ll_Capacity"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/fbl_CheckedStack" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/ll_UserCount"
+                android:id="@+id/ll_Capacity"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -190,17 +191,17 @@
                 app:layout_constraintTop_toBottomOf="@id/divider3">
 
                 <ImageView
-                    android:id="@+id/img_UserCount"
+                    android:id="@+id/img_Capacity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:src="@drawable/ic_user_cnt"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/et_UserCount"
+                    app:layout_constraintEnd_toStartOf="@id/et_Capacity"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <EditText
-                    android:id="@+id/et_UserCount"
+                    android:id="@+id/et_Capacity"
                     android:layout_width="115dp"
                     android:layout_height="match_parent"
                     android:background="@null"
@@ -211,19 +212,19 @@
                     android:textSize="14sp"
                     android:layout_marginStart="15dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/tv_UserCount"
-                    app:layout_constraintStart_toEndOf="@id/img_UserCount"
+                    app:layout_constraintEnd_toStartOf="@id/tv_Capacity"
+                    app:layout_constraintStart_toEndOf="@id/img_Capacity"
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <TextView
-                    android:id="@+id/tv_UserCount"
+                    android:id="@+id/tv_Capacity"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="명 (최대 16명)"
                     android:textColor="@color/base"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/et_UserCount"
+                    app:layout_constraintStart_toEndOf="@id/et_Capacity"
                     app:layout_constraintTop_toTopOf="parent" />
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -231,25 +232,25 @@
                 android:id="@+id/divider4"
                 style="@style/Divider.Horizontal"
                 android:layout_marginTop="15dp"
-                app:layout_constraintBottom_toTopOf="@id/tv_Period"
+                app:layout_constraintBottom_toTopOf="@id/tv_ProjectTime"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ll_UserCount" />
+                app:layout_constraintTop_toBottomOf="@id/ll_Capacity" />
 
             <TextView
-                android:id="@+id/tv_Period"
+                android:id="@+id/tv_ProjectTime"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:text="프로젝트 기간"
                 android:textColor="@color/base"
                 android:textSize="14dp"
-                app:layout_constraintBottom_toTopOf="@id/et_Period"
+                app:layout_constraintBottom_toTopOf="@id/et_ProjectTime"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider4" />
 
             <EditText
-                android:id="@+id/et_Period"
+                android:id="@+id/et_ProjectTime"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -261,31 +262,31 @@
                 app:layout_constraintBottom_toTopOf="@id/divider5"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_Period" />
+                app:layout_constraintTop_toBottomOf="@id/tv_ProjectTime" />
 
             <View
                 android:id="@+id/divider5"
                 style="@style/Divider.Horizontal"
                 android:layout_marginTop="15dp"
-                app:layout_constraintBottom_toTopOf="@id/tv_Topic"
+                app:layout_constraintBottom_toTopOf="@id/tv_SubjectDescription"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_Period" />
+                app:layout_constraintTop_toBottomOf="@id/et_ProjectTime" />
 
             <TextView
-                android:id="@+id/tv_Topic"
+                android:id="@+id/tv_SubjectDescription"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:text="프로젝트 주제 설명"
                 android:textColor="@color/base"
                 android:textSize="14dp"
-                app:layout_constraintBottom_toTopOf="@id/et_Topic"
+                app:layout_constraintBottom_toTopOf="@id/et_SubjectDescription"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider5" />
 
             <EditText
-                android:id="@+id/et_Topic"
+                android:id="@+id/et_SubjectDescription"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -296,7 +297,7 @@
                 app:layout_constraintBottom_toTopOf="@id/divider6"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_Topic" />
+                app:layout_constraintTop_toBottomOf="@id/tv_SubjectDescription" />
 
             <View
                 android:id="@+id/divider6"
@@ -305,7 +306,7 @@
                 app:layout_constraintBottom_toTopOf="@id/tv_Condition"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_Topic" />
+                app:layout_constraintTop_toBottomOf="@id/et_SubjectDescription" />
 
             <TextView
                 android:id="@+id/tv_Condition"
@@ -338,25 +339,25 @@
                 android:id="@+id/divider7"
                 style="@style/Divider.Horizontal"
                 android:layout_marginTop="15dp"
-                app:layout_constraintBottom_toTopOf="@id/tv_Way"
+                app:layout_constraintBottom_toTopOf="@id/tv_Progress"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/et_Condition" />
 
             <TextView
-                android:id="@+id/tv_Way"
+                android:id="@+id/tv_Progress"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
                 android:text="프로젝트 진행방식"
                 android:textColor="@color/base"
                 android:textSize="14dp"
-                app:layout_constraintBottom_toTopOf="@id/et_Way"
+                app:layout_constraintBottom_toTopOf="@id/et_Progress"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/divider7" />
 
             <EditText
-                android:id="@+id/et_Way"
+                android:id="@+id/et_Progress"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
@@ -368,7 +369,7 @@
                 app:layout_constraintBottom_toTopOf="@id/divider8"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_Way" />
+                app:layout_constraintTop_toBottomOf="@id/tv_Progress" />
 
             <View
                 android:id="@+id/divider8"
@@ -376,7 +377,7 @@
                 android:layout_marginTop="15dp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/et_Way"
+                app:layout_constraintTop_toBottomOf="@id/et_Progress"
                 app:layout_constraintBottom_toTopOf="@id/tv_Description"/>
 
             <TextView

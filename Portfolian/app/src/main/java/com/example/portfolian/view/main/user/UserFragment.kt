@@ -127,7 +127,7 @@ class UserFragment : Fragment(R.layout.fragment_user) {
         description = requireActivity().findViewById(R.id.tv_UserIntroduce)
 
         nickName.text = userInfo.nickName
-
+        
         if(userInfo.photo.isEmpty()) {
             profileImage.setImageDrawable(context?.getDrawable(R.drawable.avatar_1_raster))
         } else {

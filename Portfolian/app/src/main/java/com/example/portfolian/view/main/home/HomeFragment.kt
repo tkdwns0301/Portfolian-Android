@@ -1,6 +1,5 @@
 package com.example.portfolian.view.main.home
 
-import android.content.Context
 import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
@@ -29,17 +28,12 @@ import com.example.portfolian.service.ProjectService
 import com.example.portfolian.service.TokenService
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
-import com.kakao.usermgmt.UserManagement
-import com.kakao.usermgmt.callback.LogoutResponseCallback
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
 import kotlin.math.roundToInt
-import android.content.SharedPreferences
-
-
-
+import android.os.Parcelable
 
 
 class HomeFragment : Fragment(R.layout.fragment_home) {
@@ -64,6 +58,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private lateinit var checkedChips: MutableList<Chip>
     private lateinit var nameMap: Map<String, String>
+
+    private val recyclerViewState: Parcelable? = null
 
 
     private var search = ""
@@ -465,8 +461,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun setProjectAdapter(projects: ArrayList<Project>?) {
         if (projects != null) {
+            val recyclerViewState = rv_Project.layoutManager?.onSaveInstanceState()
             adapter = ProjectAdapter(requireContext(), projects, 0)
             rv_Project.adapter = adapter
+            rv_Project.layoutManager?.onRestoreInstanceState(recyclerViewState)
             adapter.notifyDataSetChanged()
         }
     }

@@ -20,7 +20,6 @@ import com.example.portfolian.data.*
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.ProjectService
-import com.example.portfolian.view.main.home.DetailOwnerProjectActivity
 import com.example.portfolian.view.main.home.DetailProjectActivity
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
@@ -313,22 +312,32 @@ class ProjectAdapter(
     override fun getItemCount(): Int = dataSet.size
 
     private fun moveDetail(projectId: String) {
-        Log.d("moveDetail", "Move!!")
         val callDetailProject = projectService.readDetailProject(projectId)
         callDetailProject.enqueue(object: Callback<DetailProjectResponse> {
             override fun onResponse(call: Call<DetailProjectResponse>, response: Response<DetailProjectResponse>) {
                 if(response.isSuccessful) {
                     val detailProject = response.body()!!
+                    Log.e("ProjectAdapter: ", "${response.body()!!.contents.recruitmentCondition}")
                     DetailData.detailData = detailProject
 
+                    val intent = Intent(context, DetailProjectActivity::class.java)
+
                     if(detailProject.leader.userId == GlobalApplication.prefs.userId) {
+                        intent.putExtra("OwnerStatus", 1)
+                    }
+
+                    intent.putExtra("projectId", "$projectId")
+                    Log.e("ProjectAdapter: projectId: ", projectId)
+
+                    context.startActivity(intent)
+                    /*if(detailProject.leader.userId == GlobalApplication.prefs.userId) {
                         val intent = Intent(context, DetailOwnerProjectActivity::class.java)
                         context.startActivity(intent)
                     }
                     else {
                         val intent = Intent(context, DetailProjectActivity::class.java)
                         context.startActivity(intent)
-                    }
+                    }*/
                 }
             }
 
