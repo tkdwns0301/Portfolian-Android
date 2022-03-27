@@ -73,22 +73,35 @@ class ProfileModifyActivity : AppCompatActivity() {
     private var myStack = ""
     private var myColor = 0
 
+    private lateinit var checkedStack: List<String>
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_profilemodify)
 
+        init()
+    }
+
+    private fun init() {
+        initRetrofit()
         initView()
+        initToolbar()
+        initUserInfo()
+
+        initAddPhoto()
     }
 
     private fun initView() {
-        initRetrofit()
-        initToolbar()
-        initDrawer()
-        initStackView()
-        initStackChoice()
-        initUserInfo()
-        initAddPhoto()
+        nickName = findViewById(R.id.et_Nickname)
+        git = findViewById(R.id.et_Git)
+        mail = findViewById(R.id.et_Email)
+        description = findViewById(R.id.et_Introduce)
+        profile = findViewById(R.id.cv_Profile)
+        toolbar = findViewById(R.id.toolbar_Setting)
+        addPhoto = findViewById(R.id.ib_AddPhoto)
+        allNonClick = findViewById(R.id.btn_AllNonClick)
+        close = findViewById(R.id.ib_Close)
+
     }
 
     private fun initRetrofit() {
@@ -97,7 +110,6 @@ class ProfileModifyActivity : AppCompatActivity() {
     }
 
     private fun initToolbar() {
-        toolbar = findViewById(R.id.toolbar_Setting)
 
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
@@ -119,7 +131,6 @@ class ProfileModifyActivity : AppCompatActivity() {
     private lateinit var getResult: ActivityResultLauncher<Intent>
 
     private fun initAddPhoto() {
-        addPhoto = findViewById(R.id.ib_AddPhoto)
 
         getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
@@ -185,10 +196,6 @@ class ProfileModifyActivity : AppCompatActivity() {
     }
 
     private fun initUserInfo() {
-        nickName = findViewById(R.id.et_Nickname)
-        git = findViewById(R.id.et_Git)
-        mail = findViewById(R.id.et_Email)
-        description = findViewById(R.id.et_Introduce)
 
         val callUserInfo = userService.readUserInfo("Bearer ${GlobalApplication.prefs.accessToken}", "${GlobalApplication.prefs.userId}")
 
@@ -204,10 +211,13 @@ class ProfileModifyActivity : AppCompatActivity() {
                     git.setText(userInfo.github)
                     mail.setText(userInfo.mail)
                     description.setText(userInfo.description)
+                    checkedStack = userInfo.stackList
+
+                    initDrawer()
+                    initStackView()
+                    initStackChoice()
 
                     var photo = intent.getStringExtra("profile")
-                    Log.e("photo", "${photo}")
-                    profile = findViewById(R.id.cv_Profile)
 
                     if (photo.isNullOrEmpty()) {
                         profile.setImageDrawable(applicationContext.getDrawable(R.drawable.avatar_1_raster))
@@ -279,7 +289,6 @@ class ProfileModifyActivity : AppCompatActivity() {
 
     //기술 선택창 설정
     private fun initDrawer() {
-        allNonClick = findViewById(R.id.btn_AllNonClick)
 
         allNonClick.setOnClickListener {
             var N = checkedChips.size
@@ -289,7 +298,6 @@ class ProfileModifyActivity : AppCompatActivity() {
             }
         }
 
-        close = findViewById(R.id.ib_Close)
         close.setOnClickListener {
             drawer.closeDrawers()
         }
@@ -385,6 +393,14 @@ class ProfileModifyActivity : AppCompatActivity() {
                     )
 
                 )
+
+                for(stack in checkedStack) {
+                    if(stack == name) {
+                        isChecked = true
+                        checkedChips.add(this)
+                        checkedStackView.addItem(name)
+                    }
+                }
 
                 setOnCheckedChangeListener { buttonView, isChecked ->
                     if (isChecked) {
