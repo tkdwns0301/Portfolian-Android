@@ -105,9 +105,15 @@ dependencies {
     implementation 'com.github.tiagohm.MarkdownView:library:0.19.0'
 
     //Socket-io
-    implementation('io.socket:socket.io-client:2.0.1') {
+    implementation('io.socket:socket.io-client:2.0.0') {
         exclude group: 'org.json', module: 'json'
     }
+
+    /*
+    implementation('com.github.nkzawa:socket.io-client:0.5.0') {
+        exclude group: 'org.json', module: 'json'
+    }
+    */
 
     //Image picker
     implementation 'com.github.esafirm.android-image-picker:imagepicker:2.4.5'
