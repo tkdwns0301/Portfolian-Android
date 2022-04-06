@@ -6,12 +6,9 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.widget.Button
 import com.example.portfolian.R
-import com.example.portfolian.network.GlobalApplication
-import com.example.portfolian.network.SocketApplication
-import io.socket.client.Socket
+
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
-    private lateinit var mSocket: Socket
 
     private lateinit var newChat: Button
 

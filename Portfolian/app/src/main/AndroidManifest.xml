@@ -50,7 +50,6 @@
         <activity android:name=".view.main.home.DetailProjectActivity"/>
         <activity android:name=".view.main.chat.ChatRoomActivity"/>
         <activity android:name=".view.main.user.ProfileModifyActivity" />
-        <activity android:name=".view.main.home.DetailOwnerProjectActivity"/>
         <activity android:name=".view.main.user.setting.NotifyActivity"/>
         <activity android:name=".view.main.user.setting.SettingActivity"/>
     </application>
