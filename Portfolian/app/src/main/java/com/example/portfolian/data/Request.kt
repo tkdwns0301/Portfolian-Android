@@ -59,3 +59,10 @@ data class RenewalTokenRequest(
     val userId: String
     )
 //------------------------------------
+
+// 40 채팅방 만들기
+data class CreateChatRequest(
+    val userId: String,
+    val projectId: String
+)
+//------------------------------------

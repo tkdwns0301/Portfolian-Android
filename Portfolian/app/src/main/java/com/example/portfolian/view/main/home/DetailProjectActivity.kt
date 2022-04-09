@@ -26,6 +26,7 @@ import com.example.portfolian.data.*
 import com.example.portfolian.databinding.ActivityDetailprojectBinding
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
+import com.example.portfolian.service.ChatService
 import com.example.portfolian.service.ProjectService
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
@@ -41,6 +42,7 @@ class DetailProjectActivity : AppCompatActivity() {
 
     private lateinit var retrofit: Retrofit
     private lateinit var bookmarkService: ProjectService
+    private lateinit var chatService: ChatService
 
     private lateinit var detailProject: DetailProjectResponse
     private lateinit var toolbar: Toolbar
@@ -136,6 +138,7 @@ class DetailProjectActivity : AppCompatActivity() {
     private fun initRetrofit() {
         retrofit = RetrofitClient.getInstance()
         bookmarkService = retrofit.create(ProjectService::class.java)
+        chatService = retrofit.create(ChatService::class.java)
     }
 
     private fun initView() {
@@ -255,7 +258,31 @@ class DetailProjectActivity : AppCompatActivity() {
                 background = ContextCompat.getDrawable(context, R.drawable.background_bottom_button)
 
                 setOnClickListener {
-                    Log.d("User Button::", "UserButton Click!!")
+                    //TODO 채팅 방 만들기
+
+                    val chatData = CreateChatRequest("${GlobalApplication.prefs.userId}", "$projectId")
+
+                    val createChat = chatService.createChat("${GlobalApplication.prefs.accessToken}", chatData)
+
+                    createChat.enqueue(object: Callback<CreateChatResponse> {
+                        override fun onResponse(
+                            call: Call<CreateChatResponse>,
+                            response: Response<CreateChatResponse>
+                        ) {
+                            if(response.isSuccessful) {
+                                val code = response.body()!!.code
+                                val message = response.body()!!.message
+                                val roomId = response.body()!!.roomId
+
+                                Log.e("createChat: ", "$code $message $roomId")
+                            }
+                        }
+
+                        override fun onFailure(call: Call<CreateChatResponse>, t: Throwable) {
+                            Log.e("createChat: ", "$t")
+                        }
+                    })
+
                 }
             }
 

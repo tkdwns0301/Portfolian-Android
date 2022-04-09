@@ -212,3 +212,13 @@ data class TokenResponse (
     val message: String
 )
 //------------------------------------
+
+// 40 채팅방 만들기
+data class CreateChatResponse (
+    @SerializedName("code")
+    val code: Int,
+    @SerializedName("roomId")
+    val roomId: String,
+    @SerializedName("message")
+    val message: String
+)

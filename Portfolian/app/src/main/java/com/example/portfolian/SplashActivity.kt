@@ -9,6 +9,7 @@ import com.example.portfolian.data.KakaoTokenRequest
 import com.example.portfolian.data.OAuthResponse
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
+import com.example.portfolian.network.SocketApplication
 import com.example.portfolian.service.OAuthService
 import com.example.portfolian.view.login.LogInActivity
 import com.example.portfolian.view.login.LogInFragment
@@ -70,6 +71,9 @@ class SplashActivity: AppCompatActivity() {
 
                     GlobalApplication.prefs.accessToken = accessToken
                     GlobalApplication.prefs.userId = userId
+
+                    SocketApplication.setSocket()
+                    SocketApplication.establishConnection()
 
                     toMain()
                 }
