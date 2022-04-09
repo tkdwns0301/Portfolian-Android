@@ -7,14 +7,16 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="20dp"
     android:background="@drawable/background_home_item"
-    android:paddingStart="30dp"
+    android:paddingStart="20dp"
     android:paddingEnd="10dp">
 
-    <ImageButton
+    <ToggleButton
         android:id="@+id/btn_Bookmark"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_width="30dp"
+        android:layout_height="30dp"
         android:background="@drawable/ic_bookmark"
+        android:textOn=""
+        android:textOff=""
         app:layout_constraintBottom_toTopOf="@id/cl_Title"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0"
@@ -86,6 +88,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -93,7 +96,7 @@
 
         <com.google.android.flexbox.FlexboxLayout
             android:id="@+id/fbl_Stack"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
             app:alignContent="stretch"
             app:alignItems="stretch"
@@ -111,6 +114,7 @@
             android:text="@string/stack"
             android:textColor="@color/base"
             android:textSize="14sp"
+            android:layout_marginStart="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/fbl_Stack"
             app:layout_constraintTop_toTopOf="parent" />
