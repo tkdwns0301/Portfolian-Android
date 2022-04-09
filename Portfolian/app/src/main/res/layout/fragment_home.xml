@@ -15,8 +15,8 @@
         android:id="@+id/ll_Drawer"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:background="@color/white"
         android:layout_gravity="end"
+        android:background="@color/white"
         android:orientation="vertical">
 
         <LinearLayout
@@ -52,33 +52,44 @@
 
         </LinearLayout>
 
-        <com.google.android.flexbox.FlexboxLayout
-            android:id="@+id/fl_Stack"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingStart="20dp"
-            android:paddingEnd="20dp"
-            app:alignContent="stretch"
-            app:alignItems="stretch"
-            app:flexWrap="wrap"
-            app:layout_constraintBottom_toTopOf="@id/btn_AllNonClick"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/toolbar_Filter" />
+            android:layout_height="wrap_content">
 
-        <Button
-            android:id="@+id/btn_AllNonClick"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="5dp"
-            android:background="@android:color/transparent"
-            android:text="전체 삭제"
-            android:textColor="@color/base"
-            android:textSize="16sp"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/fl_Stack" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+
+                <com.google.android.flexbox.FlexboxLayout
+                    android:id="@+id/fl_Stack"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:paddingStart="20dp"
+                    android:paddingEnd="20dp"
+                    app:alignContent="stretch"
+                    app:alignItems="stretch"
+                    app:flexWrap="wrap"
+                    app:layout_constraintBottom_toTopOf="@id/btn_AllNonClick"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/toolbar_Filter" />
+
+                <Button
+                    android:id="@+id/btn_AllNonClick"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="5dp"
+                    android:background="@android:color/transparent"
+                    android:text="전체 삭제"
+                    android:textColor="@color/base"
+                    android:textSize="16sp"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/fl_Stack" />
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
 </androidx.drawerlayout.widget.DrawerLayout>

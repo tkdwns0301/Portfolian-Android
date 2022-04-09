@@ -90,6 +90,12 @@ class DetailProjectActivity : AppCompatActivity() {
 
     }
 
+    override fun onBackPressed() {
+        super.onBackPressed()
+
+        DetailData.detailData = null
+    }
+
     private fun initToolbar() {
         toolbar = binding.toolbarDetailProject
 
@@ -107,6 +113,7 @@ class DetailProjectActivity : AppCompatActivity() {
                 R.id.toolbar_Modify -> {
                     val intent = Intent(this, NewProjectActivity::class.java)
                     intent.putExtra("projectId", "$projectId")
+
                     startActivity(intent)
                     true
                 }
@@ -121,6 +128,7 @@ class DetailProjectActivity : AppCompatActivity() {
             }
         }
         toolbar.setNavigationOnClickListener {
+            DetailData.detailData = null
             finish()
         }
     }
