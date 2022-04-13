@@ -69,6 +69,7 @@ class ChatAdapter (val context: Context, val arrayList: ArrayList<ChatModel>) : 
         val chatTime = itemView.findViewById<TextView>(R.id.tv_YourTime)
     }
 
+
     override fun getItemViewType(position: Int): Int {
         return 1
     }
