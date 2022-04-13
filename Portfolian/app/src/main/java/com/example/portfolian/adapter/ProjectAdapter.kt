@@ -70,7 +70,7 @@ class ProjectAdapter(
         }
 
         //Title
-        if(project.title.length >= 20) {
+        if (project.title.length >= 20) {
             var titleSub = project.title.substring(0, 20)
             holder.title.text = "$titleSub..."
         } else {
@@ -88,8 +88,8 @@ class ProjectAdapter(
         holder.stack.addItems(project.stackList)
 
         //stackCount
-        if(project.stackList.size > 3)
-            holder.stackCount.text = "+" + "${(project.stackList.size-3)}"
+        if (project.stackList.size > 3)
+            holder.stackCount.text = "+" + "${(project.stackList.size - 3)}"
         else
             holder.stackCount.text = ""
 
@@ -98,11 +98,18 @@ class ProjectAdapter(
         holder.bookmark.setOnCheckedChangeListener { buttonView, isChecked ->
             var bookmarkJson = SetBookmarkRequest(project.projectId, isChecked)
             Log.d("bookmark", "$isChecked")
-            val setBookmark = projectService.setBookmark("Bearer ${GlobalApplication.prefs.accessToken}", "${GlobalApplication.prefs.userId}", bookmarkJson)
+            val setBookmark = projectService.setBookmark(
+                "Bearer ${GlobalApplication.prefs.accessToken}",
+                "${GlobalApplication.prefs.userId}",
+                bookmarkJson
+            )
 
-            setBookmark.enqueue(object: Callback<SetBookmarkResponse> {
-                override fun onResponse(callback: Call<SetBookmarkResponse>, response: Response<SetBookmarkResponse>) {
-                    if(response.isSuccessful) {
+            setBookmark.enqueue(object : Callback<SetBookmarkResponse> {
+                override fun onResponse(
+                    callback: Call<SetBookmarkResponse>,
+                    response: Response<SetBookmarkResponse>
+                ) {
+                    if (response.isSuccessful) {
                         Log.d("SetBookmark:: ", "${response.body()!!.code}")
                     }
                 }
@@ -313,16 +320,19 @@ class ProjectAdapter(
 
     private fun moveDetail(projectId: String) {
         val callDetailProject = projectService.readDetailProject(projectId)
-        callDetailProject.enqueue(object: Callback<DetailProjectResponse> {
-            override fun onResponse(call: Call<DetailProjectResponse>, response: Response<DetailProjectResponse>) {
-                if(response.isSuccessful) {
+        callDetailProject.enqueue(object : Callback<DetailProjectResponse> {
+            override fun onResponse(
+                call: Call<DetailProjectResponse>,
+                response: Response<DetailProjectResponse>
+            ) {
+                if (response.isSuccessful) {
                     val detailProject = response.body()!!
                     Log.e("ProjectAdapter: ", "${response.body()!!.contents.recruitmentCondition}")
                     DetailData.detailData = detailProject
 
                     val intent = Intent(context, DetailProjectActivity::class.java)
 
-                    if(detailProject.leader.userId == GlobalApplication.prefs.userId) {
+                    if (detailProject.leader.userId == GlobalApplication.prefs.userId) {
                         intent.putExtra("OwnerStatus", 1)
                     }
 

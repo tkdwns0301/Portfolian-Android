@@ -3,8 +3,10 @@ package com.example.portfolian.data
 import android.os.Parcelable
 import com.google.gson.annotations.SerializedName
 import kotlinx.android.parcel.Parcelize
+import java.util.*
+import kotlin.collections.ArrayList
 
-data class Response (val response: String)
+data class Response(val response: String)
 
 // 2 프로젝트 모두 보기
 data class ReadProjectResponse(
@@ -14,6 +16,7 @@ data class ReadProjectResponse(
     @SerializedName("articleList")
     var articleList: ArrayList<Project>
 )
+
 @Parcelize
 data class Project(
     @SerializedName("projectId")
@@ -53,7 +56,7 @@ data class Leader(
 
 // 3 프로젝트 모집글 보기
 @Parcelize
-data class DetailProjectResponse (
+data class DetailProjectResponse(
     @SerializedName("projectId")
     var projectId: String,
     @SerializedName("title")
@@ -74,7 +77,7 @@ data class DetailProjectResponse (
     var createdAt: String,
     @SerializedName("leader")
     var leader: LeaderContent
-): Parcelable
+) : Parcelable
 
 @Parcelize
 data class DetailContent(
@@ -112,13 +115,14 @@ data class LeaderContent(
 
 // 5 북마크하기/ 취소하기
 @Parcelize
-data class SetBookmarkResponse (
+data class SetBookmarkResponse(
     @SerializedName("code")
     var code: Int,
 ) : Parcelable
+
 // 6 프로젝트 모집글 수정하기
 @Parcelize
-data class ModifyProjectResponse (
+data class ModifyProjectResponse(
     @SerializedName("code")
     var code: Int,
     var message: String
@@ -127,7 +131,7 @@ data class ModifyProjectResponse (
 
 // 13 나의 정보 보기
 @Parcelize
-data class UserInfoResponse (
+data class UserInfoResponse(
     @SerializedName("code")
     var code: Int,
     @SerializedName("userId")
@@ -163,7 +167,7 @@ data class LogoutResponse(
     var code: Int,
     @SerializedName("message")
     var message: String
-): Parcelable
+) : Parcelable
 //------------------------------------
 
 
@@ -194,7 +198,7 @@ data class OAuthResponse(
 //------------------------------------
 
 // 37 첫 로그인 시 닉네임 설정
-class NickNameResponse (
+class NickNameResponse(
     @SerializedName("code")
     val code: Int,
     @SerializedName("message")
@@ -203,7 +207,7 @@ class NickNameResponse (
 //------------------------------------
 
 // 38 accessToken 갱신
-data class TokenResponse (
+data class TokenResponse(
     @SerializedName("code")
     val code: Int,
     @SerializedName("accessToken")
@@ -212,3 +216,75 @@ data class TokenResponse (
     val message: String
 )
 //------------------------------------
+
+// 40 채팅방 만들기
+data class CreateChatResponse(
+    @SerializedName("code")
+    val code: Int,
+    @SerializedName("roomId")
+    val roomId: String,
+    @SerializedName("message")
+    val message: String
+)
+//----------------------------------
+
+// 41 나의 채팅방 목록 조회
+@Parcelize
+data class ReadChatList(
+    @SerializedName("code")
+    val code: Int,
+    @SerializedName("message")
+    val message: String,
+    @SerializedName("chatRoomList")
+    val chatRoomList: ArrayList<ChatRoom>
+) : Parcelable
+
+@Parcelize
+data class ChatRoom(
+    @SerializedName("chatRoomId")
+    val chatRoomId: String,
+    @SerializedName("projectTitle")
+    val projectTitle: String,
+    @SerializedName("newChatCnt")
+    val newChatCnt: Int,
+    @SerializedName("newChatContent")
+    val newChatContent: String,
+    @SerializedName("newChatDate")
+    val newChatDate: Date,
+    @SerializedName("user")
+    val user: User
+) : Parcelable
+
+@Parcelize
+data class User(
+    @SerializedName("userId")
+    val userId: String,
+    @SerializedName("nickName")
+    val nickName: String,
+    @SerializedName("photo")
+    val photo: String
+) : Parcelable
+//-------------------------------------
+
+// 42 채팅목록 조회 (채팅 메세지 조회)
+@Parcelize
+data class ReadChatResponse(
+    @SerializedName("code")
+    val code: Int,
+    @SerializedName("message")
+    val message: String,
+    @SerializedName("chatList")
+    val chatList: ArrayList<Chat>
+) : Parcelable
+
+@Parcelize
+data class Chat(
+    @SerializedName("chatType")
+    val chatType: String,
+    @SerializedName("sender")
+    val sender: String,
+    @SerializedName("messageContent")
+    val messageContent: String,
+    @SerializedName("date")
+    val date: Date
+) : Parcelable

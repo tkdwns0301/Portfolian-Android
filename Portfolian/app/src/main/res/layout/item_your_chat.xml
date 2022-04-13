@@ -1,18 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    xmlns:tools="http://schemas.android.com/tools"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:orientation="horizontal"
-    android:layout_marginBottom="15dp">
+    android:layout_marginBottom="15dp"
+    android:orientation="horizontal">
 
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:id="@+id/cv_YourProfile"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_marginEnd="10dp"
+        />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:padding="10dp"
-            android:background="@drawable/background_yourchat" >
+            android:background="@drawable/background_yourchat"
+            android:padding="10dp">
 
             <TextView
                 android:id="@+id/tv_YourMessage"
@@ -20,24 +32,26 @@
                 android:layout_height="wrap_content"
                 android:layout_gravity="left"
                 android:gravity="center_vertical"
-                tools:text="니가 입력한내용."
                 android:textColor="@color/base"
                 android:textSize="14sp"
-                app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent" />
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="니가 입력한내용." />
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <TextView
             android:id="@+id/tv_YourTime"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:gravity="left"
             android:layout_gravity="bottom"
-            tools:text="시간"
-            android:textSize="12sp"
+            android:layout_marginStart="10dp"
+            android:gravity="left"
             android:textColor="@color/gray2"
-            android:layout_marginStart="10dp"/>
+            android:textSize="12sp"
+            tools:text="시간" />
+
+    </LinearLayout>
 
 </LinearLayout>

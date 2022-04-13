@@ -45,12 +45,9 @@ class ChatRoomActivity: AppCompatActivity() {
         recyclerView.layoutManager = lm
         recyclerView.setHasFixedSize(true)
 
-        SocketApplication.setSocket()
         mSocket = SocketApplication.getSocket()
 
-        mSocket.connect()
-
-        mSocket.on("receive", onNewMessage)
+        mSocket.on("chat:receive", onNewMessage)
 
         send.setOnClickListener {
             sendMessage()
@@ -104,7 +101,7 @@ class ChatRoomActivity: AppCompatActivity() {
         jsonObject.put("messageContent", "${chattingText.text}")
         jsonObject.put("roomId", 123)
 
-        mSocket.emit("send", jsonObject)
+        mSocket.emit("chat:send", jsonObject)
 
     }
 

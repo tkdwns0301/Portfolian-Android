@@ -16,7 +16,7 @@ interface OAuthService {
     @Headers("content-type: application/json")
     @PATCH("users/{userId}/nickName")
     fun setNickName(
-        @Header("Authorization") Authorization: String?,
+        @Header("Authorization") Authorization: String,
         @Path("userId") userId: String?,
         @Body nickName: NickNameRequest
     )
@@ -25,7 +25,7 @@ interface OAuthService {
     @Headers("content-type: application/json")
     @PATCH("oauth/logout")
     fun setLogout(
-        @Header("Authorization") Authorization: String?
+        @Header("Authorization") Authorization: String
     )
     : Call<LogoutResponse>
 }
