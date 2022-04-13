@@ -40,7 +40,6 @@ class UserFragment : Fragment(R.layout.fragment_user) {
     private lateinit var mail: ImageButton
     private lateinit var description: TextView
 
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         init(view)
@@ -141,6 +140,9 @@ class UserFragment : Fragment(R.layout.fragment_user) {
             val clip = ClipData.newPlainText("git", "${userInfo.github}")
             clipboardManager.setPrimaryClip(clip)
 
+            val intent = Intent(context, WebViewActivity::class.java)
+            intent.putExtra("git", "${userInfo.github}")
+            startActivity(intent)
         }
 
         mail.setOnClickListener {
