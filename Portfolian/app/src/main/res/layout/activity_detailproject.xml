@@ -374,43 +374,56 @@
         app:layout_constraintTop_toBottomOf="@id/sv_DetailProject">
 
 
-        <de.hdodenhof.circleimageview.CircleImageView
-            android:id="@+id/cv_OwnerProfile"
-            android:layout_width="40dp"
-            android:layout_height="40dp"
-            android:layout_marginTop="15dp"
-            android:layout_marginBottom="15dp"
-            android:src="@drawable/avatar_1_raster" />
-
         <androidx.constraintlayout.widget.ConstraintLayout
-            android:id="@+id/cl_Owner"
-            android:layout_width="140dp"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center_vertical"
-            android:layout_marginStart="10dp">
+            android:id="@+id/cl_ProfileAndName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
 
-            <TextView
-                android:id="@+id/tv_Owner"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="Team Manager"
-                android:textColor="@color/base"
-                android:textSize="14sp"
-                android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/tv_OwnerName"
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/cv_OwnerProfile"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_marginTop="15dp"
+                android:layout_marginBottom="15dp"
+                android:src="@drawable/avatar_1_raster"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/cl_Owner"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
 
-            <TextView
-                android:id="@+id/tv_OwnerName"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:id="@+id/cl_Owner"
+                android:layout_width="140dp"
                 android:layout_height="wrap_content"
-                android:textColor="@color/base"
-                android:textSize="14sp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginStart="10dp"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_Owner"
-                tools:text="김수한무거북이열글자" />
+                app:layout_constraintStart_toEndOf="@id/cv_OwnerProfile"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <TextView
+                    android:id="@+id/tv_Owner"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="Team Manager"
+                    android:textColor="@color/base"
+                    android:textSize="14sp"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@id/tv_OwnerName"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_OwnerName"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="@color/base"
+                    android:textSize="14sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_Owner"
+                    tools:text="김수한무거북이열글자" />
+            </androidx.constraintlayout.widget.ConstraintLayout>
         </androidx.constraintlayout.widget.ConstraintLayout>
 
         <View
@@ -423,8 +436,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center_vertical"
-            android:orientation="horizontal">
-        </LinearLayout>
+            android:orientation="horizontal"></LinearLayout>
 
 
     </LinearLayout>
