@@ -319,7 +319,7 @@ class ProjectAdapter(
     override fun getItemCount(): Int = dataSet.size
 
     private fun moveDetail(projectId: String) {
-        val callDetailProject = projectService.readDetailProject(projectId)
+        val callDetailProject = projectService.readDetailProject("Bearer ${GlobalApplication.prefs.accessToken}", projectId)
         callDetailProject.enqueue(object : Callback<DetailProjectResponse> {
             override fun onResponse(
                 call: Call<DetailProjectResponse>,

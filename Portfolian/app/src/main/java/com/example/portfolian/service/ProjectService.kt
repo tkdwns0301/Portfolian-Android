@@ -27,6 +27,7 @@ interface ProjectService {
     // 3. 프로젝트 모집글 보기
     @GET("projects/{projectId}")
     fun readDetailProject(
+        @Header("Authorization") Authorization: String,
         @Path("projectId") projectId: String
     )
     : Call<DetailProjectResponse>
