@@ -10,16 +10,14 @@ import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
-import androidx.fragment.app.Fragment
-import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
 import android.widget.ImageButton
 import android.widget.TextView
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
-import androidx.core.content.ContextCompat.getSystemService
+import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.example.portfolian.R
 import com.example.portfolian.data.UserInfoResponse
@@ -27,7 +25,6 @@ import com.example.portfolian.databinding.FragmentUserBinding
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.UserService
-import com.example.portfolian.view.main.user.setting.SettingActivity
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import de.hdodenhof.circleimageview.CircleImageView
@@ -37,33 +34,32 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import kotlin.math.roundToInt
 
-class UserFragment : Fragment(R.layout.fragment_user) {
+class OtherActivity : AppCompatActivity() {
     private lateinit var binding: FragmentUserBinding
 
     private lateinit var retrofit: Retrofit
-    private lateinit var userInfoService: UserService
-    private lateinit var userInfo: UserInfoResponse
+    private lateinit var otherInfoService: UserService
+    private lateinit var otherInfo: UserInfoResponse
 
     private lateinit var toolbar: Toolbar
-    private lateinit var profileModify: Button
-    private lateinit var profileImage: CircleImageView
+    private lateinit var profile: CircleImageView
     private lateinit var nickName: TextView
     private lateinit var git: ImageButton
     private lateinit var mail: ImageButton
-    private lateinit var description: TextView
+    private lateinit var modifyProfile: AppCompatButton
     private lateinit var stack: FlexboxLayout
+    private lateinit var description: TextView
 
-    private var myStack = ""
-    private var myColor = 0
+    private var myColor: Int = 0
+    private var myStack: String = ""
 
-    override fun onCreateView(
-        inflater: LayoutInflater,
-        container: ViewGroup?,
-        savedInstanceState: Bundle?
-    ): View? {
-        binding = FragmentUserBinding.inflate(inflater, container, false)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        binding = FragmentUserBinding.inflate(layoutInflater)
+        setContentView(binding.root)
+
         init()
-        return binding.root
     }
 
     private fun init() {
@@ -71,128 +67,107 @@ class UserFragment : Fragment(R.layout.fragment_user) {
         initView()
     }
 
-    override fun onStart() {
-        super.onStart()
-
-        initRetrofit()
-        initView()
-    }
-
     private fun initRetrofit() {
         retrofit = RetrofitClient.getInstance()
-        userInfoService = retrofit.create(UserService::class.java)
+        otherInfoService = retrofit.create(UserService::class.java)
     }
 
     private fun initView() {
         toolbar = binding.userToolbar
-        profileModify = binding.btnModifyProfile
-        profileImage = binding.cvProfile
+
+        profile = binding.cvProfile
         nickName = binding.tvUserName
         git = binding.ibGit
         mail = binding.ibMail
-        description = binding.tvUserIntroduce
+
+        modifyProfile = binding.btnModifyProfile
+        modifyProfile.isVisible = false
+
         stack = binding.fblProfileStack
+        description = binding.tvUserIntroduce
 
         initToolbar()
-        initProfileModify()
-        readUserInfo()
+        readOtherInfo()
     }
+
     private fun initToolbar() {
-        toolbar.setOnMenuItemClickListener {
-            when(it.itemId) {
-                R.id.toolbar_Alert -> {
-                    //TODO 알림 버튼 눌렀을 때
+        toolbar.menu.setGroupVisible(0, false)
+        toolbar.menu.setGroupVisible(1, false)
+        toolbar.title = "상대방 프로필"
 
-                    true
-                }
-
-                R.id.toolbar_Setting -> {
-                    val intent = Intent(activity, SettingActivity::class.java)
-                    startActivity(intent)
-                    true
-                }
-
-                else -> {
-                    super.onOptionsItemSelected(it)
-                }
-            }
+        setSupportActionBar(toolbar)
+        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        toolbar.setNavigationOnClickListener {
+            finish()
         }
     }
 
-    private fun initProfileModify() {
-        profileModify.setOnClickListener {
-            val intent = Intent(activity, ProfileModifyActivity::class.java)
-            Log.e("profile", "${userInfo.photo}")
-            intent.putExtra("profile", "${userInfo.photo}")
-            startActivity(intent)
-        }
-    }
+    private fun readOtherInfo() {
+        val otherId = intent.getStringExtra("userId")
 
-    private fun readUserInfo() {
-        val callUserInfo = userInfoService.readUserInfo("Bearer ${GlobalApplication.prefs.accessToken}", "${GlobalApplication.prefs.userId}")
+        val callOtherInfo = otherInfoService.readUserInfo(
+            "Bearer ${GlobalApplication.prefs.accessToken}",
+            "$otherId"
+        )
 
-        callUserInfo.enqueue(object : Callback<UserInfoResponse> {
+        callOtherInfo.enqueue(object : Callback<UserInfoResponse> {
             override fun onResponse(
                 call: Call<UserInfoResponse>,
                 response: Response<UserInfoResponse>
             ) {
                 if (response.isSuccessful) {
-                    userInfo = response.body()!!
-                    setUserInfo()
+                    otherInfo = response.body()!!
+                    setOtherInfo()
                 }
             }
 
             override fun onFailure(call: Call<UserInfoResponse>, t: Throwable) {
-                Log.e("UserInfoService: ", "$t")
+                Log.e("callOtherInfo:", "$t")
             }
         })
     }
-    private fun setUserInfo() {
-        nickName.text = userInfo.nickName
 
-        if(userInfo.photo.isEmpty()) {
-            profileImage.setImageDrawable(context?.getDrawable(R.drawable.avatar_1_raster))
+    private fun setOtherInfo() {
+        nickName.text = otherInfo.nickName
+
+        if (otherInfo.photo.isEmpty()) {
+            profile.setImageDrawable(getDrawable(R.drawable.avatar_1_raster))
         } else {
             Glide.with(this)
-                .load(userInfo.photo)
-                .into(profileImage)
+                .load(otherInfo.photo)
+                .into(profile)
         }
 
         git.setOnClickListener {
-            var clipboardManager = activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText("git", "${userInfo.github}")
-            clipboardManager.setPrimaryClip(clip)
-
-            val intent = Intent(context, WebViewActivity::class.java)
-            intent.putExtra("git", "${userInfo.github}")
+            val intent = Intent(this, WebViewActivity::class.java)
+            intent.putExtra("git", "${otherInfo.github}")
             startActivity(intent)
         }
 
         mail.setOnClickListener {
-            var clipboardManager = activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText("mail", "${userInfo.mail}")
+            val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
+            val clip = ClipData.newPlainText("mail", "${otherInfo.mail}")
             clipboardManager.setPrimaryClip(clip)
         }
 
-        description.text = userInfo.description
+        description.text = otherInfo.description
 
         stack.removeAllViews()
-        stack.addItems(userInfo.stackList)
-
+        stack.addItems(otherInfo.stackList)
     }
 
-    // 홈화면에 하나씩 동적추가
     private fun FlexboxLayout.addItems(names: List<String>) {
-
-        for(name in names) {
+        for (name in names) {
             val chip = LayoutInflater.from(context).inflate(R.layout.view_chip, null) as Chip
+
             chip.apply {
                 stackColor(name)
 
-                text = " $myStack "
+                text = "  $myStack  "
                 setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
 
                 val nonClickColor = ContextCompat.getColor(context, R.color.nonClick_tag)
+
                 chipBackgroundColor = ColorStateList(
                     arrayOf(
                         intArrayOf(-android.R.attr.state_checked),
@@ -201,7 +176,7 @@ class UserFragment : Fragment(R.layout.fragment_user) {
                     intArrayOf(nonClickColor, myColor)
                 )
 
-                val nonCLickTextColor = ContextCompat.getColor(context, R.color.gray1)
+                val nonClickTextColor = ContextCompat.getColor(context, R.color.gray1)
                 //텍스트
                 setTextColor(
                     ColorStateList(
@@ -209,12 +184,15 @@ class UserFragment : Fragment(R.layout.fragment_user) {
                             intArrayOf(-android.R.attr.state_checked),
                             intArrayOf(android.R.attr.state_checked)
                         ),
-                        intArrayOf(nonCLickTextColor, Color.BLACK)
+                        intArrayOf(nonClickTextColor, Color.BLACK)
                     )
+
                 )
+
                 isChecked = true
                 isClickable = false
             }
+
             val layoutParams = ViewGroup.MarginLayoutParams(
                 ViewGroup.MarginLayoutParams.WRAP_CONTENT,
                 ViewGroup.MarginLayoutParams.WRAP_CONTENT
@@ -225,140 +203,138 @@ class UserFragment : Fragment(R.layout.fragment_user) {
         }
     }
 
-
-
     private fun stackColor(name: String) {
         when (name) {
             "frontEnd" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.front_end)
+                myColor = ContextCompat.getColor(this, R.color.front_end)
                 myStack = "Front-end"
             }
             "backEnd" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.back_end)
+                myColor = ContextCompat.getColor(this, R.color.back_end)
                 myStack = "Back-end"
             }
             "react" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.react)
+                myColor = ContextCompat.getColor(this, R.color.react)
                 myStack = "React"
             }
             "vue" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.vue)
+                myColor = ContextCompat.getColor(this, R.color.vue)
                 myStack = "Vue"
             }
             "spring" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.spring)
+                myColor = ContextCompat.getColor(this, R.color.spring)
                 myStack = "Spring"
             }
             "Spring" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.spring)
+                myColor = ContextCompat.getColor(this, R.color.spring)
                 myStack = "Spring"
             }
             "django" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.django)
+                myColor = ContextCompat.getColor(this, R.color.django)
                 myStack = "Django"
             }
             "ios" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.ios)
+                myColor = ContextCompat.getColor(this, R.color.ios)
                 myStack = "iOS"
             }
             "typescript" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.typescript)
+                myColor = ContextCompat.getColor(this, R.color.typescript)
                 myStack = "Typescript"
             }
             "javascript" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.javascript)
+                myColor = ContextCompat.getColor(this, R.color.javascript)
                 myStack = "Javascript"
             }
             "android" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.android)
+                myColor = ContextCompat.getColor(this, R.color.android)
                 myStack = "Android"
             }
             "angular" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.angular)
+                myColor = ContextCompat.getColor(this, R.color.angular)
                 myStack = "Angular"
             }
             "htmlCss" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.html_css)
+                myColor = ContextCompat.getColor(this, R.color.html_css)
                 myStack = "HTML/CSS"
             }
             "flask" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.flask)
+                myColor = ContextCompat.getColor(this, R.color.flask)
                 myStack = "Flask"
             }
             "nodeJs" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.node)
+                myColor = ContextCompat.getColor(this, R.color.node)
                 myStack = "Node.js"
             }
             "java" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.java)
+                myColor = ContextCompat.getColor(this, R.color.java)
                 myStack = "Java"
             }
             "python" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.python)
+                myColor = ContextCompat.getColor(this, R.color.python)
                 myStack = "Python"
             }
             "cCsharp" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.c_sharp)
+                myColor = ContextCompat.getColor(this, R.color.c_sharp)
                 myStack = "C#"
             }
             "kotlin" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.kotlin)
+                myColor = ContextCompat.getColor(this, R.color.kotlin)
                 myStack = "Kotlin"
             }
             "swift" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.swift)
+                myColor = ContextCompat.getColor(this, R.color.swift)
                 myStack = "Swift"
             }
             "go" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.go)
+                myColor = ContextCompat.getColor(this, R.color.go)
                 myStack = "Go"
             }
             "cCpp" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.c_cpp)
+                myColor = ContextCompat.getColor(this, R.color.c_cpp)
                 myStack = "C/C++"
             }
             "design" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.design)
+                myColor = ContextCompat.getColor(this, R.color.design)
                 myStack = "Design"
             }
             "figma" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.figma)
+                myColor = ContextCompat.getColor(this, R.color.figma)
                 myStack = "Figma"
             }
             "sketch" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.sketch)
+                myColor = ContextCompat.getColor(this, R.color.sketch)
                 myStack = "Sketch"
             }
             "git" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.git)
+                myColor = ContextCompat.getColor(this, R.color.git)
                 myStack = "Git"
             }
             "adobeXD" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.adobexd)
+                myColor = ContextCompat.getColor(this, R.color.adobexd)
                 myStack = "AdobeXD"
             }
             "photoshop" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.photoShop)
+                myColor = ContextCompat.getColor(this, R.color.photoShop)
                 myStack = "Photoshop"
             }
             "illustrator" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.illustrator)
+                myColor = ContextCompat.getColor(this, R.color.illustrator)
                 myStack = "Illustrator"
             }
             "firebase" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.firebase)
+                myColor = ContextCompat.getColor(this, R.color.firebase)
                 myStack = "Firebase"
             }
             "aws" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.aws)
+                myColor = ContextCompat.getColor(this, R.color.aws)
                 myStack = "AWS"
             }
             "gcp" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.gcp)
+                myColor = ContextCompat.getColor(this, R.color.gcp)
                 myStack = "GCP"
             }
             "etc" -> {
-                myColor = ContextCompat.getColor(requireContext(), R.color.ect)
+                myColor = ContextCompat.getColor(this, R.color.ect)
                 myStack = "etc"
             }
         }
@@ -411,5 +387,6 @@ class UserFragment : Fragment(R.layout.fragment_user) {
 
         return ""
     }
+
 
 }

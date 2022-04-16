@@ -138,6 +138,8 @@ class ProfileModifyActivity : AppCompatActivity() {
 
                 try {
                     bitmap = MediaStore.Images.Media.getBitmap(contentResolver, currentImageUri)
+
+                    profile.setImageBitmap(bitmap)
                     var file =
                         Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
                     filePath = file.path + "/img.png"

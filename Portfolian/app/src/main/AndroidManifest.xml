@@ -52,6 +52,8 @@
         <activity android:name=".view.main.user.ProfileModifyActivity" />
         <activity android:name=".view.main.user.setting.NotifyActivity"/>
         <activity android:name=".view.main.user.setting.SettingActivity"/>
+        <activity android:name=".view.main.user.WebViewActivity"/>
+        <activity android:name=".view.main.user.OtherActivity"/>
     </application>
 
 </manifest>

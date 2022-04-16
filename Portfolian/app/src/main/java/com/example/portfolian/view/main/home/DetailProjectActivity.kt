@@ -16,6 +16,7 @@ import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
 import br.tiagohm.markdownview.MarkdownView
@@ -28,6 +29,7 @@ import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.ChatService
 import com.example.portfolian.service.ProjectService
+import com.example.portfolian.view.main.user.OtherActivity
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import de.hdodenhof.circleimageview.CircleImageView
@@ -59,6 +61,7 @@ class DetailProjectActivity : AppCompatActivity() {
     private lateinit var bookmark: ToggleButton
     private lateinit var photo: CircleImageView
     private lateinit var createAt: TextView
+    private lateinit var userProfile: ConstraintLayout
 
     private lateinit var checkedChips: MutableList<Chip>
     private var myStack: String = ""
@@ -235,6 +238,15 @@ class DetailProjectActivity : AppCompatActivity() {
         val dynamicView = binding.llButton
 
         dynamicView.addItem()
+
+        userProfile = binding.clProfileAndName
+
+        userProfile.setOnClickListener {
+            intent = Intent(this, OtherActivity::class.java)
+            intent.putExtra("userId", "${detailProject.leader.userId}")
+            startActivity(intent)
+        }
+
 
     }
 
