@@ -71,6 +71,13 @@ class UserFragment : Fragment(R.layout.fragment_user) {
         initView()
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        initRetrofit()
+        initView()
+    }
+
     private fun initRetrofit() {
         retrofit = RetrofitClient.getInstance()
         userInfoService = retrofit.create(UserService::class.java)
