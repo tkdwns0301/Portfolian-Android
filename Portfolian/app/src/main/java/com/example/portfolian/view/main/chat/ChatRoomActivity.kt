@@ -7,6 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.portfolian.R
 import com.example.portfolian.adapter.ChatAdapter
 import com.example.portfolian.data.ChatModel
@@ -26,10 +27,12 @@ class ChatRoomActivity: AppCompatActivity() {
     private lateinit var chattingText: EditText
     private lateinit var toolbar: Toolbar
     private lateinit var recyclerView: RecyclerView
+    private lateinit var swipe: SwipeRefreshLayout
 
     private var arrayList = arrayListOf<ChatModel>()
     private val mAdapter = ChatAdapter(this, arrayList)
 
+    private var chatRoomId = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -37,23 +40,6 @@ class ChatRoomActivity: AppCompatActivity() {
         setContentView(binding.root)
 
         init()
-
-        recyclerView = binding.rvChatList
-
-        recyclerView.adapter = mAdapter
-        val lm = LinearLayoutManager(this)
-        recyclerView.layoutManager = lm
-        recyclerView.setHasFixedSize(true)
-
-        mSocket = SocketApplication.getSocket()
-
-        mSocket.on("chat:receive", onNewMessage)
-
-        send.setOnClickListener {
-            sendMessage()
-            chattingText.setText("")
-        }
-
     }
 
     private fun init() {
@@ -69,8 +55,11 @@ class ChatRoomActivity: AppCompatActivity() {
         toolbar = binding.toolbarChat
         send = binding.btnSend
         chattingText = binding.etMessage
+        recyclerView = binding.rvChatList
+        swipe = binding.slSwipe
 
         initToolbar()
+        initSocket()
     }
 
     private fun initToolbar() {
@@ -95,11 +84,29 @@ class ChatRoomActivity: AppCompatActivity() {
         }
     }
 
+    private fun initSocket() {
+        recyclerView.adapter = mAdapter
+        val lm = LinearLayoutManager(this)
+        recyclerView.layoutManager = lm
+        recyclerView.setHasFixedSize(true)
+
+        mSocket = SocketApplication.getSocket()
+
+        mSocket.on("chat:receive", onNewMessage)
+
+        send.setOnClickListener {
+            sendMessage()
+            chattingText.setText("")
+        }
+    }
+
     private fun sendMessage() {
         val jsonObject = JSONObject()
 
+        chatRoomId = intent.getStringExtra("chatRoomId").toString()
+
         jsonObject.put("messageContent", "${chattingText.text}")
-        jsonObject.put("roomId", 123)
+        jsonObject.put("roomId", "$chatRoomId")
 
         mSocket.emit("chat:send", jsonObject)
 
@@ -113,6 +120,11 @@ class ChatRoomActivity: AppCompatActivity() {
             mAdapter.addItem(chat)
             mAdapter.notifyDataSetChanged()
         }
+    }
+
+    private fun refresh() {
+
+        swipe.isRefreshing = false
     }
 
 }

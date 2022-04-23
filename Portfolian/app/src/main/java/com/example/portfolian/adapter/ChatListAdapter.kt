@@ -37,7 +37,6 @@ class ChatListAdapter(
         val view =
             LayoutInflater.from(parent.context).inflate(R.layout.list_chat_item, parent, false)
         initRetrofit()
-        Log.e("asdasd", "Asdasd")
         return ViewHolder(view)
     }
 
@@ -74,14 +73,15 @@ class ChatListAdapter(
         holder.date.text = date.toString()
 
         holder.container.setOnClickListener {
+            moveChat(chatRoom.chatRoomId)
         }
     }
 
     override fun getItemCount(): Int = dataSet.size
 
-    private fun moveChat(projectId: String) {
+    private fun moveChat(chatRoomId: String) {
         val callChat =
-            chatService.readChat("Bearer ${GlobalApplication.prefs.accessToken}", "$projectId")
+            chatService.readChat("Bearer ${GlobalApplication.prefs.accessToken}", "$chatRoomId")
         callChat.enqueue(object : Callback<ReadChatResponse> {
             override fun onResponse(
                 call: Call<ReadChatResponse>,

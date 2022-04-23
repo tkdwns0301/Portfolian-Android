@@ -20,6 +20,6 @@ interface ChatService {
     @GET("chats/{chatRoomId}")
     fun readChat(
         @Header("Authorization") Authorization: String,
-        @Path("projectId") projectId: String
+        @Path("chatRoomId") chatRoomId: String
     ): Call<ReadChatResponse>
 }
