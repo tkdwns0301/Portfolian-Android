@@ -34,13 +34,12 @@ class MainActivity : AppCompatActivity() {
         setContentView(view)
 
         val keyHash = Utility.getKeyHash(this)
-        Log.d("Hash", keyHash)
 
         setFragment(TAG_HOME, HomeFragment())
 
         binding.bnMain.setOnItemSelectedListener { item ->
             when(item.itemId) {
-                R.id.homeFragment -> setFragment(TAG_HOME, HomeFragment())
+                R.id.homeFragment-> setFragment(TAG_HOME, HomeFragment())
                 R.id.bookmarkFragment -> setFragment(TAG_BOOKMARK, BookmarkFragment())
                 R.id.chatFragment -> setFragment(TAG_CHAT, ChatFragment())
                 R.id.userFragment -> setFragment(TAG_USER, UserFragment())
@@ -68,7 +67,7 @@ class MainActivity : AppCompatActivity() {
             ft.hide(home)
         }
         if(bookmark != null) {
-            ft.hide(bookmark)
+            ft.remove(bookmark)
         }
         if(chat != null) {
             ft.hide(chat)
@@ -84,8 +83,9 @@ class MainActivity : AppCompatActivity() {
         }
         else if(tag == TAG_BOOKMARK) {
             if(bookmark != null) {
-                ft.show(bookmark)
+                ft.add(R.id.fg_MainNavContainer, fragment, tag)
             }
+
         }
         else if(tag == TAG_CHAT) {
             if(chat != null) {

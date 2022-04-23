@@ -48,6 +48,10 @@ class BookmarkFragment : Fragment(R.layout.fragment_bookmark) {
         return binding.root
     }
 
+    override fun onResume() {
+        super.onResume()
+        readBookmark()
+    }
 
     private fun init() {
         initRetrofit()
