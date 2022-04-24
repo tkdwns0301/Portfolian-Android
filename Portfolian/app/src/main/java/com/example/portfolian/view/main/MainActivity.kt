@@ -70,7 +70,7 @@ class MainActivity : AppCompatActivity() {
             ft.remove(bookmark)
         }
         if(chat != null) {
-            ft.hide(chat)
+            ft.remove(chat)
         }
         if(user != null) {
             ft.hide(user)
@@ -89,7 +89,7 @@ class MainActivity : AppCompatActivity() {
         }
         else if(tag == TAG_CHAT) {
             if(chat != null) {
-                ft.show(chat)
+                ft.add(R.id.fg_MainNavContainer, fragment, tag)
             }
         }
         else if(tag == TAG_USER) {

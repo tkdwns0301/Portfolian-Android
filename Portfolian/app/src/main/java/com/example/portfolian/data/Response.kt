@@ -221,8 +221,8 @@ data class TokenResponse(
 data class CreateChatResponse(
     @SerializedName("code")
     val code: Int,
-    @SerializedName("roomId")
-    val roomId: String,
+    @SerializedName("chatRoomId")
+    val chatRoomId: String,
     @SerializedName("message")
     val message: String
 )

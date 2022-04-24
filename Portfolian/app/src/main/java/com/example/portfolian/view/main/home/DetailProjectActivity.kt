@@ -29,6 +29,7 @@ import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.ChatService
 import com.example.portfolian.service.ProjectService
+import com.example.portfolian.view.main.chat.ChatRoomActivity
 import com.example.portfolian.view.main.user.OtherActivity
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
@@ -242,11 +243,10 @@ class DetailProjectActivity : AppCompatActivity() {
         userProfile = binding.clProfileAndName
 
         userProfile.setOnClickListener {
-            intent = Intent(this, OtherActivity::class.java)
+            val intent = Intent(this, OtherActivity::class.java)
             intent.putExtra("userId", "${detailProject.leader.userId}")
             startActivity(intent)
         }
-
 
     }
 
@@ -274,7 +274,7 @@ class DetailProjectActivity : AppCompatActivity() {
 
                     val chatData = CreateChatRequest("${GlobalApplication.prefs.userId}", "$projectId")
 
-                    val createChat = chatService.createChat("${GlobalApplication.prefs.accessToken}", chatData)
+                    val createChat = chatService.createChat("Bearer ${GlobalApplication.prefs.accessToken}", chatData)
 
                     createChat.enqueue(object: Callback<CreateChatResponse> {
                         override fun onResponse(
@@ -284,9 +284,13 @@ class DetailProjectActivity : AppCompatActivity() {
                             if(response.isSuccessful) {
                                 val code = response.body()!!.code
                                 val message = response.body()!!.message
-                                val roomId = response.body()!!.roomId
+                                val chatRoomId = response.body()!!.chatRoomId
 
-                                Log.e("createChat: ", "$code $message $roomId")
+                                Log.e("createChat: ", "$code $message $chatRoomId")
+
+                                val intent = Intent(this@DetailProjectActivity, ChatRoomActivity::class.java)
+                                intent.putExtra("chatRoomId", "$chatRoomId")
+                                startActivity(intent)
                             }
                         }
 

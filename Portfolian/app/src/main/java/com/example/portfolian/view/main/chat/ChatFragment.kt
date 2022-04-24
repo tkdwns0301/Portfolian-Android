@@ -3,11 +3,14 @@ package com.example.portfolian.view.main.chat
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
+import android.view.LayoutInflater
 import androidx.fragment.app.Fragment
 import android.view.View
+import android.view.ViewGroup
 import android.widget.Button
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.portfolian.R
 import com.example.portfolian.adapter.ChatAdapter
 import com.example.portfolian.adapter.ChatListAdapter
@@ -31,17 +34,21 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ChatListAdapter
+    private lateinit var swipe: SwipeRefreshLayout
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        binding = FragmentChatBinding.inflate(layoutInflater)
-
-        init(view)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentChatBinding.inflate(inflater, container, false)
+        init()
+        return binding.root
     }
 
-    private fun init(view: View) {
+    private fun init() {
         initRetrofit()
-        initView(view)
+        initView()
     }
 
     private fun initRetrofit() {
@@ -49,17 +56,26 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         chatService = retrofit.create(ChatService::class.java)
     }
 
-    private fun initView(view: View) {
-        initRecyclerView(view)
+    private fun initView() {
+        recyclerView = binding.rvChatList
+        swipe = binding.slSwipe
+
+        initRecyclerView()
+        initSwpieRefreshLayout()
     }
 
-    private fun initRecyclerView(view: View) {
+    private fun initRecyclerView() {
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        recyclerView = view.findViewById(R.id.rv_ChatList)
-
         recyclerView.layoutManager = layoutManager
         readChatList()
     }
+
+    private fun initSwpieRefreshLayout() {
+        swipe.setOnRefreshListener {
+            refresh()
+        }
+    }
+
 
 
     private fun readChatList() {
@@ -91,7 +107,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         }
     }
 
-
+    private fun refresh() {
+        readChatList()
+        swipe.isRefreshing = false
+    }
 
 
 
