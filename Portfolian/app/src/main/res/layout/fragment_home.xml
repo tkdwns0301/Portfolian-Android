@@ -8,7 +8,9 @@
     android:layout_height="match_parent"
     tools:context=".view.main.home.HomeFragment">
 
-    <include layout="@layout/drawer_home" />
+    <include
+        android:id="@+id/drawer_home"
+        layout="@layout/drawer_home" />
 
 
     <LinearLayout
