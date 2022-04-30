@@ -17,6 +17,7 @@ import com.example.portfolian.network.SocketApplication
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import org.json.JSONObject
+import java.time.LocalDate
 import java.time.LocalDateTime
 import java.util.*
 
@@ -69,8 +70,6 @@ class ChatRoomActivity: AppCompatActivity() {
     }
 
     private fun initToolbar() {
-        toolbar = binding.toolbarChat
-
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.chat_Delete -> {
@@ -116,9 +115,12 @@ class ChatRoomActivity: AppCompatActivity() {
         jsonObject.put("receiver", "$receiver")
         jsonObject.put("date", "${LocalDateTime.now()}")
 
-        Log.e("date", "${LocalDateTime.now()}")
+        val chat = ChatModel("${chattingText.text}", "$chatRoomId", "${GlobalApplication.prefs.userId}", "$receiver", LocalDateTime.now())
+
         mSocket.emit("chat:send", jsonObject)
 
+        mAdapter.addItem(chat)
+        mAdapter.notifyDataSetChanged()
     }
 
     private var onNewMessage: Emitter.Listener = Emitter.Listener { args ->
@@ -129,9 +131,9 @@ class ChatRoomActivity: AppCompatActivity() {
             val roomId = jsonObject.get("roomId")
             val sender = jsonObject.get("sender")
             val receiver = jsonObject.get("sender")
+            val date = LocalDateTime.parse("${jsonObject.get("date")}")
 
-            Log.e("json: ", "$message, $roomId, $sender, $receiver")
-            val chat = ChatModel("$message", "$roomId", "$sender", "$receiver", Date(System.currentTimeMillis()))
+            val chat = ChatModel("$message", "$roomId", "$sender", "$receiver", date)
             mAdapter.addItem(chat)
             mAdapter.notifyDataSetChanged()
         }

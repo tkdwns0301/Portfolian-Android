@@ -20,6 +20,7 @@ import java.time.format.DateTimeFormatter
 import java.util.*
 
 class ChatAdapter (val context: Context, val arrayList: ArrayList<ChatModel>, val roomId: String) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+
     fun addItem(item: ChatModel) {
         if(arrayList != null ) {
             arrayList.add(item)
@@ -48,17 +49,14 @@ class ChatAdapter (val context: Context, val arrayList: ArrayList<ChatModel>, va
         return arrayList.size
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, i: Int) {
         if(viewHolder is Holder) {
             val message = arrayList[i].message
             viewHolder.chatText?.text = message
 
             var time = arrayList[i].date
-            val formatter = SimpleDateFormat("HH : mm")
-            val date = formatter.format(time)
-            //val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd HH : mm")
-            //val date: LocalDate = LocalDate.parse(time, formatter)
+            val formatter = DateTimeFormatter.ofPattern("HH : mm")
+            val date = time.format(formatter)
 
             viewHolder.chatTime?.text = date
         }
@@ -80,6 +78,10 @@ class ChatAdapter (val context: Context, val arrayList: ArrayList<ChatModel>, va
 
 
     override fun getItemViewType(position: Int): Int {
-        return 2
+        return if(arrayList[position].sender == "${GlobalApplication.prefs.userId}") {
+            1
+        } else {
+            2
+        }
     }
 }
