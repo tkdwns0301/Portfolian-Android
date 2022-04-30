@@ -15,6 +15,7 @@ import com.example.portfolian.data.KakaoTokenRequest
 import com.example.portfolian.data.OAuthResponse
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
+import com.example.portfolian.network.SocketApplication
 import com.example.portfolian.service.OAuthService
 import com.google.android.gms.auth.api.signin.GoogleSignIn
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount
@@ -210,14 +211,24 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
                     GlobalApplication.prefs.accessToken = accessToken
                     GlobalApplication.prefs.userId = userId
 
-                    if (!isNew) {
-                        navController.navigate(R.id.action_logInFragment_to_mainActivity)
-                        activity?.finish()
-                    } else {
-                        nickname()
+                    SocketApplication.setSocket()
+                    SocketApplication.establishConnection()
+
+                    val mSocket = SocketApplication.mSocket
+
+                    mSocket.on("connection") {
+                        if (!isNew) {
+                            navController.navigate(R.id.action_logInFragment_to_mainActivity)
+                            activity?.finish()
+
+                        } else {
+                            nickname()
+                        }
                     }
+
                 }
             }
+
             override fun onFailure(call: Call<OAuthResponse>, t: Throwable) {
                 Log.e("LogInService: ", "$t")
             }
@@ -233,8 +244,6 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
             nickname()
         }
     }
-
-
 
 
 }

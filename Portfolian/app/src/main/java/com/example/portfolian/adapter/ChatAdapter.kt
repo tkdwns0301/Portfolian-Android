@@ -10,13 +10,16 @@ import androidx.annotation.RequiresApi
 import androidx.recyclerview.widget.RecyclerView
 import com.example.portfolian.R
 import com.example.portfolian.data.ChatModel
+import com.example.portfolian.network.GlobalApplication
+import com.example.portfolian.network.SocketApplication
+import org.json.JSONObject
 import java.text.DateFormat
 import java.text.SimpleDateFormat
 import java.time.LocalDate
 import java.time.format.DateTimeFormatter
 import java.util.*
 
-class ChatAdapter (val context: Context, val arrayList: ArrayList<ChatModel>) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
+class ChatAdapter (val context: Context, val arrayList: ArrayList<ChatModel>, val roomId: String) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     fun addItem(item: ChatModel) {
         if(arrayList != null ) {
             arrayList.add(item)
@@ -31,6 +34,12 @@ class ChatAdapter (val context: Context, val arrayList: ArrayList<ChatModel>) : 
             Holder(view)
         } else {
             view = LayoutInflater.from(context).inflate(R.layout.item_your_chat, parent, false)
+
+            val jsonObject = JSONObject()
+            jsonObject.put("userId", "${GlobalApplication.prefs.userId}")
+            jsonObject.put("roomId", "$roomId")
+            SocketApplication.mSocket.emit("chat:read", jsonObject)
+
             Holder2(view)
         }
     }
@@ -42,7 +51,7 @@ class ChatAdapter (val context: Context, val arrayList: ArrayList<ChatModel>) : 
     @RequiresApi(Build.VERSION_CODES.O)
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, i: Int) {
         if(viewHolder is Holder) {
-            val message = arrayList[i].message.split("\"")[3]
+            val message = arrayList[i].message
             viewHolder.chatText?.text = message
 
             var time = arrayList[i].date
@@ -71,6 +80,6 @@ class ChatAdapter (val context: Context, val arrayList: ArrayList<ChatModel>) : 
 
 
     override fun getItemViewType(position: Int): Int {
-        return 1
+        return 2
     }
 }

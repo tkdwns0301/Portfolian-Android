@@ -27,6 +27,7 @@ import com.example.portfolian.data.*
 import com.example.portfolian.databinding.ActivityDetailprojectBinding
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
+import com.example.portfolian.network.SocketApplication
 import com.example.portfolian.service.ChatService
 import com.example.portfolian.service.ProjectService
 import com.example.portfolian.view.main.chat.ChatRoomActivity
@@ -290,6 +291,7 @@ class DetailProjectActivity : AppCompatActivity() {
 
                                 val intent = Intent(this@DetailProjectActivity, ChatRoomActivity::class.java)
                                 intent.putExtra("chatRoomId", "$chatRoomId")
+                                intent.putExtra("receiver", "${detailProject.leader.userId}")
                                 startActivity(intent)
                             }
                         }

@@ -12,10 +12,12 @@ import com.example.portfolian.R
 import com.example.portfolian.adapter.ChatAdapter
 import com.example.portfolian.data.ChatModel
 import com.example.portfolian.databinding.ActivityChatroomBinding
+import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.SocketApplication
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import org.json.JSONObject
+import java.time.LocalDateTime
 import java.util.*
 
 
@@ -30,7 +32,7 @@ class ChatRoomActivity: AppCompatActivity() {
     private lateinit var swipe: SwipeRefreshLayout
 
     private var arrayList = arrayListOf<ChatModel>()
-    private val mAdapter = ChatAdapter(this, arrayList)
+    private lateinit var mAdapter : ChatAdapter
 
     private var chatRoomId = ""
 
@@ -58,8 +60,12 @@ class ChatRoomActivity: AppCompatActivity() {
         recyclerView = binding.rvChatList
         swipe = binding.slSwipe
 
+        chatRoomId = intent.getStringExtra("chatRoomId").toString()
+        mAdapter = ChatAdapter(this, arrayList, chatRoomId)
+
         initToolbar()
         initSocket()
+
     }
 
     private fun initToolbar() {
@@ -103,27 +109,35 @@ class ChatRoomActivity: AppCompatActivity() {
     private fun sendMessage() {
         val jsonObject = JSONObject()
 
-        chatRoomId = intent.getStringExtra("chatRoomId").toString()
-
+        val receiver = intent.getStringExtra("receiver").toString()
         jsonObject.put("messageContent", "${chattingText.text}")
         jsonObject.put("roomId", "$chatRoomId")
+        jsonObject.put("sender", "${GlobalApplication.prefs.userId}")
+        jsonObject.put("receiver", "$receiver")
+        jsonObject.put("date", "${LocalDateTime.now()}")
 
+        Log.e("date", "${LocalDateTime.now()}")
         mSocket.emit("chat:send", jsonObject)
 
     }
 
     private var onNewMessage: Emitter.Listener = Emitter.Listener { args ->
         runOnUiThread {
-            val message = args[0]
+            val jsonObject = JSONObject(args[0].toString())
 
-            val chat = ChatModel("123", "상준", "$message", Date(System.currentTimeMillis()))
+            val message = jsonObject.get("messageContent")
+            val roomId = jsonObject.get("roomId")
+            val sender = jsonObject.get("sender")
+            val receiver = jsonObject.get("sender")
+
+            Log.e("json: ", "$message, $roomId, $sender, $receiver")
+            val chat = ChatModel("$message", "$roomId", "$sender", "$receiver", Date(System.currentTimeMillis()))
             mAdapter.addItem(chat)
             mAdapter.notifyDataSetChanged()
         }
     }
 
     private fun refresh() {
-
         swipe.isRefreshing = false
     }
 

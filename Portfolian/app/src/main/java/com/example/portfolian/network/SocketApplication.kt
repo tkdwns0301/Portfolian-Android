@@ -4,6 +4,7 @@ package com.example.portfolian.network
 import android.util.Log
 import io.socket.client.IO
 import io.socket.client.Socket
+import org.json.JSONObject
 import java.net.URISyntaxException
 
 object SocketApplication {
@@ -31,5 +32,13 @@ object SocketApplication {
     @Synchronized
     fun closeConnection() {
         mSocket.disconnect()
+    }
+
+    @Synchronized
+    fun sendUserId() {
+        val jsonObject = JSONObject()
+        jsonObject.put("userId", "${GlobalApplication.prefs.userId}")
+
+        mSocket.emit("auth", jsonObject)
     }
 }

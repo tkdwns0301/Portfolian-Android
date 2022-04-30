@@ -12,6 +12,7 @@ import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.portfolian.R
 import com.example.portfolian.databinding.ActivityMainBinding
+import com.example.portfolian.network.SocketApplication
 import com.example.portfolian.view.main.bookmark.BookmarkFragment
 import com.example.portfolian.view.main.chat.ChatFragment
 import com.example.portfolian.view.main.home.HomeFragment
@@ -99,6 +100,12 @@ class MainActivity : AppCompatActivity() {
         }
 
         ft.commitAllowingStateLoss()
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+
+        SocketApplication.closeConnection()
     }
 
 }

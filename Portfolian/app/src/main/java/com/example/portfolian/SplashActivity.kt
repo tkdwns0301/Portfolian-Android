@@ -17,6 +17,7 @@ import com.example.portfolian.view.main.MainActivity
 import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
+import io.socket.emitter.Emitter
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -75,7 +76,12 @@ class SplashActivity: AppCompatActivity() {
                     SocketApplication.setSocket()
                     SocketApplication.establishConnection()
 
-                    toMain()
+                    val mSocket = SocketApplication.mSocket
+
+                    mSocket.on("connection") {
+                        SocketApplication.sendUserId()
+                        toMain()
+                    }
                 }
             }
             override fun onFailure(call: Call<OAuthResponse>, t: Throwable) {
