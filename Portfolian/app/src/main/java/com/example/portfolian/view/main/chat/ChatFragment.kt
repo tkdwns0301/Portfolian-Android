@@ -49,7 +49,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
         val mSocket = SocketApplication.mSocket
 
-        Log.e("connected", "${mSocket.connected()}")
         return binding.root
     }
 
