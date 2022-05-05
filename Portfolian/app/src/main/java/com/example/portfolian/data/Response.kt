@@ -288,3 +288,14 @@ data class Chat(
     @SerializedName("date")
     val date: Date
 ) : Parcelable
+//-------------------------------------
+
+// 43 채팅방 나가기
+@Parcelize
+data class RemoveChatResponse(
+    @SerializedName("code")
+    val code: Int,
+    @SerializedName("message")
+    val message: String
+) : Parcelable
+//-------------------------------------

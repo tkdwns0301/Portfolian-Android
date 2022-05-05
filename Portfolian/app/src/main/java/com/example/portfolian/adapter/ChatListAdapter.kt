@@ -2,6 +2,7 @@ package com.example.portfolian.adapter
 
 import android.content.Context
 import android.content.Intent
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -12,10 +13,15 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.portfolian.R
 import com.example.portfolian.data.ChatRoom
+import com.example.portfolian.data.RemoveChatResponse
+import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.ChatService
 import com.example.portfolian.view.main.chat.ChatRoomActivity
 import de.hdodenhof.circleimageview.CircleImageView
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 import retrofit2.Retrofit
 import java.text.SimpleDateFormat
 
@@ -70,6 +76,10 @@ class ChatListAdapter(
         holder.container.setOnClickListener {
             moveChat(chatRoom.chatRoomId, chatRoom.user.userId, chatRoom.user.photo, chatRoom.projectTitle, chatRoom.user.nickName)
         }
+
+        holder.remove.setOnClickListener {
+            removeData(position, chatRoom.chatRoomId)
+        }
     }
 
     override fun getItemCount(): Int = dataSet.size
@@ -111,5 +121,30 @@ class ChatListAdapter(
         val title: TextView = view.findViewById(R.id.tv_Title)
         val badge: TextView = view.findViewById(R.id.tv_Badge)
         val badgeLayout: ConstraintLayout = view.findViewById(R.id.cl_Badge)
+        val remove: TextView = view.findViewById(R.id.tv_Remove)
+    }
+
+    private fun removeData(position: Int, chatRoomId: String) {
+        val removeChat = chatService.removeChat("Bearer ${GlobalApplication.prefs.accessToken}", "$chatRoomId")
+        removeChat.enqueue(object : Callback<RemoveChatResponse> {
+            override fun onResponse(
+                call: Call<RemoveChatResponse>,
+                response: Response<RemoveChatResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val code = response.body()!!.code
+                    val message = response.body()!!.message
+
+                    Log.e("RemoveChat: ", "$code: $message")
+                }
+            }
+
+            override fun onFailure(call: Call<RemoveChatResponse>, t: Throwable) {
+                Log.e("moveChat:", "$t")
+            }
+
+        })
+        dataSet.removeAt(position)
+        notifyItemRemoved(position)
     }
 }

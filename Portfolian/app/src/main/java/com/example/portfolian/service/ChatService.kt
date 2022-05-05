@@ -22,4 +22,10 @@ interface ChatService {
         @Header("Authorization") Authorization: String,
         @Path("chatRoomId") chatRoomId: String
     ): Call<ReadChatResponse>
+
+    @PUT("chats/{chatRoomId}")
+    fun removeChat (
+        @Header("Authorization") Authorization: String,
+        @Path("chatRoomId") chatRoomId: String
+    ): Call<RemoveChatResponse>
 }

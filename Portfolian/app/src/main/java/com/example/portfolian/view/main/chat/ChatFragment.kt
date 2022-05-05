@@ -1,5 +1,6 @@
 package com.example.portfolian.view.main.chat
 
+import android.content.ClipData
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -9,12 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.Toolbar
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.portfolian.R
 import com.example.portfolian.adapter.ChatAdapter
 import com.example.portfolian.adapter.ChatListAdapter
+import com.example.portfolian.adapter.SwipeHelperCallback
 import com.example.portfolian.data.ChatRoom
 import com.example.portfolian.data.ReadChatList
 import com.example.portfolian.databinding.FragmentChatBinding
@@ -128,6 +131,17 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         if(chatRoomList != null) {
             adapter = ChatListAdapter(requireContext(), chatRoomList, 0)
             recyclerView.adapter = adapter
+
+            val swipeHelperCallback = SwipeHelperCallback(adapter).apply {
+                setClamp((resources.displayMetrics.widthPixels.toFloat() / 4))
+            }
+            ItemTouchHelper(swipeHelperCallback).attachToRecyclerView(recyclerView)
+
+            recyclerView.setOnTouchListener {_, _ ->
+                swipeHelperCallback.removePreviousClamp(recyclerView)
+                false
+            }
+
             adapter.notifyDataSetChanged()
         }
     }
