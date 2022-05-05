@@ -75,13 +75,13 @@ class ChatListAdapter(
         holder.date.text = date.toString()
 
         holder.container.setOnClickListener {
-            moveChat(chatRoom.chatRoomId, chatRoom.user.userId)
+            moveChat(chatRoom.chatRoomId, chatRoom.user.userId, chatRoom.user.photo)
         }
     }
 
     override fun getItemCount(): Int = dataSet.size
 
-    private fun moveChat(chatRoomId: String, receiver: String) {
+    private fun moveChat(chatRoomId: String, receiver: String, photo: String) {
         /*val callChat = chatService.readChat("Bearer ${GlobalApplication.prefs.accessToken}", "$chatRoomId")
         callChat.enqueue(object : Callback<ReadChatResponse> {
             override fun onResponse(
@@ -102,6 +102,7 @@ class ChatListAdapter(
         val intent = Intent(context, ChatRoomActivity::class.java)
         intent.putExtra("chatRoomId", "$chatRoomId")
         intent.putExtra("receiver", "$receiver")
+        intent.putExtra("photo", "$photo")
         context.startActivity(intent)
     }
 

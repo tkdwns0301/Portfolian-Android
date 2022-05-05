@@ -17,9 +17,7 @@ import com.example.portfolian.network.SocketApplication
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
 import org.json.JSONObject
-import java.time.LocalDate
 import java.time.LocalDateTime
-import java.util.*
 
 
 class ChatRoomActivity: AppCompatActivity() {
@@ -36,6 +34,7 @@ class ChatRoomActivity: AppCompatActivity() {
     private lateinit var mAdapter : ChatAdapter
 
     private var chatRoomId = ""
+    private var photo = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -60,9 +59,10 @@ class ChatRoomActivity: AppCompatActivity() {
         chattingText = binding.etMessage
         recyclerView = binding.rvChatList
         swipe = binding.slSwipe
+        photo = intent.getStringExtra("photo").toString()
 
         chatRoomId = intent.getStringExtra("chatRoomId").toString()
-        mAdapter = ChatAdapter(this, arrayList, chatRoomId)
+        mAdapter = ChatAdapter(this, arrayList, chatRoomId, photo)
 
         initToolbar()
         initSocket()
@@ -134,6 +134,7 @@ class ChatRoomActivity: AppCompatActivity() {
             val date = LocalDateTime.parse("${jsonObject.get("date")}")
 
             val chat = ChatModel("$message", "$roomId", "$sender", "$receiver", date)
+
             mAdapter.addItem(chat)
             mAdapter.notifyDataSetChanged()
         }
