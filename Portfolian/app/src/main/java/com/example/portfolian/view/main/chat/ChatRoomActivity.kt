@@ -29,7 +29,6 @@ class ChatRoomActivity: AppCompatActivity() {
     private lateinit var toolbar: Toolbar
     private lateinit var toolbarTitle: TextView
     private lateinit var recyclerView: RecyclerView
-    private lateinit var swipe: SwipeRefreshLayout
     private lateinit var title: TextView
 
     private var arrayList = arrayListOf<ChatModel>()
@@ -62,8 +61,6 @@ class ChatRoomActivity: AppCompatActivity() {
         send = binding.btnSend
         chattingText = binding.etMessage
         recyclerView = binding.rvChatList
-
-        swipe = binding.slSwipe
         title = binding.tvTitle
 
         photo = intent.getStringExtra("photo").toString()
@@ -152,10 +149,6 @@ class ChatRoomActivity: AppCompatActivity() {
             recyclerView.smoothScrollToPosition(arrayList.size-1)
 
         }
-    }
-
-    private fun refresh() {
-        swipe.isRefreshing = false
     }
 
 }

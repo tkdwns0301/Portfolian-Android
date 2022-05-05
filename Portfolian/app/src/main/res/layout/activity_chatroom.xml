@@ -50,10 +50,10 @@
             android:id="@+id/tv_Title"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
+            android:layout_marginStart="10dp"
             android:textColor="@color/base"
             android:textSize="14sp"
             app:layout_constraintBottom_toBottomOf="parent"
-            android:layout_marginStart="10dp"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
@@ -63,27 +63,22 @@
     <View
         android:id="@+id/divider2"
         style="@style/Divider.Horizontal"
-        app:layout_constraintBottom_toTopOf="@id/sl_Swipe"
+        app:layout_constraintBottom_toTopOf="@id/rv_ChatList"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cl_Title" />
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/sl_Swipe"
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_ChatList"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/white"
+        android:padding="20dp"
         app:layout_constraintBottom_toTopOf="@id/bottomView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider2">
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_ChatList"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:background="@color/white"
-            android:padding="20dp" />
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        app:layout_constraintTop_toBottomOf="@id/divider2" />
 
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -96,7 +91,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/sl_Swipe">
+        app:layout_constraintTop_toBottomOf="@id/rv_ChatList">
 
 
         <androidx.constraintlayout.widget.ConstraintLayout

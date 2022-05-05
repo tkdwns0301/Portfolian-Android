@@ -25,7 +25,7 @@ class ChatAdapter(
     val photo: String
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
-    private var photoFlag = false
+    private var photoFlag = true
     private var svFlag = false
 
     fun addItem(item: ChatModel) {
