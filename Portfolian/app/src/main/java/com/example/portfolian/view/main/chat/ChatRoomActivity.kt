@@ -27,8 +27,10 @@ class ChatRoomActivity: AppCompatActivity() {
     private lateinit var send: ImageButton
     private lateinit var chattingText: EditText
     private lateinit var toolbar: Toolbar
+    private lateinit var toolbarTitle: TextView
     private lateinit var recyclerView: RecyclerView
     private lateinit var swipe: SwipeRefreshLayout
+    private lateinit var title: TextView
 
     private var arrayList = arrayListOf<ChatModel>()
     private lateinit var mAdapter : ChatAdapter
@@ -55,13 +57,19 @@ class ChatRoomActivity: AppCompatActivity() {
 
     private fun initView() {
         toolbar = binding.toolbarChat
+        toolbarTitle = binding.tvYourName
+
         send = binding.btnSend
         chattingText = binding.etMessage
         recyclerView = binding.rvChatList
-        swipe = binding.slSwipe
-        photo = intent.getStringExtra("photo").toString()
 
+        swipe = binding.slSwipe
+        title = binding.tvTitle
+
+        photo = intent.getStringExtra("photo").toString()
         chatRoomId = intent.getStringExtra("chatRoomId").toString()
+        title.text = intent.getStringExtra("title")
+
         mAdapter = ChatAdapter(this, arrayList, chatRoomId, photo)
 
         initToolbar()
@@ -70,6 +78,8 @@ class ChatRoomActivity: AppCompatActivity() {
     }
 
     private fun initToolbar() {
+        toolbarTitle.text = intent.getStringExtra("nickName")
+
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.chat_Delete -> {
@@ -121,6 +131,8 @@ class ChatRoomActivity: AppCompatActivity() {
 
         mAdapter.addItem(chat)
         mAdapter.notifyDataSetChanged()
+
+        recyclerView.smoothScrollToPosition(arrayList.size-1)
     }
 
     private var onNewMessage: Emitter.Listener = Emitter.Listener { args ->
@@ -137,6 +149,8 @@ class ChatRoomActivity: AppCompatActivity() {
 
             mAdapter.addItem(chat)
             mAdapter.notifyDataSetChanged()
+            recyclerView.smoothScrollToPosition(arrayList.size-1)
+
         }
     }
 

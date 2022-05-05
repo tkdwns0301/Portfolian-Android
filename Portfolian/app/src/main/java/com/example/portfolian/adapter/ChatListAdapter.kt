@@ -2,7 +2,6 @@ package com.example.portfolian.adapter
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,16 +12,10 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.portfolian.R
 import com.example.portfolian.data.ChatRoom
-import com.example.portfolian.data.ReadChatResponse
-import com.example.portfolian.databinding.ListChatItemBinding
-import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.ChatService
 import com.example.portfolian.view.main.chat.ChatRoomActivity
 import de.hdodenhof.circleimageview.CircleImageView
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
 import retrofit2.Retrofit
 import java.text.SimpleDateFormat
 
@@ -75,13 +68,13 @@ class ChatListAdapter(
         holder.date.text = date.toString()
 
         holder.container.setOnClickListener {
-            moveChat(chatRoom.chatRoomId, chatRoom.user.userId, chatRoom.user.photo)
+            moveChat(chatRoom.chatRoomId, chatRoom.user.userId, chatRoom.user.photo, chatRoom.projectTitle, chatRoom.user.nickName)
         }
     }
 
     override fun getItemCount(): Int = dataSet.size
 
-    private fun moveChat(chatRoomId: String, receiver: String, photo: String) {
+    private fun moveChat(chatRoomId: String, receiver: String, photo: String, title: String, nickName: String) {
         /*val callChat = chatService.readChat("Bearer ${GlobalApplication.prefs.accessToken}", "$chatRoomId")
         callChat.enqueue(object : Callback<ReadChatResponse> {
             override fun onResponse(
@@ -103,6 +96,8 @@ class ChatListAdapter(
         intent.putExtra("chatRoomId", "$chatRoomId")
         intent.putExtra("receiver", "$receiver")
         intent.putExtra("photo", "$photo")
+        intent.putExtra("title", "$title")
+        intent.putExtra("nickName", "$nickName")
         context.startActivity(intent)
     }
 

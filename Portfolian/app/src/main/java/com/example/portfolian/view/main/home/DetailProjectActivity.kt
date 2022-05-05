@@ -297,6 +297,8 @@ class DetailProjectActivity : AppCompatActivity() {
                                 intent.putExtra("chatRoomId", "$chatRoomId")
                                 intent.putExtra("receiver", "${detailProject.leader.userId}")
                                 intent.putExtra("photo", "${detailProject.leader.photo}")
+                                intent.putExtra("title", "${detailProject.title}")
+                                intent.putExtra("nickName", "${detailProject.leader.nickName}")
                                 startActivity(intent)
                             }
                         }
