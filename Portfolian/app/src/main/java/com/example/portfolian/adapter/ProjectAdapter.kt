@@ -110,8 +110,6 @@ class ProjectAdapter(
                     response: Response<SetBookmarkResponse>
                 ) {
                     if (response.isSuccessful) {
-                        project.bookMark = holder.bookmark.isChecked
-
                         Log.d("SetBookmark:: ", "${response.body()!!.code}")
                     }
                 }
@@ -125,7 +123,6 @@ class ProjectAdapter(
         holder.container.setOnClickListener {
             moveDetail(project.projectId, project.leader.userId)
         }
-
     }
 
     //flexbox layout 아이템 동적추가
@@ -136,9 +133,8 @@ class ProjectAdapter(
 
             chip.apply {
                 stackColor(name)
-                text = " $myStack "
-                setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
-
+                text = "$myStack"
+                textSize = 15f
                 val nonClickColor = ContextCompat.getColor(context, R.color.nonClick_tag)
 
                 chipBackgroundColor = ColorStateList(
@@ -172,7 +168,7 @@ class ProjectAdapter(
                 ViewGroup.MarginLayoutParams.WRAP_CONTENT
             )
 
-            layoutParams.rightMargin = 12
+            layoutParams.rightMargin = 10
             addView(chip, layoutParams)
 
             i++

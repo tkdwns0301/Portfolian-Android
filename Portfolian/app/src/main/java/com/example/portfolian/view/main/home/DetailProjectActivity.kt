@@ -52,7 +52,8 @@ class DetailProjectActivity : AppCompatActivity() {
     private lateinit var toolbar: Toolbar
     private lateinit var title: TextView
     private lateinit var view: TextView
-    private lateinit var stackView: FlexboxLayout
+    private lateinit var userStackView: FlexboxLayout
+    private lateinit var ownerStackView: FlexboxLayout
     private lateinit var capacity: TextView
     private lateinit var subjectDescription: TextView
     private lateinit var projectTime: TextView
@@ -109,7 +110,7 @@ class DetailProjectActivity : AppCompatActivity() {
     private fun initToolbar() {
         toolbar = binding.toolbarDetailProject
 
-        if(!ownerStatusFlag) {
+        if (!ownerStatusFlag) {
             toolbar.menu[1].isVisible = false
             toolbar.menu[2].isVisible = false
         }
@@ -157,8 +158,10 @@ class DetailProjectActivity : AppCompatActivity() {
         view = binding.tvView
         view.text = "조회 " + "${detailProject.view}"
 
+        userStackView = binding.fblUserStack
+        ownerStackView = binding.fblOwnerStack
+
         initStackView()
-        stackView.addItems(detailProject.stackList)
 
         capacity = binding.tvCapacity
         capacity.text = detailProject.capacity.toString()
@@ -172,7 +175,6 @@ class DetailProjectActivity : AppCompatActivity() {
         recruitmentCondition = binding.tvRecruitmentCondition
         recruitmentCondition.text = detailProject.contents.recruitmentCondition
 
-        Log.e("condition", "${detailProject.contents.recruitmentCondition}")
         progress = binding.tvProgress
         progress.text = detailProject.contents.progress
 
@@ -238,7 +240,7 @@ class DetailProjectActivity : AppCompatActivity() {
         }
 
         createAt = binding.tvCreateAt
-        createAt.text = detailProject.createdAt
+        createAt.text = detailProject.createdAt.substring(0, 10)
 
         val dynamicView = binding.llButton
 
@@ -259,16 +261,16 @@ class DetailProjectActivity : AppCompatActivity() {
         val button = LayoutInflater.from(context).inflate(R.layout.view_button, null) as Button
 
         button.apply {
-            if(ownerStatusFlag) {
+            if (ownerStatusFlag) {
                 text = "모집마감"
                 setTextColor(ContextCompat.getColor(context, R.color.white))
-                background = ContextCompat.getDrawable(context, R.drawable.background_bottom_button2)
+                background =
+                    ContextCompat.getDrawable(context, R.drawable.background_bottom_button2)
 
                 setOnClickListener {
                     Log.d("Owner Button::", "OwnerButton Click!!")
                 }
-            }
-            else {
+            } else {
                 text = "채팅하기"
                 setTextColor(ContextCompat.getColor(context, R.color.thema))
                 background = ContextCompat.getDrawable(context, R.drawable.background_bottom_button)
@@ -279,21 +281,25 @@ class DetailProjectActivity : AppCompatActivity() {
 
                     val chatData = CreateChatRequest("$userId", "$projectId")
 
-                    val createChat = chatService.createChat("Bearer ${GlobalApplication.prefs.accessToken}", chatData)
+                    val createChat = chatService.createChat(
+                        "Bearer ${GlobalApplication.prefs.accessToken}",
+                        chatData
+                    )
 
-                    createChat.enqueue(object: Callback<CreateChatResponse> {
+                    createChat.enqueue(object : Callback<CreateChatResponse> {
                         override fun onResponse(
                             call: Call<CreateChatResponse>,
                             response: Response<CreateChatResponse>
                         ) {
-                            if(response.isSuccessful) {
+                            if (response.isSuccessful) {
                                 val code = response.body()!!.code
                                 val message = response.body()!!.message
                                 val chatRoomId = response.body()!!.chatRoomId
 
                                 Log.e("createChat: ", "$code $message $chatRoomId")
 
-                                val intent = Intent(this@DetailProjectActivity, ChatRoomActivity::class.java)
+                                val intent =
+                                    Intent(this@DetailProjectActivity, ChatRoomActivity::class.java)
                                 intent.putExtra("chatRoomId", "$chatRoomId")
                                 intent.putExtra("receiver", "${detailProject.leader.userId}")
                                 intent.putExtra("photo", "${detailProject.leader.photo}")
@@ -314,7 +320,7 @@ class DetailProjectActivity : AppCompatActivity() {
             setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12f)
         }
 
-        val layoutParams = ViewGroup.MarginLayoutParams (
+        val layoutParams = ViewGroup.MarginLayoutParams(
             ViewGroup.MarginLayoutParams.WRAP_CONTENT,
             ViewGroup.MarginLayoutParams.WRAP_CONTENT
         )
@@ -324,14 +330,17 @@ class DetailProjectActivity : AppCompatActivity() {
     }
 
     private fun deleteProject() {
-        val deleteProject = bookmarkService.deleteProject("Bearer ${GlobalApplication.prefs.accessToken}", projectId)
+        val deleteProject = bookmarkService.deleteProject(
+            "Bearer ${GlobalApplication.prefs.accessToken}",
+            projectId
+        )
 
-        deleteProject.enqueue(object: Callback<ModifyProjectResponse> {
+        deleteProject.enqueue(object : Callback<ModifyProjectResponse> {
             override fun onResponse(
                 call: Call<ModifyProjectResponse>,
                 response: Response<ModifyProjectResponse>
             ) {
-                if(response.isSuccessful) {
+                if (response.isSuccessful) {
                     val code = response.body()!!.code
                     val message = response.body()!!.message
 
@@ -346,8 +355,6 @@ class DetailProjectActivity : AppCompatActivity() {
     }
 
     private fun initStackView() {
-        stackView = binding.fblStack
-
         val nameArray = arrayOf(
             "frontEnd",
             "backEnd",
@@ -382,6 +389,9 @@ class DetailProjectActivity : AppCompatActivity() {
             "aws",
             "etc"
         )
+
+        userStackView.addItems(detailProject.stackList)
+        ownerStackView.addItem(detailProject.leader.stack)
     }
 
     //flexbox layout 아이템 동적추가
@@ -394,9 +404,8 @@ class DetailProjectActivity : AppCompatActivity() {
             chip.apply {
                 stackColor(name)
 
-                text = "  $myStack  "
-                setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
-
+                text = "$myStack"
+                textSize = 15f
                 val nonClickColor = ContextCompat.getColor(context, R.color.nonClick_tag)
 
                 chipBackgroundColor = ColorStateList(
@@ -429,9 +438,58 @@ class DetailProjectActivity : AppCompatActivity() {
                 ViewGroup.MarginLayoutParams.WRAP_CONTENT
             )
 
-            layoutParams.rightMargin = dpToPx(6)
+            layoutParams.rightMargin = 10
             addView(chip, layoutParams)
         }
+    }
+
+
+    private fun FlexboxLayout.addItem(name: String) {
+        checkedChips = mutableListOf()
+
+        val chip = LayoutInflater.from(context).inflate(R.layout.view_chip, null) as Chip
+
+        chip.apply {
+            stackColor(name)
+
+            text = "$myStack"
+            textSize = 15f
+
+            val nonClickColor = ContextCompat.getColor(context, R.color.nonClick_tag)
+
+            chipBackgroundColor = ColorStateList(
+                arrayOf(
+                    intArrayOf(-android.R.attr.state_checked),
+                    intArrayOf(android.R.attr.state_checked)
+                ),
+                intArrayOf(nonClickColor, myColor)
+            )
+
+            val nonClickTextColor = ContextCompat.getColor(context, R.color.gray1)
+            //텍스트
+            setTextColor(
+                ColorStateList(
+                    arrayOf(
+                        intArrayOf(-android.R.attr.state_checked),
+                        intArrayOf(android.R.attr.state_checked)
+                    ),
+                    intArrayOf(nonClickTextColor, Color.BLACK)
+                )
+
+            )
+
+            isChecked = true
+            isClickable = false
+        }
+
+        val layoutParams = ViewGroup.MarginLayoutParams(
+            ViewGroup.MarginLayoutParams.WRAP_CONTENT,
+            ViewGroup.MarginLayoutParams.WRAP_CONTENT
+        )
+
+        layoutParams.rightMargin = 10
+        addView(chip, layoutParams)
+
     }
 
     private fun stackColor(name: String) {

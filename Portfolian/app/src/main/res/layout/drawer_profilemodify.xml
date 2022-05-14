@@ -43,8 +43,8 @@
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_TopView"
-                android:layout_width="150dp"
-                android:layout_height="150dp"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 app:layout_constraintBottom_toTopOf="@id/divider1"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -56,21 +56,22 @@
                     android:layout_height="150dp"
                     android:background="@android:color/transparent"
                     android:src="@drawable/ic_usercircle"
-                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintBottom_toTopOf="@id/tv_ModifyProfile"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <ImageButton
-                    android:id="@+id/ib_AddPhoto"
+                <TextView
+                    android:id="@+id/tv_ModifyProfile"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="18dp"
-                    android:layout_marginBottom="18dp"
-                    android:background="@android:color/transparent"
-                    android:src="@drawable/ic_photo"
+                    android:text="프로필 수정하기"
+                    android:textSize="14sp"
+                    android:textColor="@color/thema"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent" />
+                    app:layout_constraintTop_toBottomOf="@id/cv_Profile"/>
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -143,15 +144,27 @@
                     android:textColor="@color/thema"
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/et_Git"
+                    app:layout_constraintEnd_toStartOf="@id/tv_GitBaseUrl"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:layout_marginStart="15dp"
+                    android:id="@+id/tv_GitBaseUrl"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="https://www.github.com/"
+                    android:textSize="14sp"
+                    android:textColor="@color/base"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintStart_toEndOf="@id/tv_Git"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/et_Git"/>
 
                 <EditText
                     android:id="@+id/et_Git"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="15dp"
                     android:hint="URL"
                     android:imeOptions="actionDone"
                     android:singleLine="true"
@@ -160,7 +173,7 @@
                     android:textSize="14sp"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/tv_Git"
+                    app:layout_constraintStart_toEndOf="@id/tv_GitBaseUrl"
                     app:layout_constraintTop_toTopOf="parent" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>

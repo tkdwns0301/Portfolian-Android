@@ -1,14 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cl_Project"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="20dp"
+    android:layout_marginBottom="10dp"
     android:background="@drawable/background_home_item"
-    android:paddingStart="20dp"
-    android:paddingEnd="10dp">
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp">
 
     <ToggleButton
         android:id="@+id/btn_Bookmark"
@@ -18,8 +17,6 @@
         android:textOn=""
         android:textOff=""
         app:layout_constraintBottom_toTopOf="@id/cl_Title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -39,7 +36,8 @@
             android:fontFamily="@font/notosanskr_bold"
             android:text="@string/title"
             android:textColor="@color/base"
-            android:textSize="21sp"
+            android:textSize="18sp"
+            android:gravity="start"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/cl_Profile_View"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,9 +54,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/cv_Profile"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:padding="15dp"
+                android:layout_width="45dp"
+                android:layout_height="45dp"
                 android:src="@drawable/avatar_1_raster"
                 app:layout_constraintBottom_toTopOf="@id/tv_View"
                 app:layout_constraintEnd_toEndOf="parent"

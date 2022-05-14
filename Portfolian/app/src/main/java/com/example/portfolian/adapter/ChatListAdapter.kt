@@ -60,7 +60,13 @@ class ChatListAdapter(
 
         holder.nickname.text = "${chatRoom.user.nickName}"
         holder.lastMessage.text = "${chatRoom.newChatContent}"
-        holder.title.text = "${chatRoom.projectTitle}"
+
+        if(chatRoom.projectTitle.length >= 20) {
+            holder.title.text = chatRoom.projectTitle.substring(0, 18) + "..."
+        } else {
+            holder.title.text = "${chatRoom.projectTitle}"
+        }
+
 
         if (chatRoom.newChatCnt == 0) {
             holder.badgeLayout.isVisible = false

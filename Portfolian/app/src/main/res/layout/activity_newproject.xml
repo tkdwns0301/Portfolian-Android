@@ -114,7 +114,7 @@
                 android:layout_height="wrap_content"
                 android:layout_marginStart="20dp"
                 android:fontFamily="@font/notosanskr_bold"
-                android:text="기술 선택 (최대 7개 선택)"
+                android:text="기술 선택 (최대 1개 선택)"
                 android:textColor="@color/base"
                 android:textSize="18sp" />
 

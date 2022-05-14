@@ -41,13 +41,16 @@ class ChatAdapter(
         mSocket = SocketApplication.getSocket()
         val view: View
 
-        return if (viewType == 1) {
+        if (viewType == 1) {
             view = LayoutInflater.from(context).inflate(R.layout.item_my_chat, parent, false)
-            Holder(view)
-        } else {
+            return Holder(view)
+        } else if(viewType == 2){
             view = LayoutInflater.from(context).inflate(R.layout.item_your_chat, parent, false)
 
-            Holder2(view)
+            return Holder2(view)
+        } else {
+            view = LayoutInflater.from(context).inflate(R.layout.item_notice_chat, parent, false)
+            return Holder3(view)
         }
     }
 
@@ -91,6 +94,8 @@ class ChatAdapter(
 
                 mSocket.emit("chat:read", jsonObject)
             }
+        } else if(viewHolder is Holder3){
+            viewHolder.noticeText.text = arrayList[i].messageContent
         }
     }
 
@@ -103,6 +108,10 @@ class ChatAdapter(
         val profile = view.findViewById<CircleImageView>(R.id.cv_YourProfile)
         val chatText = view.findViewById<TextView>(R.id.tv_YourMessage)
         val chatTime = view.findViewById<TextView>(R.id.tv_YourTime)
+    }
+
+    class Holder3(view: View) : RecyclerView.ViewHolder(view) {
+        val noticeText = view.findViewById<TextView>(R.id.tv_Notice)
     }
 
 

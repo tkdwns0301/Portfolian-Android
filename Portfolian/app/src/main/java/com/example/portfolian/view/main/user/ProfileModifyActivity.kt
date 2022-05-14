@@ -14,10 +14,7 @@ import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.EditText
-import android.widget.ImageButton
-import android.widget.LinearLayout
+import android.widget.*
 import androidx.activity.result.ActivityResultLauncher
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
@@ -30,6 +27,7 @@ import com.example.portfolian.R
 import com.example.portfolian.data.ModifyProfileRequest
 import com.example.portfolian.data.ModifyProfileResponse
 import com.example.portfolian.data.UserInfoResponse
+import com.example.portfolian.databinding.ActivityProfilemodifyBinding
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.UserService
@@ -48,10 +46,12 @@ import java.lang.Exception
 import kotlin.math.roundToInt
 
 class ProfileModifyActivity : AppCompatActivity() {
+    private lateinit var binding: ActivityProfilemodifyBinding
+
     private lateinit var retrofit: Retrofit
     private lateinit var userService: UserService
 
-    private lateinit var addPhoto: ImageButton
+    private lateinit var addPhoto: TextView
 
     private lateinit var toolbar: Toolbar
     private lateinit var profile: CircleImageView
@@ -77,7 +77,9 @@ class ProfileModifyActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_profilemodify)
+
+        binding = ActivityProfilemodifyBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         init()
     }
@@ -85,22 +87,22 @@ class ProfileModifyActivity : AppCompatActivity() {
     private fun init() {
         initRetrofit()
         initView()
-        initToolbar()
-        initUserInfo()
-
-        initAddPhoto()
     }
 
     private fun initView() {
-        nickName = findViewById(R.id.et_Nickname)
-        git = findViewById(R.id.et_Git)
-        mail = findViewById(R.id.et_Email)
-        description = findViewById(R.id.et_Introduce)
-        profile = findViewById(R.id.cv_Profile)
-        toolbar = findViewById(R.id.toolbar_Setting)
-        addPhoto = findViewById(R.id.ib_AddPhoto)
-        allNonClick = findViewById(R.id.btn_AllNonClick)
-        close = findViewById(R.id.ib_Close)
+        nickName = binding.drawerProfileModify.etNickname
+        git = binding.drawerProfileModify.etGit
+        mail = binding.drawerProfileModify.etEmail
+        description = binding.drawerProfileModify.etIntroduce
+        profile = binding.drawerProfileModify.cvProfile
+        toolbar = binding.drawerProfileModify.toolbarSetting
+        addPhoto = binding.drawerProfileModify.tvGit
+        allNonClick = binding.btnAllNonClick
+        close = binding.ibClose
+
+        initToolbar()
+        initUserInfo()
+        initAddPhoto()
 
     }
 
@@ -131,7 +133,6 @@ class ProfileModifyActivity : AppCompatActivity() {
     private lateinit var getResult: ActivityResultLauncher<Intent>
 
     private fun initAddPhoto() {
-
         getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
             if (it.resultCode == Activity.RESULT_OK) {
                 var currentImageUri = it.data?.data
@@ -210,7 +211,7 @@ class ProfileModifyActivity : AppCompatActivity() {
                     val userInfo = response.body()!!
 
                     nickName.setText(userInfo.nickName)
-                    git.setText(userInfo.github)
+                    git.setText(userInfo.github.substring(15, userInfo.github.length))
                     mail.setText(userInfo.mail)
                     description.setText(userInfo.description)
                     checkedStack = userInfo.stackList
@@ -242,7 +243,7 @@ class ProfileModifyActivity : AppCompatActivity() {
     private fun setUserInfo() {
 
         var nickNameStr = nickName.text.toString()
-        var gitStr = git.text.toString()
+        var gitStr = "https://www.github.com/" + git.text.toString()
         var mailStr = mail.text.toString()
         var descriptionStr = description.text.toString()
 

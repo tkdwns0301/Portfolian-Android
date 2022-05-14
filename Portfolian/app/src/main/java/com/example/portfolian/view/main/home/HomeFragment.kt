@@ -192,10 +192,6 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
                     true
                 }
-                R.id.toolbar_Alert -> {
-                    renewal()
-                    true
-                }
                 else -> {
                     super.onOptionsItemSelected(it)
                 }
