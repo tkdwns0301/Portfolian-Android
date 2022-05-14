@@ -8,8 +8,10 @@
         <entry key="app/src/main/res/drawable/background_bottom_button.xml" value="0.3435185185185185" />
         <entry key="app/src/main/res/drawable/background_bottom_button2.xml" value="0.3435185185185185" />
         <entry key="app/src/main/res/drawable/background_button1.xml" value="0.3435185185185185" />
+        <entry key="app/src/main/res/drawable/background_chatlist_back_item.xml" value="0.25416666666666665" />
         <entry key="app/src/main/res/drawable/background_drawer.xml" value="0.3435185185185185" />
         <entry key="app/src/main/res/drawable/background_edittext.xml" value="0.2890625" />
+        <entry key="app/src/main/res/drawable/background_home_item.xml" value="0.30052083333333335" />
         <entry key="app/src/main/res/drawable/background_mychat.xml" value="0.3343370049834571" />
         <entry key="app/src/main/res/drawable/background_yourchat.xml" value="0.13148148148148148" />
         <entry key="app/src/main/res/drawable/ic_setting.xml" value="0.41302083333333334" />
@@ -20,7 +22,7 @@
         <entry key="app/src/main/res/drawable/switch_track_selector.xml" value="0.13148148148148148" />
         <entry key="app/src/main/res/drawable/swtich_track_off.xml" value="0.13148148148148148" />
         <entry key="app/src/main/res/drawable/swtich_track_on.xml" value="0.13148148148148148" />
-        <entry key="app/src/main/res/layout/activity_chatroom.xml" value="0.335" />
+        <entry key="app/src/main/res/layout/activity_chatroom.xml" value="0.378530921379039" />
         <entry key="app/src/main/res/layout/activity_detailproject.xml" value="0.2878787878787879" />
         <entry key="app/src/main/res/layout/activity_detailproject_owner.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_detailproject_user.xml" value="0.24846625766871167" />
@@ -48,7 +50,7 @@
         <entry key="app/src/main/res/layout/fragment_user.xml" value="0.22404371584699453" />
         <entry key="app/src/main/res/layout/item_my_chat.xml" value="0.24814814814814815" />
         <entry key="app/src/main/res/layout/item_your_chat.xml" value="0.24814814814814815" />
-        <entry key="app/src/main/res/layout/list_chat_item.xml" value="0.33117251847191836" />
+        <entry key="app/src/main/res/layout/list_chat_item.xml" value="0.23692307692307693" />
         <entry key="app/src/main/res/layout/list_view_stack_item.xml" value="0.10833333333333334" />
         <entry key="app/src/main/res/layout/view_addprofileimage.xml" value="0.13697916666666668" />
         <entry key="app/src/main/res/layout/view_button.xml" value="0.27291666666666664" />

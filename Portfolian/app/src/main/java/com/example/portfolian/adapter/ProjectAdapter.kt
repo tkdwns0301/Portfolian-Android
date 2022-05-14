@@ -110,6 +110,8 @@ class ProjectAdapter(
                     response: Response<SetBookmarkResponse>
                 ) {
                     if (response.isSuccessful) {
+                        project.bookMark = holder.bookmark.isChecked
+
                         Log.d("SetBookmark:: ", "${response.body()!!.code}")
                     }
                 }
@@ -121,7 +123,7 @@ class ProjectAdapter(
         }
 
         holder.container.setOnClickListener {
-            moveDetail(project.projectId)
+            moveDetail(project.projectId, project.leader.userId)
         }
 
     }
@@ -318,7 +320,7 @@ class ProjectAdapter(
 
     override fun getItemCount(): Int = dataSet.size
 
-    private fun moveDetail(projectId: String) {
+    private fun moveDetail(projectId: String, userId: String) {
         val callDetailProject = projectService.readDetailProject("Bearer ${GlobalApplication.prefs.accessToken}", projectId)
         callDetailProject.enqueue(object : Callback<DetailProjectResponse> {
             override fun onResponse(
@@ -336,6 +338,7 @@ class ProjectAdapter(
                         intent.putExtra("OwnerStatus", 1)
                     }
 
+                    intent.putExtra("userId", "$userId")
                     intent.putExtra("projectId", "$projectId")
                     Log.e("ProjectAdapter: projectId: ", projectId)
 

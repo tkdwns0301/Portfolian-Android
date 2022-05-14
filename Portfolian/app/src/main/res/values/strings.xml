@@ -15,4 +15,5 @@
     <string name="BASE_URL">3.36.84.11:3000</string>
     <string name="kakao_app_key">8ab6cd6b8425d701ee369a5b461275a8</string>
     <string name="Version">ver 1.0.0</string>
+    <string name="msg_token_fmt" translatable="false">토큰: %s</string>
 </resources>

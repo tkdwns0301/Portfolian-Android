@@ -1,5 +1,6 @@
 package com.example.portfolian.view.main.chat
 
+import android.content.ClipData
 import android.content.Intent
 import android.os.Bundle
 import android.util.Log
@@ -8,17 +9,21 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.Toolbar
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.portfolian.R
 import com.example.portfolian.adapter.ChatAdapter
 import com.example.portfolian.adapter.ChatListAdapter
+import com.example.portfolian.adapter.SwipeHelperCallback
 import com.example.portfolian.data.ChatRoom
 import com.example.portfolian.data.ReadChatList
 import com.example.portfolian.databinding.FragmentChatBinding
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
+import com.example.portfolian.network.SocketApplication
 import com.example.portfolian.service.ChatService
 import retrofit2.Call
 import retrofit2.Callback
@@ -32,6 +37,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private lateinit var retrofit: Retrofit
     private lateinit var chatService: ChatService
 
+    private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ChatListAdapter
     private lateinit var swipe: SwipeRefreshLayout
@@ -43,6 +49,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     ): View? {
         binding = FragmentChatBinding.inflate(inflater, container, false)
         init()
+
+        val mSocket = SocketApplication.mSocket
+
         return binding.root
     }
 
@@ -57,11 +66,30 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     }
 
     private fun initView() {
+        toolbar = binding.toolbarChatList
         recyclerView = binding.rvChatList
         swipe = binding.slSwipe
 
         initRecyclerView()
+        initToolbar()
         initSwpieRefreshLayout()
+    }
+
+    private fun initToolbar() {
+        toolbar.setOnMenuItemClickListener {
+            when (it.itemId) {
+                R.id.toolbar_Alert -> {
+                    SocketApplication.sendUserId()
+                    Log.e("버튼 눌렸어요!!!!", "!!!!")
+                    true;
+                }
+
+                else -> {
+                    super.onOptionsItemSelected(it)
+                }
+            }
+
+        }
     }
 
     private fun initRecyclerView() {
@@ -103,6 +131,17 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         if(chatRoomList != null) {
             adapter = ChatListAdapter(requireContext(), chatRoomList, 0)
             recyclerView.adapter = adapter
+
+            val swipeHelperCallback = SwipeHelperCallback(adapter).apply {
+                setClamp((resources.displayMetrics.widthPixels.toFloat() / 4))
+            }
+            ItemTouchHelper(swipeHelperCallback).attachToRecyclerView(recyclerView)
+
+            recyclerView.setOnTouchListener {_, _ ->
+                swipeHelperCallback.removePreviousClamp(recyclerView)
+                false
+            }
+
             adapter.notifyDataSetChanged()
         }
     }

@@ -274,17 +274,24 @@ data class ReadChatResponse(
     @SerializedName("message")
     val message: String,
     @SerializedName("chatList")
-    val chatList: ArrayList<Chat>
+    val chatList: Chat
 ) : Parcelable
 
 @Parcelize
 data class Chat(
-    @SerializedName("chatType")
-    val chatType: String,
-    @SerializedName("sender")
-    val sender: String,
-    @SerializedName("messageContent")
-    val messageContent: String,
-    @SerializedName("date")
-    val date: Date
+    @SerializedName("oldChatList")
+    val oldChatList: ArrayList<ChatModel>,
+    @SerializedName("newChatList")
+    val newChatList: ArrayList<ChatModel>
 ) : Parcelable
+//-------------------------------------
+
+// 43 채팅방 나가기
+@Parcelize
+data class RemoveChatResponse(
+    @SerializedName("code")
+    val code: Int,
+    @SerializedName("message")
+    val message: String
+) : Parcelable
+//-------------------------------------

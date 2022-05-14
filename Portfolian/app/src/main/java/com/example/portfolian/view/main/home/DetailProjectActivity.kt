@@ -27,6 +27,7 @@ import com.example.portfolian.data.*
 import com.example.portfolian.databinding.ActivityDetailprojectBinding
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
+import com.example.portfolian.network.SocketApplication
 import com.example.portfolian.service.ChatService
 import com.example.portfolian.service.ProjectService
 import com.example.portfolian.view.main.chat.ChatRoomActivity
@@ -71,6 +72,7 @@ class DetailProjectActivity : AppCompatActivity() {
 
     private var ownerStatusFlag = false
     private lateinit var projectId: String
+    private lateinit var userId: String
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -82,6 +84,8 @@ class DetailProjectActivity : AppCompatActivity() {
 
     private fun init() {
         projectId = intent.getStringExtra("projectId").toString()
+        userId = intent.getStringExtra("userId").toString()
+
         Log.e("projectId", "$projectId")
         if (intent.hasExtra("OwnerStatus")) {
             val status = intent.getIntExtra("OwnerStatus", 0)
@@ -271,8 +275,9 @@ class DetailProjectActivity : AppCompatActivity() {
 
                 setOnClickListener {
                     //TODO 채팅 방 만들기
+                    //TODO 상대방 아이디 넣기
 
-                    val chatData = CreateChatRequest("${GlobalApplication.prefs.userId}", "$projectId")
+                    val chatData = CreateChatRequest("$userId", "$projectId")
 
                     val createChat = chatService.createChat("Bearer ${GlobalApplication.prefs.accessToken}", chatData)
 
@@ -290,6 +295,10 @@ class DetailProjectActivity : AppCompatActivity() {
 
                                 val intent = Intent(this@DetailProjectActivity, ChatRoomActivity::class.java)
                                 intent.putExtra("chatRoomId", "$chatRoomId")
+                                intent.putExtra("receiver", "${detailProject.leader.userId}")
+                                intent.putExtra("photo", "${detailProject.leader.photo}")
+                                intent.putExtra("title", "${detailProject.title}")
+                                intent.putExtra("nickName", "${detailProject.leader.nickName}")
                                 startActivity(intent)
                             }
                         }
