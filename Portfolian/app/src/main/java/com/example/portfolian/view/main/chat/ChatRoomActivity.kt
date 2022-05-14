@@ -10,14 +10,17 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.portfolian.R
 import com.example.portfolian.adapter.ChatAdapter
+import com.example.portfolian.data.ChatListData
 import com.example.portfolian.data.ChatModel
 import com.example.portfolian.databinding.ActivityChatroomBinding
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.SocketApplication
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
+import okhttp3.internal.notify
 import org.json.JSONObject
 import java.time.LocalDateTime
+import java.time.format.DateTimeFormatter
 
 
 class ChatRoomActivity: AppCompatActivity() {
@@ -31,7 +34,7 @@ class ChatRoomActivity: AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var title: TextView
 
-    private var arrayList = arrayListOf<ChatModel>()
+    private var arrayList = ArrayList<ChatModel>()
     private lateinit var mAdapter : ChatAdapter
 
     private var chatRoomId = ""
@@ -66,8 +69,22 @@ class ChatRoomActivity: AppCompatActivity() {
         photo = intent.getStringExtra("photo").toString()
         chatRoomId = intent.getStringExtra("chatRoomId").toString()
         title.text = intent.getStringExtra("title")
+        arrayList = ChatListData.oldChatList!!
 
         mAdapter = ChatAdapter(this, arrayList, chatRoomId, photo)
+
+        recyclerView.adapter = mAdapter
+        val lm = LinearLayoutManager(this)
+        recyclerView.layoutManager = lm
+        recyclerView.setHasFixedSize(true)
+
+        for(newChat in ChatListData.newChatList!!) {
+            mAdapter.addItem(newChat)
+        }
+
+        mAdapter.notifyDataSetChanged()
+        recyclerView.scrollToPosition(arrayList.size-1)
+
 
         initToolbar()
         initSocket()
@@ -97,11 +114,6 @@ class ChatRoomActivity: AppCompatActivity() {
     }
 
     private fun initSocket() {
-        recyclerView.adapter = mAdapter
-        val lm = LinearLayoutManager(this)
-        recyclerView.layoutManager = lm
-        recyclerView.setHasFixedSize(true)
-
         mSocket = SocketApplication.getSocket()
 
         mSocket.on("chat:receive", onNewMessage)
@@ -110,19 +122,31 @@ class ChatRoomActivity: AppCompatActivity() {
             sendMessage()
             chattingText.setText("")
         }
+        val jsonObject = JSONObject()
+
+        jsonObject.put("roomId", "$chatRoomId")
+        jsonObject.put("userId", "${GlobalApplication.prefs.userId}")
+
+        mSocket.emit("chat:read", jsonObject)
     }
 
     private fun sendMessage() {
         val jsonObject = JSONObject()
 
         val receiver = intent.getStringExtra("receiver").toString()
+        jsonObject.put("chatRoomId", "$chatRoomId")
         jsonObject.put("messageContent", "${chattingText.text}")
-        jsonObject.put("roomId", "$chatRoomId")
+        jsonObject.put("messageType", "Chat")
         jsonObject.put("sender", "${GlobalApplication.prefs.userId}")
         jsonObject.put("receiver", "$receiver")
-        jsonObject.put("date", "${LocalDateTime.now()}")
 
-        val chat = ChatModel("${chattingText.text}", "$chatRoomId", "${GlobalApplication.prefs.userId}", "$receiver", LocalDateTime.now())
+        val current = LocalDateTime.now()
+        val formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS'Z'")
+        val formatted = current.format(formatter)
+
+        jsonObject.put("date", "$formatted")
+
+        val chat = ChatModel("$chatRoomId", "${chattingText.text}", "", "${GlobalApplication.prefs.userId}", "$receiver", "$formatted")
 
         mSocket.emit("chat:send", jsonObject)
 
@@ -136,13 +160,15 @@ class ChatRoomActivity: AppCompatActivity() {
         runOnUiThread {
             val jsonObject = JSONObject(args[0].toString())
 
+
+            val roomId = jsonObject.get("chatRoomId")
             val message = jsonObject.get("messageContent")
-            val roomId = jsonObject.get("roomId")
+            val messageType = jsonObject.get("messageType")
             val sender = jsonObject.get("sender")
             val receiver = jsonObject.get("sender")
-            val date = LocalDateTime.parse("${jsonObject.get("date")}")
+            val date = jsonObject.get("date")
 
-            val chat = ChatModel("$message", "$roomId", "$sender", "$receiver", date)
+            val chat = ChatModel("$roomId", "$message", "$messageType","$sender", "$receiver", "$date")
 
             mAdapter.addItem(chat)
             mAdapter.notifyDataSetChanged()

@@ -12,7 +12,9 @@ import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.portfolian.R
+import com.example.portfolian.data.ChatListData
 import com.example.portfolian.data.ChatRoom
+import com.example.portfolian.data.ReadChatResponse
 import com.example.portfolian.data.RemoveChatResponse
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
@@ -85,13 +87,28 @@ class ChatListAdapter(
     override fun getItemCount(): Int = dataSet.size
 
     private fun moveChat(chatRoomId: String, receiver: String, photo: String, title: String, nickName: String) {
-        /*val callChat = chatService.readChat("Bearer ${GlobalApplication.prefs.accessToken}", "$chatRoomId")
+        val callChat = chatService.readChat("Bearer ${GlobalApplication.prefs.accessToken}", "$chatRoomId")
         callChat.enqueue(object : Callback<ReadChatResponse> {
             override fun onResponse(
                 call: Call<ReadChatResponse>,
                 response: Response<ReadChatResponse>
             ) {
                 if (response.isSuccessful) {
+                    Log.e("ChatList: ", "${response.body()!!.chatList}")
+                    ChatListData.oldChatList = response.body()!!.chatList.oldChatList
+                    ChatListData.newChatList = response.body()!!.chatList.newChatList
+
+                    Log.e("oldChatList: ", "${ChatListData.oldChatList}")
+                    Log.e("newChatList: ", "${ChatListData.newChatList}")
+
+                    val intent = Intent(context, ChatRoomActivity::class.java)
+                    intent.putExtra("chatRoomId", "$chatRoomId")
+                    intent.putExtra("receiver", "$receiver")
+                    intent.putExtra("photo", "$photo")
+                    intent.putExtra("title", "$title")
+                    intent.putExtra("nickName", "$nickName")
+                    context.startActivity(intent)
+
                     Log.e("moveChat: ", "success")
                 }
             }
@@ -100,15 +117,7 @@ class ChatListAdapter(
                 Log.e("moveChat:", "$t")
             }
 
-        })*/
-
-        val intent = Intent(context, ChatRoomActivity::class.java)
-        intent.putExtra("chatRoomId", "$chatRoomId")
-        intent.putExtra("receiver", "$receiver")
-        intent.putExtra("photo", "$photo")
-        intent.putExtra("title", "$title")
-        intent.putExtra("nickName", "$nickName")
-        context.startActivity(intent)
+        })
     }
 
 
@@ -125,6 +134,7 @@ class ChatListAdapter(
     }
 
     private fun removeData(position: Int, chatRoomId: String) {
+        Log.e("position: ", "$position")
         val removeChat = chatService.removeChat("Bearer ${GlobalApplication.prefs.accessToken}", "$chatRoomId")
         removeChat.enqueue(object : Callback<RemoveChatResponse> {
             override fun onResponse(
@@ -134,7 +144,7 @@ class ChatListAdapter(
                 if (response.isSuccessful) {
                     val code = response.body()!!.code
                     val message = response.body()!!.message
-
+                    notifyDataSetChanged()
                     Log.e("RemoveChat: ", "$code: $message")
                 }
             }

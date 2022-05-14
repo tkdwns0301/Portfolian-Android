@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "1083263618420",
+    "project_id": "portfolian",
+    "storage_bucket": "portfolian.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1083263618420:android:90ed501ec2969fa3447021",
+        "android_client_info": {
+          "package_name": "com.example.portfolian"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "1083263618420-44g8jnirfdp0f4rho9lnr8h3vme13i5h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.portfolian",
+            "certificate_hash": "47be3ab298ebc836e1fe9f711e8262c18bfc3511"
+          }
+        },
+        {
+          "client_id": "1083263618420-h64dmhckpltu1fkj1pnprg4aicavm13d.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCjnm3wdj-QuYHpAuiDK3lBQaHEDH64ztM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "1083263618420-h64dmhckpltu1fkj1pnprg4aicavm13d.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

@@ -14,7 +14,10 @@ import com.example.portfolian.data.ChatModel
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.SocketApplication
 import de.hdodenhof.circleimageview.CircleImageView
+import io.socket.client.Socket
 import org.json.JSONObject
+import java.text.SimpleDateFormat
+import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.*
 
@@ -26,7 +29,7 @@ class ChatAdapter(
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
 
     private var photoFlag = true
-    private var svFlag = false
+    private lateinit var mSocket: Socket
 
     fun addItem(item: ChatModel) {
         if (arrayList != null) {
@@ -35,6 +38,7 @@ class ChatAdapter(
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+        mSocket = SocketApplication.getSocket()
         val view: View
 
         return if (viewType == 1) {
@@ -42,11 +46,6 @@ class ChatAdapter(
             Holder(view)
         } else {
             view = LayoutInflater.from(context).inflate(R.layout.item_your_chat, parent, false)
-
-            val jsonObject = JSONObject()
-            jsonObject.put("userId", "${GlobalApplication.prefs.userId}")
-            jsonObject.put("roomId", "$roomId")
-            SocketApplication.mSocket.emit("chat:read", jsonObject)
 
             Holder2(view)
         }
@@ -58,45 +57,40 @@ class ChatAdapter(
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, i: Int) {
         if (viewHolder is Holder) {
-            photoFlag = false
-            svFlag = true
+            photoFlag = true
 
-            Log.e("photoFlag: ", "$photoFlag")
-
-            val message = arrayList[i].message
+            val message = arrayList[i].messageContent
             viewHolder.chatText?.text = message
 
-            var time = arrayList[i].date
-            val formatter = DateTimeFormatter.ofPattern("HH : mm")
-            val date = time.format(formatter)
+            var time = arrayList[i].date.substring(11 until 16)
 
-            viewHolder.chatTime?.text = date
+            viewHolder.chatTime?.text = time
+
         } else if (viewHolder is Holder2) {
-            if(photoFlag) {
-                photoFlag= !photoFlag
-            }
-
-            if(svFlag && !photoFlag) {
-                photoFlag = true
-            } else if(!svFlag && photoFlag) {
-                photoFlag = false
-            }
-
-            svFlag = false
-
-            Log.e("photoFlag: ", "$photoFlag")
 
             if (photoFlag) {
+
                 Glide.with(viewHolder.itemView.context)
                     .load(photo)
                     .into(viewHolder.profile)
+
+                photoFlag = false
             }
 
-            var time = arrayList[i].date
-            val formatter = DateTimeFormatter.ofPattern("HH : mm")
-            val date = time.format(formatter)
-            viewHolder.chatText?.text = arrayList[i].message
-            viewHolder.chatTime?.text = date
+            var time = arrayList[i].date.substring(11 until 16)
+
+            viewHolder.chatText?.text = arrayList[i].messageContent
+            viewHolder.chatTime?.text = time
+
+            if (i == arrayList.size - 1) {
+                val jsonObject = JSONObject()
+
+                jsonObject.put("chatRoomId", "$roomId")
+                Log.e("chatRoomId: ", "$roomId")
+                jsonObject.put("userId", "${GlobalApplication.prefs.userId}")
+
+                mSocket.emit("chat:read", jsonObject)
+            }
         }
     }
 
@@ -113,10 +107,15 @@ class ChatAdapter(
 
 
     override fun getItemViewType(position: Int): Int {
-        return if (arrayList[position].sender == "${GlobalApplication.prefs.userId}") {
-            1
+        return if(arrayList[position].messageType == "Notice") {
+            3
         } else {
-            2
+            if (arrayList[position].sender == "${GlobalApplication.prefs.userId}") {
+                1
+            } else {
+                2
+            }
         }
+
     }
 }

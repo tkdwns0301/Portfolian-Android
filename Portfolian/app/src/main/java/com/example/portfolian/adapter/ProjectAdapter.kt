@@ -110,6 +110,8 @@ class ProjectAdapter(
                     response: Response<SetBookmarkResponse>
                 ) {
                     if (response.isSuccessful) {
+                        project.bookMark = holder.bookmark.isChecked
+
                         Log.d("SetBookmark:: ", "${response.body()!!.code}")
                     }
                 }
