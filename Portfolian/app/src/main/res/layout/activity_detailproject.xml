@@ -492,12 +492,15 @@
             android:layout_height="0dp"
             android:layout_weight="1" />
 
-        <LinearLayout
-            android:id="@+id/ll_Button"
+        <androidx.appcompat.widget.AppCompatButton
+            android:background="@drawable/background_bottom_button"
+            android:id="@+id/btn_Dynamic"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="35dp"
             android:layout_gravity="center_vertical"
-            android:orientation="horizontal"></LinearLayout>
+            tools:text="채팅하기"
+            android:textSize="12sp"
+            style="?android:attr/borderlessButtonStyle"/>
 
 
     </LinearLayout>

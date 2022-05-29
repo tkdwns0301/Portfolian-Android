@@ -51,121 +51,133 @@
         app:layout_constraintTop_toTopOf="parent">
 
 
-        <TextView
-            android:id="@+id/tv_ChatDate"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_DateAndCnt"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="5dp"
-            android:textColor="@color/gray2"
-            android:textSize="12sp"
             app:layout_constraintBottom_toTopOf="@id/cl_NameAndTitle"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            tools:text="10월 8일" />
+            app:layout_constraintTop_toTopOf="parent">
+
+            <TextView
+                android:id="@+id/tv_ChatDate"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/gray2"
+                android:textSize="12sp"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/tv_ChatCnt"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="10월 8일" />
+
+            <TextView
+                android:id="@+id/tv_ChatCnt"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="10dp"
+                android:textColor="@color/thema"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tv_ChatDate"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="10" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:id="@+id/cl_NameAndTitle"
-            android:layout_width="0dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/tv_ChatDate">
+            app:layout_constraintTop_toBottomOf="@id/cl_DateAndCnt">
 
-            <de.hdodenhof.circleimageview.CircleImageView
-                android:id="@+id/cv_ChatProfile"
-                android:layout_width="50dp"
-                android:layout_height="50dp"
-                android:layout_marginEnd="20dp"
-                android:src="@drawable/avatar_1_raster"
-                app:layout_constraintEnd_toStartOf="@id/cl_NicknameAndMessage"
-                app:layout_constraintHorizontal_chainStyle="spread_inside"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_NicknameAndMessage"
-                android:layout_width="wrap_content"
-                android:layout_height="match_parent"
-                android:layout_marginStart="10dp"
-                app:layout_constraintStart_toEndOf="@id/cv_ChatProfile"
-                app:layout_constraintTop_toTopOf="parent">
-
-
-                <TextView
-                    android:id="@+id/tv_ChatNickname"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginBottom="5dp"
-                    android:textColor="@color/base"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@id/tv_LastMessage"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="압둘라싸함" />
-
-                <TextView
-                    android:id="@+id/tv_LastMessage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="8"
-                    android:textColor="@color/gray1"
-                    android:textSize="14sp"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@id/tv_ChatNickname"
-                    tools:text="네 알겠다고요" />
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:id="@+id/cl_BadgeAndTitle"
-                android:layout_width="wrap_content"
+                android:id="@+id/cl_ProfileAndName"
+                android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toStartOf="@id/tv_Title"
+                app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
+
+                <de.hdodenhof.circleimageview.CircleImageView
+                    android:id="@+id/cv_ChatProfile"
+                    android:layout_width="50dp"
+                    android:layout_height="50dp"
+                    android:layout_marginEnd="20dp"
+                    android:src="@drawable/avatar_1_raster"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toStartOf="@id/cl_NicknameAndMessage"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
 
                 <androidx.constraintlayout.widget.ConstraintLayout
-                    android:id="@+id/cl_Badge"
+                    android:id="@+id/cl_NicknameAndMessage"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:background="@drawable/background_badge"
+                    android:layout_height="0dp"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/tv_Title"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintStart_toEndOf="@id/cv_ChatProfile"
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:layout_marginStart="10dp">
 
                     <TextView
-                        android:id="@+id/tv_Badge"
-                        android:layout_width="wrap_content"
+                        android:id="@+id/tv_ChatNickname"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
-                        android:layout_margin="5dp"
-                        android:textColor="@color/white"
-                        android:textSize="10sp"
-                        app:layout_constraintBottom_toBottomOf="parent"
+                        android:layout_marginBottom="5dp"
+                        android:textColor="@color/base"
+                        android:textSize="12sp"
+                        android:textStyle="bold"
+                        android:gravity="start|top"
+                        app:layout_constraintBottom_toTopOf="@id/tv_LastMessage"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
-                        tools:text="10" />
+                        tools:text="압둘라싸함" />
+
+                    <TextView
+                        android:id="@+id/tv_LastMessage"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:textColor="@color/gray1"
+                        android:textSize="14sp"
+                        android:ems="8"
+                        android:gravity="top|start"
+                        app:layout_constraintBottom_toBottomOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_ChatNickname"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        tools:text="네 알겠다고요" />
+
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
-                <TextView
-                    android:id="@+id/tv_Title"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:ems="8"
-                    android:gravity="end"
-                    android:textColor="@color/base"
-                    android:textSize="12sp"
-                    android:textStyle="bold"
-                    android:maxLines="2"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/cl_Badge"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="일이삼사오육칠팔구싶일이삼사오육칠팔구십" />
-
-
             </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+            <TextView
+                android:id="@+id/tv_Title"
+                android:layout_width="0dp"
+                android:layout_height="0dp"
+                android:gravity="end|top"
+                android:maxLines="2"
+                android:textColor="@color/base"
+                android:textSize="12sp"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@id/cl_ProfileAndName"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:text="일이삼사오육" />
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
     </androidx.constraintlayout.widget.ConstraintLayout>

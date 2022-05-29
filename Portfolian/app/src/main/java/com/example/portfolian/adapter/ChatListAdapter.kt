@@ -67,9 +67,9 @@ class ChatListAdapter(
 
 
         if (chatRoom.newChatCnt == 0) {
-            holder.badgeLayout.isVisible = false
+            holder.badge.isVisible = false
         } else {
-            holder.badgeLayout.isVisible = true
+            holder.badge.isVisible = true
             holder.badge.text = "${chatRoom.newChatCnt}"
         }
 
@@ -108,8 +108,7 @@ class ChatListAdapter(
         val lastMessage: TextView = view.findViewById(R.id.tv_LastMessage)
         val date: TextView = view.findViewById(R.id.tv_ChatDate)
         val title: TextView = view.findViewById(R.id.tv_Title)
-        val badge: TextView = view.findViewById(R.id.tv_Badge)
-        val badgeLayout: ConstraintLayout = view.findViewById(R.id.cl_Badge)
+        val badge: TextView = view.findViewById(R.id.tv_ChatCnt)
         val remove: TextView = view.findViewById(R.id.tv_Remove)
     }
 

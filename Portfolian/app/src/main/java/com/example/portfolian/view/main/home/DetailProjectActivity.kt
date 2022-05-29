@@ -12,6 +12,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
@@ -63,6 +64,7 @@ class DetailProjectActivity : AppCompatActivity() {
     private lateinit var photo: CircleImageView
     private lateinit var createAt: TextView
     private lateinit var userProfile: ConstraintLayout
+    private lateinit var dynamic: AppCompatButton
 
     private lateinit var checkedChips: MutableList<Chip>
     private var myStack: String = ""
@@ -99,6 +101,9 @@ class DetailProjectActivity : AppCompatActivity() {
 
         detailProject = DetailData.detailData!!
         status = detailProject.status
+
+        dynamic = binding.btnDynamic
+
         initRetrofit()
         initToolbar()
         initView()
@@ -251,10 +256,6 @@ class DetailProjectActivity : AppCompatActivity() {
         createAt = binding.tvCreateAt
         createAt.text = detailProject.createdAt.substring(0, 10)
 
-        val dynamicView = binding.llButton
-
-        dynamicView.addItem()
-
         userProfile = binding.clProfileAndName
 
         userProfile.setOnClickListener {
@@ -263,155 +264,138 @@ class DetailProjectActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        if (ownerStatusFlag) {
+            if (status == 0) {
+                dynamic.text = "모집완료"
+                dynamic.setTextColor(ContextCompat.getColor(this, R.color.white))
+                dynamic.background =
+                    ContextCompat.getDrawable(this, R.drawable.background_bottom_button2)
+            } else {
+                dynamic.text = "모집진행"
+                dynamic.setTextColor(ContextCompat.getColor(this, R.color.white))
+                dynamic.background =
+                    ContextCompat.getDrawable(this, R.drawable.background_bottom_button3)
+            }
 
-    }
+        } else {
+            dynamic.text = "채팅하기"
+            dynamic.setTextColor(ContextCompat.getColor(this, R.color.thema))
+            dynamic.background =
+                ContextCompat.getDrawable(this, R.drawable.background_bottom_button)
+        }
 
-    private fun LinearLayout.addItem() {
-
-        val button = LayoutInflater.from(context).inflate(R.layout.view_button, null) as Button
-
-        button.apply {
+        dynamic.setOnClickListener {
             if (ownerStatusFlag) {
                 if (status == 0) {
-                    text = "모집완료"
-                    setTextColor(ContextCompat.getColor(context, R.color.white))
-                    background =
-                        ContextCompat.getDrawable(context, R.drawable.background_bottom_button2)
+                    var statusClass = ModifyProjectStatusRequest(1)
 
-                    setOnClickListener {
-                        var statusClass = ModifyProjectStatusRequest(1)
-
-                        val modifyProjectStatus = bookmarkService.modifyProjectStatus(
-                            "Bearer ${GlobalApplication.prefs.accessToken}",
-                            "${detailProject.projectId}",
-                            statusClass
-                        )
-
-                        modifyProjectStatus.enqueue(object : Callback<ModifyProjectStatusResponse> {
-                            override fun onResponse(
-                                call: Call<ModifyProjectStatusResponse>,
-                                response: Response<ModifyProjectStatusResponse>
-                            ) {
-                                if (response.isSuccessful) {
-                                    val code = response.body()!!.code
-                                    val message = response.body()!!.message
-
-                                    Log.e("modifyStatus: ", "code: $code, message: $message")
-
-                                    text = "모집집행"
-                                    background = ContextCompat.getDrawable(context, R.drawable.background_bottom_button3)
-                                    status = 1
-                                }
-                            }
-
-                            override fun onFailure(
-                                call: Call<ModifyProjectStatusResponse>,
-                                t: Throwable
-                            ) {
-                                Log.e("modifyStatus: ", "$t")
-                            }
-                        })
-
-
-                    }
-                } else if (detailProject.status == 1) {
-                    text = "모집진행"
-                    setTextColor(ContextCompat.getColor(context, R.color.white))
-                    background =
-                        ContextCompat.getDrawable(context, R.drawable.background_bottom_button3)
-
-                    setOnClickListener {
-                        var statusClass = ModifyProjectStatusRequest(0)
-
-                        val modifyProjectStatus = bookmarkService.modifyProjectStatus(
-                            "Bearer ${GlobalApplication.prefs.accessToken}",
-                            "${detailProject.projectId}",
-                            statusClass
-                        )
-
-                        modifyProjectStatus.enqueue(object : Callback<ModifyProjectStatusResponse> {
-                            override fun onResponse(
-                                call: Call<ModifyProjectStatusResponse>,
-                                response: Response<ModifyProjectStatusResponse>
-                            ) {
-                                if (response.isSuccessful) {
-                                    val code = response.body()!!.code
-                                    val message = response.body()!!.message
-
-                                    Log.e("modifyStatus: ", "code: $code, message: $message")
-
-                                    text = "모집완료"
-                                    background = ContextCompat.getDrawable(context, R.drawable.background_bottom_button2)
-                                    status = 0
-                                }
-                            }
-
-                            override fun onFailure(
-                                call: Call<ModifyProjectStatusResponse>,
-                                t: Throwable
-                            ) {
-                                Log.e("modifyStatus: ", "$t")
-                            }
-                        })
-
-
-                    }
-                }
-
-            } else {
-                text = "채팅하기"
-                setTextColor(ContextCompat.getColor(context, R.color.thema))
-                background = ContextCompat.getDrawable(context, R.drawable.background_bottom_button)
-
-                setOnClickListener {
-                    val chatData = CreateChatRequest("$userId", "$projectId")
-
-                    val createChat = chatService.createChat(
+                    val modifyProjectStatus = bookmarkService.modifyProjectStatus(
                         "Bearer ${GlobalApplication.prefs.accessToken}",
-                        chatData
+                        "${detailProject.projectId}",
+                        statusClass
                     )
 
-                    createChat.enqueue(object : Callback<CreateChatResponse> {
+                    modifyProjectStatus.enqueue(object : Callback<ModifyProjectStatusResponse> {
                         override fun onResponse(
-                            call: Call<CreateChatResponse>,
-                            response: Response<CreateChatResponse>
+                            call: Call<ModifyProjectStatusResponse>,
+                            response: Response<ModifyProjectStatusResponse>
                         ) {
                             if (response.isSuccessful) {
                                 val code = response.body()!!.code
                                 val message = response.body()!!.message
-                                val chatRoomId = response.body()!!.chatRoomId
 
-                                Log.e("createChat: ", "$code $message $chatRoomId")
+                                Log.e("modifyStatus: ", "code: $code, message: $message")
 
-                                val intent =
-                                    Intent(this@DetailProjectActivity, ChatRoomActivity::class.java)
-                                intent.putExtra("chatRoomId", "$chatRoomId")
-                                intent.putExtra("receiver", "${detailProject.leader.userId}")
-                                intent.putExtra("photo", "${detailProject.leader.photo}")
-                                intent.putExtra("title", "${detailProject.title}")
-                                intent.putExtra("nickName", "${detailProject.leader.nickName}")
-                                startActivity(intent)
+                                dynamic.text = "모집집행"
+                                dynamic.background = ContextCompat.getDrawable(
+                                    applicationContext,
+                                    R.drawable.background_bottom_button3
+                                )
+                                status = 1
                             }
                         }
 
-                        override fun onFailure(call: Call<CreateChatResponse>, t: Throwable) {
-                            Log.e("createChat: ", "$t")
+                        override fun onFailure(
+                            call: Call<ModifyProjectStatusResponse>,
+                            t: Throwable
+                        ) {
+                            Log.e("modifyStatus: ", "$t")
                         }
                     })
+                } else {
+                    var statusClass = ModifyProjectStatusRequest(0)
 
+                    val modifyProjectStatus = bookmarkService.modifyProjectStatus(
+                        "Bearer ${GlobalApplication.prefs.accessToken}",
+                        "${detailProject.projectId}",
+                        statusClass
+                    )
+
+                    modifyProjectStatus.enqueue(object : Callback<ModifyProjectStatusResponse> {
+                        override fun onResponse(
+                            call: Call<ModifyProjectStatusResponse>,
+                            response: Response<ModifyProjectStatusResponse>
+                        ) {
+                            if (response.isSuccessful) {
+                                val code = response.body()!!.code
+                                val message = response.body()!!.message
+
+                                Log.e("modifyStatus: ", "code: $code, message: $message")
+
+                                dynamic.text = "모집완료"
+                                dynamic.background = ContextCompat.getDrawable(
+                                    applicationContext,
+                                    R.drawable.background_bottom_button2
+                                )
+                                status = 0
+                            }
+                        }
+
+                        override fun onFailure(
+                            call: Call<ModifyProjectStatusResponse>,
+                            t: Throwable
+                        ) {
+                            Log.e("modifyStatus: ", "$t")
+                        }
+                    })
                 }
+            } else {
+                val chatData = CreateChatRequest("$userId", "$projectId")
+
+                val createChat = chatService.createChat(
+                    "Bearer ${GlobalApplication.prefs.accessToken}",
+                    chatData
+                )
+
+                createChat.enqueue(object : Callback<CreateChatResponse> {
+                    override fun onResponse(
+                        call: Call<CreateChatResponse>,
+                        response: Response<CreateChatResponse>
+                    ) {
+                        if (response.isSuccessful) {
+                            val code = response.body()!!.code
+                            val message = response.body()!!.message
+                            val chatRoomId = response.body()!!.chatRoomId
+
+                            Log.e("createChat: ", "$code $message $chatRoomId")
+
+                            val intent =
+                                Intent(this@DetailProjectActivity, ChatRoomActivity::class.java)
+                            intent.putExtra("chatRoomId", "$chatRoomId")
+                            intent.putExtra("receiver", "${detailProject.leader.userId}")
+                            intent.putExtra("photo", "${detailProject.leader.photo}")
+                            intent.putExtra("title", "${detailProject.title}")
+                            intent.putExtra("nickName", "${detailProject.leader.nickName}")
+                            startActivity(intent)
+                        }
+                    }
+
+                    override fun onFailure(call: Call<CreateChatResponse>, t: Throwable) {
+                        Log.e("createChat: ", "$t")
+                    }
+                })
             }
-
-            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 12f)
         }
-
-        val layoutParams = ViewGroup.MarginLayoutParams(
-            ViewGroup.MarginLayoutParams.WRAP_CONTENT,
-            ViewGroup.MarginLayoutParams.WRAP_CONTENT
-        )
-
-        layoutParams.height = dpToPx(35)
-        addView(button, layoutParams)
     }
 
     private fun deleteProject() {
