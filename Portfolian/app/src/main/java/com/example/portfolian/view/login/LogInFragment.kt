@@ -35,6 +35,7 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
     private lateinit var logInService: OAuthService
     private lateinit var retrofit: Retrofit
     private lateinit var kakaoLogin: ImageButton
+    private lateinit var navController: NavController
 
     private lateinit var loginActivity: LogInActivity
 
@@ -48,6 +49,11 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
         return binding.root
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        navController = Navigation.findNavController(view)
+    }
+
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
@@ -55,6 +61,7 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
     }
 
     private fun init() {
+
         initRetrofit()
         initView()
     }
@@ -120,9 +127,11 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
 
 
     private fun nickname(isNew: Boolean) {
-        if(isNew) {
-        val intent = Intent(context, NicknameFragment::class.java)
-        startActivity(intent)
+        if (isNew) {
+            activity?.runOnUiThread {
+                navController.navigate(R.id.action_logInFragment_to_nicknameFragment)
+            }
+
         } else {
             val intent = Intent(context, MainActivity::class.java)
             startActivity(intent)
@@ -150,6 +159,7 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
 
                     val mSocket = SocketApplication.mSocket
 
+                    Log.e("isNew: ", "$isNew")
                     mSocket.on("connection") {
                         nickname(isNew)
                     }

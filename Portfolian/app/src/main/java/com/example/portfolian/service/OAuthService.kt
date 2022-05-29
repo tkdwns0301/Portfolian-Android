@@ -29,5 +29,12 @@ interface OAuthService {
     )
     : Call<LogoutResponse>
 
+    @DELETE("users/{userId}")
+    fun unLink(
+        @Header("Authorization") Authorization: String,
+        @Path("userId") userId: String
+    )
+    : Call<UnlinkResponse>
+
 
 }

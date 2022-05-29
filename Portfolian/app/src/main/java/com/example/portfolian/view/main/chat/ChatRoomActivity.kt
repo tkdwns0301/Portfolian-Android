@@ -7,24 +7,31 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.portfolian.R
 import com.example.portfolian.adapter.ChatAdapter
-import com.example.portfolian.data.ChatListData
 import com.example.portfolian.data.ChatModel
+import com.example.portfolian.data.ReadChatResponse
 import com.example.portfolian.databinding.ActivityChatroomBinding
 import com.example.portfolian.network.GlobalApplication
+import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.network.SocketApplication
+import com.example.portfolian.service.ChatService
 import io.socket.client.Socket
 import io.socket.emitter.Emitter
-import okhttp3.internal.notify
 import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 
 
 class ChatRoomActivity: AppCompatActivity() {
     private lateinit var binding: ActivityChatroomBinding
+
+    private lateinit var retrofit: Retrofit
+    private lateinit var chatService: ChatService
 
     private lateinit var mSocket: Socket
     private lateinit var send: ImageButton
@@ -34,8 +41,11 @@ class ChatRoomActivity: AppCompatActivity() {
     private lateinit var recyclerView: RecyclerView
     private lateinit var title: TextView
 
-    private var arrayList = ArrayList<ChatModel>()
     private lateinit var mAdapter : ChatAdapter
+
+    private var arrayList = ArrayList<ChatModel>()
+    private var oldChatList = ArrayList<ChatModel>()
+    private var newChatList = ArrayList<ChatModel>()
 
     private var chatRoomId = ""
     private var photo = ""
@@ -44,20 +54,19 @@ class ChatRoomActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityChatroomBinding.inflate(layoutInflater)
         setContentView(binding.root)
+        chatRoomId = intent.getStringExtra("chatRoomId").toString()
 
-        init()
-    }
-
-    private fun init() {
         initRetrofit()
-        initView()
+        readChat()
     }
 
     private fun initRetrofit() {
-
+        retrofit = RetrofitClient.getInstance()
+        chatService = retrofit.create(ChatService::class.java)
     }
 
     private fun initView() {
+        Log.e("initView", "view")
         toolbar = binding.toolbarChat
         toolbarTitle = binding.tvYourName
 
@@ -67,9 +76,13 @@ class ChatRoomActivity: AppCompatActivity() {
         title = binding.tvTitle
 
         photo = intent.getStringExtra("photo").toString()
-        chatRoomId = intent.getStringExtra("chatRoomId").toString()
         title.text = intent.getStringExtra("title")
-        arrayList = ChatListData.oldChatList!!
+
+        if(oldChatList.size != 0) {
+            Log.e("asdfds","asdf")
+            arrayList = oldChatList!!
+            arrayList.add(ChatModel("", "여기까지 읽으셨습니다.", "Notice","", "", ""))
+        }
 
         mAdapter = ChatAdapter(this, arrayList, chatRoomId, photo)
 
@@ -78,8 +91,13 @@ class ChatRoomActivity: AppCompatActivity() {
         recyclerView.layoutManager = lm
         recyclerView.setHasFixedSize(true)
 
-        for(newChat in ChatListData.newChatList!!) {
-            mAdapter.addItem(newChat)
+
+
+        if(newChatList != null) {
+
+            for (newChat in newChatList) {
+                mAdapter.addItem(newChat)
+            }
         }
 
         mAdapter.notifyDataSetChanged()
@@ -128,6 +146,32 @@ class ChatRoomActivity: AppCompatActivity() {
         jsonObject.put("userId", "${GlobalApplication.prefs.userId}")
 
         mSocket.emit("chat:read", jsonObject)
+    }
+
+    private fun readChat() {
+        val callChat = chatService.readChat("Bearer ${GlobalApplication.prefs.accessToken}", "$chatRoomId")
+        callChat.enqueue(object : Callback<ReadChatResponse> {
+            override fun onResponse(
+                call: Call<ReadChatResponse>,
+                response: Response<ReadChatResponse>
+            ) {
+                if (response.isSuccessful) {
+                    oldChatList = response.body()!!.chatList.oldChatList
+                    newChatList = response.body()!!.chatList.newChatList
+
+                    Log.e("oldChatList: ", "$oldChatList")
+                    Log.e("newChatList: ", "$newChatList")
+
+                    initView()
+
+                }
+            }
+
+            override fun onFailure(call: Call<ReadChatResponse>, t: Throwable) {
+                Log.e("moveChat:", "$t")
+            }
+
+        })
     }
 
     private fun sendMessage() {

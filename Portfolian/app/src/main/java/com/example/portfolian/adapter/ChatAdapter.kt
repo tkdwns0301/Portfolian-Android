@@ -27,8 +27,6 @@ class ChatAdapter(
     val roomId: String,
     val photo: String
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
-
-    private var photoFlag = true
     private lateinit var mSocket: Socket
 
     fun addItem(item: ChatModel) {
@@ -60,8 +58,6 @@ class ChatAdapter(
 
     override fun onBindViewHolder(viewHolder: RecyclerView.ViewHolder, i: Int) {
         if (viewHolder is Holder) {
-            photoFlag = true
-
             val message = arrayList[i].messageContent
             viewHolder.chatText?.text = message
 
@@ -70,14 +66,18 @@ class ChatAdapter(
             viewHolder.chatTime?.text = time
 
         } else if (viewHolder is Holder2) {
-
-            if (photoFlag) {
-
+            if(i==1) {
                 Glide.with(viewHolder.itemView.context)
                     .load(photo)
                     .into(viewHolder.profile)
+            }
+            else {
+                if(arrayList[i-1].sender == "${GlobalApplication.prefs.userId}") {
+                    Glide.with(viewHolder.itemView.context)
+                        .load(photo)
+                        .into(viewHolder.profile)
+                }
 
-                photoFlag = false
             }
 
             var time = arrayList[i].date.substring(11 until 16)
@@ -89,7 +89,6 @@ class ChatAdapter(
                 val jsonObject = JSONObject()
 
                 jsonObject.put("chatRoomId", "$roomId")
-                Log.e("chatRoomId: ", "$roomId")
                 jsonObject.put("userId", "${GlobalApplication.prefs.userId}")
 
                 mSocket.emit("chat:read", jsonObject)

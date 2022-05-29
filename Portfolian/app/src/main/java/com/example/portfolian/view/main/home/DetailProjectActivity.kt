@@ -10,15 +10,13 @@ import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Button
-import android.widget.LinearLayout
-import android.widget.TextView
-import android.widget.ToggleButton
+import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.get
+import androidx.core.widget.addTextChangedListener
 import br.tiagohm.markdownview.MarkdownView
 import br.tiagohm.markdownview.css.styles.Github
 import com.bumptech.glide.Glide
@@ -74,6 +72,9 @@ class DetailProjectActivity : AppCompatActivity() {
     private var ownerStatusFlag = false
     private lateinit var projectId: String
     private lateinit var userId: String
+
+    private lateinit var test: EditText
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -178,6 +179,7 @@ class DetailProjectActivity : AppCompatActivity() {
         progress = binding.tvProgress
         progress.text = detailProject.contents.progress
 
+        test = binding.etTest
         description = binding.mdDescription
 
         var display = windowManager.defaultDisplay
@@ -191,7 +193,11 @@ class DetailProjectActivity : AppCompatActivity() {
 
         description.addStyleSheet(mStyle)
 
-        description.loadMarkdown("${detailProject.contents.description}")
+        test.addTextChangedListener {
+            description.loadMarkdown("${test.text}")
+        }
+
+
 
         ownerName = binding.tvOwnerName
         ownerName.text = detailProject.leader.nickName
@@ -254,6 +260,7 @@ class DetailProjectActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+
     }
 
     private fun LinearLayout.addItem() {
@@ -276,9 +283,6 @@ class DetailProjectActivity : AppCompatActivity() {
                 background = ContextCompat.getDrawable(context, R.drawable.background_bottom_button)
 
                 setOnClickListener {
-                    //TODO 채팅 방 만들기
-                    //TODO 상대방 아이디 넣기
-
                     val chatData = CreateChatRequest("$userId", "$projectId")
 
                     val createChat = chatService.createChat(

@@ -7,38 +7,45 @@ import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import com.example.portfolian.R
+import com.example.portfolian.databinding.ActivitySettingBinding
 import com.example.portfolian.view.CustomDialog
 
 class SettingActivity : AppCompatActivity() {
+    private lateinit var binding: ActivitySettingBinding
 
     private lateinit var toolbar: Toolbar
     private lateinit var notify: LinearLayout
     private lateinit var logout: TextView
+    private lateinit var unlink: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_setting)
+
+        binding = ActivitySettingBinding.inflate(layoutInflater)
+        setContentView(binding.root)
 
         init()
     }
 
     private fun init() {
+        toolbar = binding.toolbarSetting
+        notify = binding.llNotify
+        logout = binding.tvLogout
+        unlink = binding.tvUnlink
+
         initToolbar()
         initNotifySetting()
         initLogout()
+        initUnlink()
     }
 
     private fun initToolbar() {
-        toolbar = findViewById(R.id.toolbar_Setting)
-
         toolbar.setNavigationOnClickListener {
             finish()
         }
     }
 
     private fun initNotifySetting() {
-        notify = findViewById(R.id.ll_Notify)
-
         notify.setOnClickListener {
             val intent = Intent(this, NotifyActivity::class.java)
             startActivity(intent)
@@ -46,10 +53,15 @@ class SettingActivity : AppCompatActivity() {
     }
 
     private fun initLogout() {
-        logout = findViewById(R.id.tv_Logout)
-
         logout.setOnClickListener {
-            val customDialog = CustomDialog(this)
+            val customDialog = CustomDialog(this, false)
+            customDialog.showDialog()
+        }
+    }
+
+    private fun initUnlink() {
+        unlink.setOnClickListener {
+            val customDialog = CustomDialog(this, true)
             customDialog.showDialog()
         }
     }

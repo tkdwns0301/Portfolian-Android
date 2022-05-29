@@ -170,6 +170,14 @@ data class LogoutResponse(
 ) : Parcelable
 //------------------------------------
 
+// 28 회원탈퇴
+@Parcelize
+data class UnlinkResponse(
+    @SerializedName("code")
+    var code: Int,
+    @SerializedName("message")
+    var message: String
+) : Parcelable
 
 // 29 모집글 생성
 data class WriteProjectResponse(

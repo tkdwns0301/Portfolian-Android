@@ -388,14 +388,23 @@
                 android:textColor="@color/base"
                 android:textSize="16sp"
                 android:textStyle="bold"
-                app:layout_constraintBottom_toTopOf="@id/md_Description"
+                app:layout_constraintBottom_toTopOf="@id/et_test"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_Progress" />
 
+            <EditText
+                android:id="@+id/et_test"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintTop_toBottomOf="@id/tv_DescriptionText"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/md_Description"/>
+
             <br.tiagohm.markdownview.MarkdownView
                 android:id="@+id/md_Description"
-                android:layout_width="0dp"
+                android:layout_width="500dp"
                 android:layout_height="wrap_content"
                 app:escapeHtml="false"
                 app:layout_constraintBottom_toBottomOf="parent"

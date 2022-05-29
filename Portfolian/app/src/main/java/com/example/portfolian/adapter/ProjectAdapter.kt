@@ -95,9 +95,11 @@ class ProjectAdapter(
 
         //bookmark
         holder.bookmark.isChecked = project.bookMark
-        holder.bookmark.setOnCheckedChangeListener { buttonView, isChecked ->
-            var bookmarkJson = SetBookmarkRequest(project.projectId, isChecked)
-            Log.d("bookmark", "$isChecked")
+
+        var index = position
+        holder.bookmark.setOnClickListener {
+            var bookmarkJson = SetBookmarkRequest(project.projectId, holder.bookmark.isChecked)
+
             val setBookmark = projectService.setBookmark(
                 "Bearer ${GlobalApplication.prefs.accessToken}",
                 "${GlobalApplication.prefs.userId}",
@@ -111,6 +113,8 @@ class ProjectAdapter(
                 ) {
                     if (response.isSuccessful) {
                         Log.d("SetBookmark:: ", "${response.body()!!.code}")
+                        dataSet[index].bookMark = holder.bookmark.isChecked
+                        notifyItemChanged(index)
                     }
                 }
 

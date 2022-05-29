@@ -50,8 +50,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         binding = FragmentChatBinding.inflate(inflater, container, false)
         init()
 
-        val mSocket = SocketApplication.mSocket
-
         return binding.root
     }
 

@@ -119,10 +119,11 @@
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ll_Version" />
+                app:layout_constraintTop_toBottomOf="@id/ll_Version"
+                app:layout_constraintBottom_toTopOf="@id/tv_Unlink"/>
 
             <TextView
-                android:id="@+id/tv_Withdrawal"
+                android:id="@+id/tv_Unlink"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
