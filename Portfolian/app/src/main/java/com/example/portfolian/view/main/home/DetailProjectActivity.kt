@@ -279,9 +279,16 @@ class DetailProjectActivity : AppCompatActivity() {
 
         } else {
             dynamic.text = "채팅하기"
-            dynamic.setTextColor(ContextCompat.getColor(this, R.color.thema))
-            dynamic.background =
-                ContextCompat.getDrawable(this, R.drawable.background_bottom_button)
+
+            if(status == 0) {
+                dynamic.setTextColor(ContextCompat.getColor(this, R.color.thema))
+                dynamic.background =
+                    ContextCompat.getDrawable(this, R.drawable.background_bottom_button)
+            }else {
+                dynamic.setTextColor(ContextCompat.getColor(this, R.color.white))
+                dynamic.background = ContextCompat.getDrawable(this, R.drawable.background_bottom_button3)
+                dynamic.isEnabled = false
+            }
         }
 
         dynamic.setOnClickListener {
@@ -360,6 +367,7 @@ class DetailProjectActivity : AppCompatActivity() {
                     })
                 }
             } else {
+
                 val chatData = CreateChatRequest("$userId", "$projectId")
 
                 val createChat = chatService.createChat(
