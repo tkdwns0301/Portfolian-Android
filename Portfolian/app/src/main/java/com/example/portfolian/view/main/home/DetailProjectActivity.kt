@@ -75,6 +75,8 @@ class DetailProjectActivity : AppCompatActivity() {
 
     private lateinit var test: EditText
 
+    private var status = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
@@ -96,6 +98,7 @@ class DetailProjectActivity : AppCompatActivity() {
         }
 
         detailProject = DetailData.detailData!!
+        status = detailProject.status
         initRetrofit()
         initToolbar()
         initView()
@@ -269,14 +272,92 @@ class DetailProjectActivity : AppCompatActivity() {
 
         button.apply {
             if (ownerStatusFlag) {
-                text = "모집마감"
-                setTextColor(ContextCompat.getColor(context, R.color.white))
-                background =
-                    ContextCompat.getDrawable(context, R.drawable.background_bottom_button2)
+                if (status == 0) {
+                    text = "모집완료"
+                    setTextColor(ContextCompat.getColor(context, R.color.white))
+                    background =
+                        ContextCompat.getDrawable(context, R.drawable.background_bottom_button2)
 
-                setOnClickListener {
-                    Log.d("Owner Button::", "OwnerButton Click!!")
+                    setOnClickListener {
+                        var statusClass = ModifyProjectStatusRequest(1)
+
+                        val modifyProjectStatus = bookmarkService.modifyProjectStatus(
+                            "Bearer ${GlobalApplication.prefs.accessToken}",
+                            "${detailProject.projectId}",
+                            statusClass
+                        )
+
+                        modifyProjectStatus.enqueue(object : Callback<ModifyProjectStatusResponse> {
+                            override fun onResponse(
+                                call: Call<ModifyProjectStatusResponse>,
+                                response: Response<ModifyProjectStatusResponse>
+                            ) {
+                                if (response.isSuccessful) {
+                                    val code = response.body()!!.code
+                                    val message = response.body()!!.message
+
+                                    Log.e("modifyStatus: ", "code: $code, message: $message")
+
+                                    text = "모집집행"
+                                    background = ContextCompat.getDrawable(context, R.drawable.background_bottom_button3)
+                                    status = 1
+                                }
+                            }
+
+                            override fun onFailure(
+                                call: Call<ModifyProjectStatusResponse>,
+                                t: Throwable
+                            ) {
+                                Log.e("modifyStatus: ", "$t")
+                            }
+                        })
+
+
+                    }
+                } else if (detailProject.status == 1) {
+                    text = "모집진행"
+                    setTextColor(ContextCompat.getColor(context, R.color.white))
+                    background =
+                        ContextCompat.getDrawable(context, R.drawable.background_bottom_button3)
+
+                    setOnClickListener {
+                        var statusClass = ModifyProjectStatusRequest(0)
+
+                        val modifyProjectStatus = bookmarkService.modifyProjectStatus(
+                            "Bearer ${GlobalApplication.prefs.accessToken}",
+                            "${detailProject.projectId}",
+                            statusClass
+                        )
+
+                        modifyProjectStatus.enqueue(object : Callback<ModifyProjectStatusResponse> {
+                            override fun onResponse(
+                                call: Call<ModifyProjectStatusResponse>,
+                                response: Response<ModifyProjectStatusResponse>
+                            ) {
+                                if (response.isSuccessful) {
+                                    val code = response.body()!!.code
+                                    val message = response.body()!!.message
+
+                                    Log.e("modifyStatus: ", "code: $code, message: $message")
+
+                                    text = "모집완료"
+                                    background = ContextCompat.getDrawable(context, R.drawable.background_bottom_button2)
+                                    status = 0
+                                }
+                            }
+
+                            override fun onFailure(
+                                call: Call<ModifyProjectStatusResponse>,
+                                t: Throwable
+                            ) {
+                                Log.e("modifyStatus: ", "$t")
+                            }
+                        })
+
+
+                    }
                 }
+
             } else {
                 text = "채팅하기"
                 setTextColor(ContextCompat.getColor(context, R.color.thema))

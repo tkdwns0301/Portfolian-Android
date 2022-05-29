@@ -15,6 +15,13 @@ data class ModifyProjectRequest (
     var ownerStack: String
 )
 //------------------------------------
+
+// 12. 프로젝트 상태 변경
+data class ModifyProjectStatusRequest (
+    var status: Int
+)
+//-------------------------------------
+
 // 14 나의 정보 수정
 data class ModifyProfileRequest(
     var nickName: String,

@@ -129,6 +129,15 @@ data class ModifyProjectResponse(
 ) : Parcelable
 //------------------------------------
 
+// 12 프로젝트 상태 변경
+@Parcelize
+data class ModifyProjectStatusResponse(
+    @SerializedName("code")
+    var code: Int,
+    @SerializedName("message")
+    var message: String
+): Parcelable
+
 // 13 나의 정보 보기
 @Parcelize
 data class UserInfoResponse(

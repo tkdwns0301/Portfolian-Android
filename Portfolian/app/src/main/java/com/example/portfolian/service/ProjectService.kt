@@ -66,4 +66,13 @@ interface ProjectService {
         @Path("projectId") projectId: String
     )
     : Call<ModifyProjectResponse>
+
+    // 12. 프로젝트 모집완료
+    @PATCH("projects/{projectId}/status")
+    fun modifyProjectStatus(
+        @Header("Authorization") Authorization: String,
+        @Path("projectId") projectId: String,
+        @Body modify: ModifyProjectStatusRequest
+    )
+    : Call<ModifyProjectStatusResponse>
 }

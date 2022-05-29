@@ -5,7 +5,6 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.Log
-import android.util.TypedValue
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -58,6 +57,12 @@ class ProjectAdapter(
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val project = dataSet[position]
+
+        if(project.status == 0) {
+            holder.container.background = ContextCompat.getDrawable(context, R.drawable.background_home_item)
+        } else {
+            holder.container.background = ContextCompat.getDrawable(context, R.drawable.background_home_item2)
+        }
 
         //Profile Image
         if (project.leader.photo.isEmpty()) {
