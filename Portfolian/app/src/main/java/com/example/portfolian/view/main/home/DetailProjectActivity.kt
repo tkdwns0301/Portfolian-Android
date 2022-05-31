@@ -120,16 +120,12 @@ class DetailProjectActivity : AppCompatActivity() {
         toolbar = binding.toolbarDetailProject
 
         if (!ownerStatusFlag) {
+            toolbar.menu[0].isVisible = false
             toolbar.menu[1].isVisible = false
-            toolbar.menu[2].isVisible = false
         }
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
-                R.id.toolbar_Sharing -> {
-                    //TODO 공유버튼을 눌렸을 때 메뉴표시
-                    Log.d("Sharing", "공유버튼을 눌렀습니다.")
-                    true
-                }
+
                 R.id.toolbar_Modify -> {
                     val intent = Intent(this, NewProjectActivity::class.java)
                     intent.putExtra("projectId", "$projectId")
