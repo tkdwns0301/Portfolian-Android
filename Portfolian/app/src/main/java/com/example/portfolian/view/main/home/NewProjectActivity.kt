@@ -12,7 +12,10 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import androidx.core.widget.addTextChangedListener
 import androidx.drawerlayout.widget.DrawerLayout
+import br.tiagohm.markdownview.MarkdownView
 import com.example.portfolian.R
 import com.example.portfolian.data.*
 import com.example.portfolian.databinding.ActivityNewprojectBinding
@@ -20,9 +23,11 @@ import com.example.portfolian.databinding.DrawerNewProjectBinding
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.ProjectService
+import com.example.portfolian.view.MarkdownDialog
 import com.example.portfolian.view.main.MainActivity
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
+import org.w3c.dom.Text
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -63,6 +68,8 @@ class NewProjectActivity : AppCompatActivity() {
     private lateinit var progress: EditText
     private lateinit var description: EditText
     private lateinit var capacity: EditText
+    private lateinit var markdown: MarkdownView
+    private lateinit var markdownEx: TextView
 
     private lateinit var ownerStack: ArrayList<String>
     private lateinit var memberStack: ArrayList<String>
@@ -82,7 +89,7 @@ class NewProjectActivity : AppCompatActivity() {
     }
 
     private fun initView() {
-        if(DetailData.detailData != null) {
+        if (DetailData.detailData != null) {
             isModify = true
             projectId = intent.getStringExtra("projectId").toString()
             detailData = DetailData.detailData!!
@@ -95,6 +102,24 @@ class NewProjectActivity : AppCompatActivity() {
         progress = binding.drawerLayout.etProgress
         description = binding.drawerLayout.etDescription
         capacity = binding.drawerLayout.etCapacity
+        markdown = binding.drawerLayout.mdMarkdown
+        markdownEx = binding.drawerLayout.tvMarkdownEx
+
+        markdown.isVisible = false
+        description.addTextChangedListener {
+            if (description.text.isEmpty()) {
+                markdown.isVisible = false
+            } else {
+                markdown.isVisible = true
+                markdown.loadMarkdown("${description.text}")
+            }
+        }
+
+        markdownEx.setOnClickListener {
+            val markdownDialog = MarkdownDialog(this)
+            markdownDialog.showDialog()
+        }
+
 
         initToolbar()
         initDrawer()
@@ -105,7 +130,7 @@ class NewProjectActivity : AppCompatActivity() {
     }
 
     private fun setView() {
-        if(isModify) {
+        if (isModify) {
             title.setText(detailData.title)
             subjectDescription.setText(detailData.contents.subjectDescription)
             projectTime.setText(detailData.contents.projectTime)
@@ -185,10 +210,14 @@ class NewProjectActivity : AppCompatActivity() {
 
         if (!title.text.isNullOrEmpty() || stackList.isNotEmpty() || !subjectDescription.text.isNullOrEmpty() || !projectTime.text.isNullOrEmpty() || !condition.text.isNullOrEmpty() || !progress.text.isNullOrEmpty() || !capacity.text.isNullOrEmpty()) {
 
-            if(isModify) {
-                val modifyProject = projectService.modifyProject("Bearer ${GlobalApplication.prefs.accessToken}", projectId, writeRequest)
+            if (isModify) {
+                val modifyProject = projectService.modifyProject(
+                    "Bearer ${GlobalApplication.prefs.accessToken}",
+                    projectId,
+                    writeRequest
+                )
 
-                modifyProject.enqueue(object: Callback<ModifyProjectResponse> {
+                modifyProject.enqueue(object : Callback<ModifyProjectResponse> {
                     override fun onResponse(
                         call: Call<ModifyProjectResponse>,
                         response: Response<ModifyProjectResponse>
@@ -370,10 +399,10 @@ class NewProjectActivity : AppCompatActivity() {
 
                 )
 
-                if(isModify) {
+                if (isModify) {
                     val checkedStack = detailData.stackList
-                    for(stack in checkedStack) {
-                        if(stack == name) {
+                    for (stack in checkedStack) {
+                        if (stack == name) {
                             isChecked = true
                             checkedChips.add(this)
                             checkedStackView.addItem(name)
@@ -445,12 +474,12 @@ class NewProjectActivity : AppCompatActivity() {
 
                 )
 
-                if(isModify) {
+                if (isModify) {
                     val checkedStack = detailData.leader.stack
-                    if(checkedStack == name) {
-                            isChecked = true
-                            checkedOwnerChips.add(this)
-                            checkedOwnerStackView.addItem(name)
+                    if (checkedStack == name) {
+                        isChecked = true
+                        checkedOwnerChips.add(this)
+                        checkedOwnerStackView.addItem(name)
                     }
                 }
 

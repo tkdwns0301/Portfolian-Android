@@ -75,7 +75,6 @@ class DetailProjectActivity : AppCompatActivity() {
     private lateinit var projectId: String
     private lateinit var userId: String
 
-    private lateinit var test: EditText
 
     private var status = 0
 
@@ -183,23 +182,10 @@ class DetailProjectActivity : AppCompatActivity() {
         progress = binding.tvProgress
         progress.text = detailProject.contents.progress
 
-        test = binding.etTest
         description = binding.mdDescription
 
-        var display = windowManager.defaultDisplay
+        description.loadMarkdown("${detailProject.contents.description}")
 
-        val size = Point()
-        display.getRealSize(size)
-        val width = size.x
-
-        mStyle.addMedia("screen and (max-width: ${width}px)")
-        mStyle.endMedia()
-
-        description.addStyleSheet(mStyle)
-
-        test.addTextChangedListener {
-            description.loadMarkdown("${test.text}")
-        }
 
 
 
@@ -276,13 +262,14 @@ class DetailProjectActivity : AppCompatActivity() {
         } else {
             dynamic.text = "채팅하기"
 
-            if(status == 0) {
+            if (status == 0) {
                 dynamic.setTextColor(ContextCompat.getColor(this, R.color.thema))
                 dynamic.background =
                     ContextCompat.getDrawable(this, R.drawable.background_bottom_button)
-            }else {
+            } else {
                 dynamic.setTextColor(ContextCompat.getColor(this, R.color.white))
-                dynamic.background = ContextCompat.getDrawable(this, R.drawable.background_bottom_button3)
+                dynamic.background =
+                    ContextCompat.getDrawable(this, R.drawable.background_bottom_button3)
                 dynamic.isEnabled = false
             }
         }
