@@ -119,8 +119,10 @@ class DetailProjectActivity : AppCompatActivity() {
         toolbar = binding.toolbarDetailProject
 
         if (!ownerStatusFlag) {
-            toolbar.menu[0].isVisible = false
             toolbar.menu[1].isVisible = false
+            toolbar.menu[2].isVisible = false
+        } else {
+            toolbar.menu[0].isVisible = false
         }
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {

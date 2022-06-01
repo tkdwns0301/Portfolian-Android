@@ -18,7 +18,6 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:menu="@menu/menu_main_chatitem"
         app:title="채팅"
         app:titleTextAppearance="@style/toolbarTitleStyle"
         app:titleTextColor="@color/base"

@@ -64,9 +64,9 @@
         <entry key="app/src/main/res/layout/fragment_markdown.xml" value="0.23697916666666666" />
         <entry key="app/src/main/res/layout/fragment_nickname.xml" value="0.10833333333333334" />
         <entry key="app/src/main/res/layout/fragment_user.xml" value="0.22404371584699453" />
-        <entry key="app/src/main/res/layout/item_my_chat.xml" value="0.24814814814814815" />
+        <entry key="app/src/main/res/layout/item_my_chat.xml" value="0.25" />
         <entry key="app/src/main/res/layout/item_notice_chat.xml" value="0.27395833333333336" />
-        <entry key="app/src/main/res/layout/item_your_chat.xml" value="0.24814814814814815" />
+        <entry key="app/src/main/res/layout/item_your_chat.xml" value="0.33" />
         <entry key="app/src/main/res/layout/list_chat_item.xml" value="0.2997804863049927" />
         <entry key="app/src/main/res/layout/list_view_home_item.xml" value="0.125" />
         <entry key="app/src/main/res/layout/list_view_home_item2.xml" value="0.335" />

@@ -2,56 +2,51 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
+    android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginBottom="15dp"
-    android:orientation="horizontal">
+    android:gravity="start"
+    android:orientation="horizontal"
+    android:paddingEnd="40dp">
 
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/cv_YourProfile"
         android:layout_width="40dp"
         android:layout_height="40dp"
-        android:layout_marginEnd="10dp"
-        />
+        android:layout_marginEnd="10dp" />
 
-    <LinearLayout
+
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-
-        <androidx.constraintlayout.widget.ConstraintLayout
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/background_yourchat"
-            android:padding="10dp">
-
-            <TextView
-                android:id="@+id/tv_YourMessage"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_gravity="left"
-                android:gravity="center_vertical"
-                android:textColor="@color/base"
-                android:textSize="14sp"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                tools:text="니가 입력한내용." />
-        </androidx.constraintlayout.widget.ConstraintLayout>
+        android:background="@drawable/background_yourchat"
+        android:padding="10dp">
 
         <TextView
-            android:id="@+id/tv_YourTime"
+            android:id="@+id/tv_YourMessage"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="bottom"
-            android:layout_marginStart="10dp"
-            android:gravity="left"
-            android:textColor="@color/gray2"
-            android:textSize="12sp"
-            tools:text="시간" />
+            android:gravity="center_vertical"
+            android:textColor="@color/base"
+            android:maxWidth="200dp"
+            android:textSize="14sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="동해물과 백두산이 마르고 닳도록 하느님이 보우하사 우리나라 만세 무궁화 삼천리 화려강산 대한사람 대한으로 길이 보전하세" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
 
-    </LinearLayout>
+    <TextView
+        android:id="@+id/tv_YourTime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom"
+        android:layout_marginStart="10dp"
+        android:textColor="@color/gray2"
+        android:textSize="12sp"
+        tools:text="12:00" />
+
 
 </LinearLayout>

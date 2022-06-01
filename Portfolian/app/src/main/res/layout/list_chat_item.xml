@@ -98,6 +98,15 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/cl_DateAndCnt">
 
+            <de.hdodenhof.circleimageview.CircleImageView
+                android:id="@+id/cv_ChatProfile"
+                android:layout_width="50dp"
+                android:layout_height="50dp"
+                android:src="@drawable/avatar_1_raster"
+                app:layout_constraintEnd_toStartOf="@id/cl_ProfileAndName"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/cl_ProfileAndName"
@@ -105,29 +114,21 @@
                 android:layout_height="wrap_content"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toStartOf="@id/tv_Title"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
+                app:layout_constraintStart_toEndOf="@id/cv_ChatProfile"
+                app:layout_constraintTop_toTopOf="parent"
+                android:paddingEnd="20dp">
 
-                <de.hdodenhof.circleimageview.CircleImageView
-                    android:id="@+id/cv_ChatProfile"
-                    android:layout_width="50dp"
-                    android:layout_height="50dp"
-                    android:layout_marginEnd="20dp"
-                    android:src="@drawable/avatar_1_raster"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toStartOf="@id/cl_NicknameAndMessage"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
 
 
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:id="@+id/cl_NicknameAndMessage"
-                    android:layout_width="wrap_content"
-                    android:layout_height="0dp"
+                    android:layout_width="0dp"
+                    android:layout_height="wrap_content"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toEndOf="@id/cv_ChatProfile"
+                    app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent"
-                    android:layout_marginStart="10dp">
+                    android:layout_marginStart="10dp"
+                    app:layout_constraintEnd_toEndOf="parent">
 
                     <TextView
                         android:id="@+id/tv_ChatNickname"
@@ -146,17 +147,17 @@
 
                     <TextView
                         android:id="@+id/tv_LastMessage"
-                        android:layout_width="wrap_content"
+                        android:layout_width="0dp"
                         android:layout_height="wrap_content"
                         android:textColor="@color/gray1"
                         android:textSize="14sp"
-                        android:ems="8"
+                        android:maxLines="2"
                         android:gravity="top|start"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toBottomOf="@id/tv_ChatNickname"
                         app:layout_constraintEnd_toEndOf="parent"
-                        tools:text="네 알겠다고요" />
+                        tools:text="hand2님이 나갔습니다." />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -165,7 +166,7 @@
 
             <TextView
                 android:id="@+id/tv_Title"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="0dp"
                 android:gravity="end|top"
                 android:maxLines="2"
@@ -176,7 +177,7 @@
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/cl_ProfileAndName"
                 app:layout_constraintTop_toTopOf="parent"
-                tools:text="일이삼사오육" />
+                tools:text="Markdown" />
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

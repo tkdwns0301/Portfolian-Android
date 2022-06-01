@@ -2,6 +2,7 @@ package com.example.portfolian.view.main.chat
 
 import android.content.ClipData
 import android.content.Intent
+import android.net.SocketKeepalive
 import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
@@ -18,6 +19,7 @@ import com.example.portfolian.R
 import com.example.portfolian.adapter.ChatAdapter
 import com.example.portfolian.adapter.ChatListAdapter
 import com.example.portfolian.adapter.SwipeHelperCallback
+import com.example.portfolian.data.ChatModel
 import com.example.portfolian.data.ChatRoom
 import com.example.portfolian.data.ReadChatList
 import com.example.portfolian.databinding.FragmentChatBinding
@@ -25,6 +27,9 @@ import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.network.SocketApplication
 import com.example.portfolian.service.ChatService
+import io.socket.client.Socket
+import io.socket.emitter.Emitter
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -42,6 +47,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private lateinit var adapter: ChatListAdapter
     private lateinit var swipe: SwipeRefreshLayout
 
+    private lateinit var mSocket: Socket
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -54,6 +61,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     }
 
     private fun init() {
+        mSocket = SocketApplication.getSocket()
+
         initRetrofit()
         initView()
     }
@@ -71,6 +80,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         initRecyclerView()
         initToolbar()
         initSwpieRefreshLayout()
+
+        mSocket.on("chat:receive", onNewMessage)
     }
 
     private fun initToolbar() {
@@ -142,6 +153,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
 
             adapter.notifyDataSetChanged()
         }
+    }
+
+    private var onNewMessage: Emitter.Listener = Emitter.Listener { args ->
+        readChatList()
     }
 
     private fun refresh() {

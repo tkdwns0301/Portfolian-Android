@@ -79,9 +79,12 @@ class ChatRoomActivity: AppCompatActivity() {
         title.text = intent.getStringExtra("title")
 
         if(oldChatList.size != 0) {
-            Log.e("asdfds","asdf")
             arrayList = oldChatList!!
-            arrayList.add(ChatModel("", "여기까지 읽으셨습니다.", "Notice","", "", ""))
+
+            Log.e("oldChatList: ", "${oldChatList[oldChatList.size-1]}")
+
+            if(oldChatList[oldChatList.size-1].messageType != "Notice")
+                arrayList.add(ChatModel("", "여기까지 읽으셨습니다.", "Notice","", "", ""))
         }
 
         mAdapter = ChatAdapter(this, arrayList, chatRoomId, photo)
