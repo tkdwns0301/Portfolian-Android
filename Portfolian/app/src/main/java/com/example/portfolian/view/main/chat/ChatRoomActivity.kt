@@ -5,6 +5,7 @@ import android.util.Log
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.portfolian.R
@@ -130,6 +131,7 @@ class ChatRoomActivity: AppCompatActivity() {
             }
         }
         toolbar.setNavigationOnClickListener {
+
             finish()
         }
     }
@@ -225,3 +227,4 @@ class ChatRoomActivity: AppCompatActivity() {
     }
 
 }
+

@@ -37,8 +37,8 @@ import retrofit2.Retrofit
 
 
 class ChatFragment : Fragment(R.layout.fragment_chat) {
-    private lateinit var binding: FragmentChatBinding
 
+    private lateinit var binding: FragmentChatBinding
     private lateinit var retrofit: Retrofit
     private lateinit var chatService: ChatService
 
@@ -58,6 +58,11 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         init()
 
         return binding.root
+    }
+
+    override fun onResume() {
+        super.onResume()
+        readChatList()
     }
 
     private fun init() {
