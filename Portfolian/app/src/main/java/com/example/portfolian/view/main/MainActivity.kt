@@ -10,6 +10,10 @@ import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -35,13 +39,14 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import java.net.Socket
 
 private const val TAG_HOME = "home_Fragment"
 private const val TAG_BOOKMARK = "bookmark_Fragment"
 private const val TAG_CHAT = "chat_Fragment"
 private const val TAG_USER = "user_Fragment"
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), LifecycleObserver{
     private lateinit var binding: ActivityMainBinding
     private lateinit var retrofit: Retrofit
     private lateinit var tokenService: TokenService
@@ -52,6 +57,7 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        SocketApplication.getSocket().off("connection")
         initRetrofit()
 
         val keyHash = Utility.getKeyHash(this)
@@ -95,7 +101,51 @@ class MainActivity : AppCompatActivity() {
             sendFCMToken(token)
         })
 
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+
     }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    private fun onAppBackgrounded() {
+        Log.e("STOP", "STOP")
+        SocketApplication.getSocket().off("chat:receive")
+        SocketApplication.closeConnection()
+
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    private fun onAppForegrounded() {
+        Log.e("START", "START")
+
+        if(!SocketApplication.getSocket().connected())
+            SocketApplication.establishConnection()
+    }
+
+//    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+//    fun onAppCreated() {
+//        Log.e("CREATE", "CREATE")
+//    }
+//
+//    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+//    fun onAppDestroyed() {
+//        Log.e("DESTROY", "DESTROY")
+//    }
+//
+//    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+//    fun onAppPaused() {
+//        Log.e("PAUSE", "PAUSE")
+//    }
+//
+//    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+//    fun onAppResumed() {
+//        Log.e("RESUME", "RESUME")
+//    }
+//
+//    @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
+//    fun onAppAny() {
+//        Log.e("Any", "Any")
+//    }
+
 
     private fun initRetrofit() {
         retrofit = RetrofitClient.getInstance()
@@ -174,12 +224,6 @@ class MainActivity : AppCompatActivity() {
         }
 
         ft.commitAllowingStateLoss()
-    }
-
-    override fun onDestroy() {
-        super.onDestroy()
-
-        SocketApplication.closeConnection()
     }
 
     companion object {

@@ -57,7 +57,13 @@ class ChatRoomActivity: AppCompatActivity() {
         setContentView(binding.root)
         chatRoomId = intent.getStringExtra("chatRoomId").toString()
 
+
         initRetrofit()
+        //readChat()
+    }
+
+    override fun onResume() {
+        super.onResume()
         readChat()
     }
 
@@ -110,7 +116,6 @@ class ChatRoomActivity: AppCompatActivity() {
 
         initToolbar()
         initSocket()
-
     }
 
     private fun initToolbar() {
@@ -131,7 +136,6 @@ class ChatRoomActivity: AppCompatActivity() {
             }
         }
         toolbar.setNavigationOnClickListener {
-
             finish()
         }
     }

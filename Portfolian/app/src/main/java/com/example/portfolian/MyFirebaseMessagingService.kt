@@ -18,11 +18,10 @@ import com.google.firebase.messaging.RemoteMessage
 class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
-        Log.e("received: ", "new!!")
-        if (remoteMessage.data.isNotEmpty()) {
-            Log.e("body", remoteMessage.data["body"].toString())
-            Log.e("title", remoteMessage.data["title"].toString())
-            sendNotification(remoteMessage)
+        Log.e("received: ", "${remoteMessage.notification!!.title}, ${remoteMessage.notification!!.body}")
+        Log.e("received: ", "$remoteMessage")
+        if (remoteMessage.notification!!.title!!.isNotEmpty() && remoteMessage.notification!!.body!!.isNotEmpty()) {
+            sendNotification(remoteMessage.notification!!.title!!, remoteMessage.notification!!.body!!)
         }
     }
 
@@ -31,7 +30,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         super.onNewToken(token)
     }
 
-    private fun sendNotification(remoteMessage: RemoteMessage) {
+    private fun sendNotification(title: String, body: String) {
         val intent = Intent(this, MainActivity::class.java)
         intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP)
         val pendingIntent = PendingIntent.getActivity(this, 0, intent, PendingIntent.FLAG_ONE_SHOT)
@@ -40,8 +39,9 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
-            .setContentTitle(remoteMessage.data["title"].toString())
-            .setContentText(remoteMessage.data["body"].toString())
+            .setContentTitle(title)
+            .setContentText(body)
+            .setSmallIcon(R.mipmap.ic_launcher)
             .setAutoCancel(true)
             .setSound(defaultSoundUri)
             .setContentIntent(pendingIntent)

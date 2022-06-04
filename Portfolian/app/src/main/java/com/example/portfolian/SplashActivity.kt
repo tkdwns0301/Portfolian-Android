@@ -98,11 +98,13 @@ class SplashActivity: AppCompatActivity() {
     private fun toMain() {
         val intent = Intent(this, MainActivity::class.java)
         startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+        finish()
     }
 
     private fun toLogIn() {
         val intent = Intent(this, LogInActivity::class.java)
         startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
+        finish()
     }
 
 //    private var onNewMessage: Emitter.Listener = Emitter.Listener { args ->
