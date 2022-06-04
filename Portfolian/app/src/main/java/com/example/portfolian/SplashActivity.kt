@@ -84,7 +84,7 @@ class SplashActivity: AppCompatActivity() {
 
                     mSocket.on("connection") {
                         SocketApplication.sendUserId()
-                        mSocket.on("chat:receive", onNewMessage)
+                        //mSocket.on("chat:receive", onNewMessage)
                         toMain()
                     }
                 }
@@ -105,29 +105,29 @@ class SplashActivity: AppCompatActivity() {
         startActivity(intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TOP))
     }
 
-    private var onNewMessage: Emitter.Listener = Emitter.Listener { args ->
-        runOnUiThread {
-            Log.e("receive:", "zksdjflzkjdsf")
-            var builder = NotificationCompat.Builder(this,)
-                .setSmallIcon(R.drawable.cast_ic_notification_small_icon)
-                .setContentTitle("알림 제목")
-                .setContentText("알림 내용")
-
-            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                val channelId = "Portfolian_Channel"
-                val channelName ="Portfolian"
-                val descriptionText = "포트폴리안 알림을 위한 채널입니다."
-                val importance = NotificationManager.IMPORTANCE_DEFAULT
-                val channel = NotificationChannel(channelId, channelName, importance).apply {
-                    description = descriptionText
-                }
-
-                val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-                notificationManager.createNotificationChannel(channel)
-
-                notificationManager.notify(1002 , builder.build())
-            }
-
-        }
-    }
+//    private var onNewMessage: Emitter.Listener = Emitter.Listener { args ->
+//        runOnUiThread {
+//            Log.e("receive:", "zksdjflzkjdsf")
+//            var builder = NotificationCompat.Builder(this,)
+//                .setSmallIcon(R.drawable.cast_ic_notification_small_icon)
+//                .setContentTitle("알림 제목")
+//                .setContentText("알림 내용")
+//
+//            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+//                val channelId = "Portfolian_Channel"
+//                val channelName ="Portfolian"
+//                val descriptionText = "포트폴리안 알림을 위한 채널입니다."
+//                val importance = NotificationManager.IMPORTANCE_DEFAULT
+//                val channel = NotificationChannel(channelId, channelName, importance).apply {
+//                    description = descriptionText
+//                }
+//
+//                val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+//                notificationManager.createNotificationChannel(channel)
+//
+//                notificationManager.notify(1002 , builder.build())
+//            }
+//
+//        }
+//    }
 }

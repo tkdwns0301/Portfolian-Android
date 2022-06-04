@@ -57,6 +57,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         binding = FragmentChatBinding.inflate(inflater, container, false)
         init()
 
+
         return binding.root
     }
 
@@ -86,7 +87,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         initToolbar()
         initSwpieRefreshLayout()
 
-        mSocket.on("chat:receive", onNewMessage)
+        //mSocket.on("chat:receive", onNewMessage)
     }
 
     private fun initToolbar() {
@@ -168,6 +169,8 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         readChatList()
         swipe.isRefreshing = false
     }
+
+
 
 
 

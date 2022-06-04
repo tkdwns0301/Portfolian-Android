@@ -73,3 +73,8 @@ data class CreateChatRequest(
     val projectId: String
 )
 //------------------------------------
+
+// 48 FCM 토큰 보내기
+data class SendFCMTokenRequest(
+    val fcmToken: String
+)

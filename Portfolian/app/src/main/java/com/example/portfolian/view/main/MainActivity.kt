@@ -15,8 +15,14 @@ import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.portfolian.R
+import com.example.portfolian.data.SendFCMTokenRequest
+import com.example.portfolian.data.SendFCMTokenResponse
 import com.example.portfolian.databinding.ActivityMainBinding
+import com.example.portfolian.network.GlobalApplication
+import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.network.SocketApplication
+import com.example.portfolian.service.TokenService
+import com.example.portfolian.service.UserService
 import com.example.portfolian.view.main.bookmark.BookmarkFragment
 import com.example.portfolian.view.main.chat.ChatFragment
 import com.example.portfolian.view.main.home.HomeFragment
@@ -25,6 +31,10 @@ import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.common.util.Utility
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
 
 private const val TAG_HOME = "home_Fragment"
 private const val TAG_BOOKMARK = "bookmark_Fragment"
@@ -33,12 +43,16 @@ private const val TAG_USER = "user_Fragment"
 
 class MainActivity : AppCompatActivity() {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var retrofit: Retrofit
+    private lateinit var tokenService: TokenService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         val view = binding.root
         setContentView(view)
+
+        initRetrofit()
 
         val keyHash = Utility.getKeyHash(this)
 
@@ -78,11 +92,39 @@ class MainActivity : AppCompatActivity() {
             // Log and toast
             val msg = getString(R.string.msg_token_fmt, token)
             Log.e(TAG, msg)
-            Toast.makeText(baseContext, msg, Toast.LENGTH_SHORT).show()
+            sendFCMToken(token)
         })
 
     }
 
+    private fun initRetrofit() {
+        retrofit = RetrofitClient.getInstance()
+        tokenService = retrofit.create(TokenService::class.java)
+    }
+
+    private fun sendFCMToken(token: String) {
+        val fcmToken = SendFCMTokenRequest(token)
+        val sendToken = tokenService.sendFCMToken("Bearer ${GlobalApplication.prefs.accessToken}", "${GlobalApplication.prefs.userId}", fcmToken)
+
+        sendToken.enqueue(object: Callback<SendFCMTokenResponse> {
+            override fun onResponse(
+                call: Call<SendFCMTokenResponse>,
+                response: Response<SendFCMTokenResponse>
+            ) {
+                if(response.isSuccessful) {
+                    val code = response.body()!!.code
+                    val message = response.body()!!.message
+
+                    Log.e("sendToken: ", "$code: $message")
+                }
+            }
+
+            override fun onFailure(call: Call<SendFCMTokenResponse>, t: Throwable) {
+                Log.e("sendToken: ", "$t")
+            }
+        })
+
+    }
     private fun setFragment(tag: String, fragment: Fragment) {
         val manager: FragmentManager = supportFragmentManager
         val ft: FragmentTransaction = manager.beginTransaction()

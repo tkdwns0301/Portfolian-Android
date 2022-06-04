@@ -219,6 +219,7 @@ class ChatRoomActivity: AppCompatActivity() {
 
             val chat = ChatModel("$roomId", "$message", "$messageType","$sender", "$receiver", "$date")
 
+            Log.e("onNewMessage", "new!!!")
             mAdapter.addItem(chat)
             mAdapter.notifyDataSetChanged()
             recyclerView.smoothScrollToPosition(arrayList.size-1)

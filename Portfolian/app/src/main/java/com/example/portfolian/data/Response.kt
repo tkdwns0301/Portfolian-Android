@@ -312,3 +312,12 @@ data class RemoveChatResponse(
     val message: String
 ) : Parcelable
 //-------------------------------------
+
+// 48 FCM 토큰 보내기
+@Parcelize
+data class SendFCMTokenResponse(
+    @SerializedName("code")
+    val code: Int,
+    @SerializedName("message")
+    val message: String
+) : Parcelable

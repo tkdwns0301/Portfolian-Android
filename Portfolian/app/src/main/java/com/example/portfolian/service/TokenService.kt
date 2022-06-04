@@ -2,10 +2,7 @@ package com.example.portfolian.service
 
 import com.example.portfolian.data.*
 import retrofit2.Call
-import retrofit2.http.Body
-import retrofit2.http.Header
-import retrofit2.http.Headers
-import retrofit2.http.POST
+import retrofit2.http.*
 
 interface TokenService {
     //38 accessToken 갱신
@@ -15,4 +12,12 @@ interface TokenService {
         @Body renewalTokenRequest: RenewalTokenRequest
     )
     : Call<TokenResponse>
+
+    @PATCH("users/{userId}/fcm")
+    fun sendFCMToken(
+        @Header("Authorization") Authorization: String,
+        @Path("userId") userId: String,
+        @Body fcmToken: SendFCMTokenRequest
+    )
+    : Call<SendFCMTokenResponse>
 }
