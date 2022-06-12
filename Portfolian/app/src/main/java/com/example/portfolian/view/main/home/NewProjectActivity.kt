@@ -97,6 +97,7 @@ class NewProjectActivity : AppCompatActivity() {
 
         title = binding.drawerLayout.etTitle
         subjectDescription = binding.drawerLayout.etSubjectDescription
+        subjectDescription = binding.drawerLayout.etSubjectDescription
         projectTime = binding.drawerLayout.etProjectTime
         condition = binding.drawerLayout.etCondition
         progress = binding.drawerLayout.etProgress

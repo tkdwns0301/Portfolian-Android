@@ -313,6 +313,17 @@ data class RemoveChatResponse(
 ) : Parcelable
 //-------------------------------------
 
+// 46, 47 사용자 or 프로젝트 신고하기
+@Parcelize
+data class ReportResponse(
+    @SerializedName("code")
+    val code: Int,
+    @SerializedName("message")
+    val message: String,
+    @SerializedName("reportId")
+    val reportId: String
+) : Parcelable
+
 // 48 FCM 토큰 보내기
 @Parcelize
 data class SendFCMTokenResponse(

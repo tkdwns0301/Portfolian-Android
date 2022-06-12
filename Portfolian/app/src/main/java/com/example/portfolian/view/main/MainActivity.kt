@@ -109,6 +109,7 @@ class MainActivity : AppCompatActivity(), LifecycleObserver{
     private fun onAppBackgrounded() {
         Log.e("STOP", "STOP")
         SocketApplication.getSocket().off("chat:receive")
+        SocketApplication.getSocket().off("connection")
         SocketApplication.closeConnection()
 
     }
@@ -119,6 +120,10 @@ class MainActivity : AppCompatActivity(), LifecycleObserver{
 
         if(!SocketApplication.getSocket().connected())
             SocketApplication.establishConnection()
+
+            SocketApplication.getSocket().on("connection") {
+                SocketApplication.sendUserId()
+            }
     }
 
 //    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
@@ -189,7 +194,7 @@ class MainActivity : AppCompatActivity(), LifecycleObserver{
         val user = manager.findFragmentByTag(TAG_USER)
 
         if(home != null) {
-            ft.hide(home)
+            ft.remove(home)
         }
         if(bookmark != null) {
             ft.remove(bookmark)
@@ -198,12 +203,12 @@ class MainActivity : AppCompatActivity(), LifecycleObserver{
             ft.remove(chat)
         }
         if(user != null) {
-            ft.hide(user)
+            ft.remove(user)
         }
 
         if(tag == TAG_HOME) {
             if(home != null) {
-                ft.show(home)
+                ft.add(R.id.fg_MainNavContainer, fragment, tag)
             }
         }
         else if(tag == TAG_BOOKMARK) {
@@ -219,7 +224,7 @@ class MainActivity : AppCompatActivity(), LifecycleObserver{
         }
         else if(tag == TAG_USER) {
             if(user != null) {
-                ft.show(user)
+                ft.add(R.id.fg_MainNavContainer, fragment, tag)
             }
         }
 

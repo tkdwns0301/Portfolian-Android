@@ -49,6 +49,7 @@
         <entry key="app/src/main/res/layout/activity_webview.xml" value="0.2743362831858407" />
         <entry key="app/src/main/res/layout/dialog_layout.xml" value="0.24299065420560748" />
         <entry key="app/src/main/res/layout/dialog_markdown.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/dialog_report_project.xml" value="0.314070351758794" />
         <entry key="app/src/main/res/layout/drawer_bookmark.xml" value="0.26869158878504673" />
         <entry key="app/src/main/res/layout/drawer_home.xml" value="0.2657002015147735" />
         <entry key="app/src/main/res/layout/drawer_new_project.xml" value="0.27291666666666664" />

@@ -26,6 +26,7 @@ import com.example.portfolian.data.UserInfoResponse
 import com.example.portfolian.databinding.FragmentUserBinding
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
+import com.example.portfolian.network.SocketApplication
 import com.example.portfolian.service.UserService
 import com.example.portfolian.view.main.user.setting.SettingActivity
 import com.google.android.flexbox.FlexboxLayout
@@ -66,14 +67,13 @@ class UserFragment : Fragment(R.layout.fragment_user) {
         return binding.root
     }
 
-    private fun init() {
-        initRetrofit()
+    override fun onResume() {
+        super.onResume()
+        SocketApplication.getSocket().off("chat:receive")
         initView()
     }
 
-    override fun onStart() {
-        super.onStart()
-
+    private fun init() {
         initRetrofit()
         initView()
     }

@@ -45,6 +45,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
             .setAutoCancel(true)
             .setSound(defaultSoundUri)
             .setContentIntent(pendingIntent)
+            .setPriority(NotificationCompat.PRIORITY_HIGH)
 
         val notificationManager =
             getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
@@ -53,9 +54,11 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(
                 channelId,
-                "Channel human readable title",
-                NotificationManager.IMPORTANCE_DEFAULT
-            )
+                "Portfolian",
+                NotificationManager.IMPORTANCE_HIGH
+            ).apply {
+                description = "Portfolian description"
+            }
             notificationManager.createNotificationChannel(channel)
         }
 
@@ -64,6 +67,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
     companion object {
 
-        private const val TAG = "PortfoianFCMService"
+        private const val TAG = "PortfolianFCMService"
     }
 }

@@ -18,6 +18,7 @@ import com.example.portfolian.data.ReadProjectResponse
 import com.example.portfolian.databinding.FragmentBookmarkBinding
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
+import com.example.portfolian.network.SocketApplication
 import com.example.portfolian.service.ProjectService
 import com.example.portfolian.service.TokenService
 import retrofit2.Call
@@ -50,6 +51,7 @@ class BookmarkFragment : Fragment(R.layout.fragment_bookmark) {
 
     override fun onResume() {
         super.onResume()
+        SocketApplication.getSocket().off("chat:receive")
         readBookmark()
     }
 

@@ -11,7 +11,6 @@ import java.net.URISyntaxException
 object SocketApplication {
     lateinit var mSocket: Socket
 
-
     @Synchronized
     fun setSocket() {
         try {

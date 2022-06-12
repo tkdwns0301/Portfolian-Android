@@ -87,7 +87,6 @@ class ChatAdapter(
 
             if (i == arrayList.size - 1) {
                 val jsonObject = JSONObject()
-
                 jsonObject.put("chatRoomId", "$roomId")
                 jsonObject.put("userId", "${GlobalApplication.prefs.userId}")
 

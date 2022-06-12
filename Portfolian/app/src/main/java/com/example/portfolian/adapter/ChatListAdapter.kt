@@ -16,6 +16,7 @@ import com.example.portfolian.data.ChatRoom
 import com.example.portfolian.data.RemoveChatResponse
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
+import com.example.portfolian.network.SocketApplication
 import com.example.portfolian.service.ChatService
 import com.example.portfolian.view.main.chat.ChatRoomActivity
 import de.hdodenhof.circleimageview.CircleImageView
@@ -91,6 +92,7 @@ class ChatListAdapter(
     override fun getItemCount(): Int = dataSet.size
 
     private fun moveChat(chatRoomId: String, receiver: String, photo: String, title: String, nickName: String) {
+        SocketApplication.getSocket().off("chat:receive")
         val intent = Intent(context, ChatRoomActivity::class.java)
         intent.putExtra("chatRoomId", "$chatRoomId")
         intent.putExtra("receiver", "$receiver")

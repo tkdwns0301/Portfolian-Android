@@ -34,10 +34,15 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import kotlin.math.roundToInt
 import android.os.Parcelable
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
 import com.example.portfolian.databinding.FragmentHomeBinding
+import com.example.portfolian.network.SocketApplication
 
 
-class HomeFragment : Fragment(R.layout.fragment_home) {
+class HomeFragment : Fragment(R.layout.fragment_home), LifecycleObserver{
     private lateinit var binding: FragmentHomeBinding
 
     private lateinit var retrofit: Retrofit
@@ -72,7 +77,42 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     ): View? {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         init()
+
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         return binding.root
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    private fun appOnStop() {
+        Log.e("HomeFragment: ", "onResume")
+    }
+    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
+    private fun appOnCreate() {
+        Log.e("HomeFragment: ", "onResume")
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
+    private fun appOnDestroy() {
+        Log.e("HomeFragment: ", "onResume")
+    }
+    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
+    private fun appOnPause() {
+        Log.e("HomeFragment: ", "onResume")
+    }
+    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
+    private fun appOnResume() {
+        Log.e("HomeFragment: ", "onResume")
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    private fun appOnStart() {
+        Log.e("HomeFragment: ", "onStart")
+    }
+
+    override fun onResume() {
+        super.onResume()
+        //Log.e("HomeFragment: ", "onResume")
+        SocketApplication.getSocket().off("chat:receive")
     }
 
     private fun init() {

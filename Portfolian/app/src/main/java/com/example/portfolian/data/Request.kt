@@ -74,6 +74,12 @@ data class CreateChatRequest(
 )
 //------------------------------------
 
+// 46, 47 사용자 or 프로젝트 신고하기
+data class ReportRequest(
+    val reason: String
+)
+//------------------------------------
+
 // 48 FCM 토큰 보내기
 data class SendFCMTokenRequest(
     val fcmToken: String

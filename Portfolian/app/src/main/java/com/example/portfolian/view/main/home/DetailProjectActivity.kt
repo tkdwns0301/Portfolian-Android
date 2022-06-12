@@ -29,6 +29,7 @@ import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.network.SocketApplication
 import com.example.portfolian.service.ChatService
 import com.example.portfolian.service.ProjectService
+import com.example.portfolian.view.ReportProjectDialog
 import com.example.portfolian.view.main.chat.ChatRoomActivity
 import com.example.portfolian.view.main.user.OtherActivity
 import com.google.android.flexbox.FlexboxLayout
@@ -126,7 +127,12 @@ class DetailProjectActivity : AppCompatActivity() {
         }
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
+                R.id.toolbar_Report -> {
+                    val reportDialog = ReportProjectDialog(this, "$projectId")
+                    reportDialog.showDialog()
 
+                    true
+                }
                 R.id.toolbar_Modify -> {
                     val intent = Intent(this, NewProjectActivity::class.java)
                     intent.putExtra("projectId", "$projectId")
