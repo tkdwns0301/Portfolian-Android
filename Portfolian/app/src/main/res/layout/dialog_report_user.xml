@@ -34,7 +34,7 @@
                 android:id="@+id/tv_Report1"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="부적절한 글이에요"
+                android:text="욕설을 했어요"
                 android:paddingBottom="15dp"
                 android:textSize="14sp"
                 android:textColor="@color/base"/>
@@ -42,7 +42,7 @@
                 android:id="@+id/tv_Report2"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="낚시성 글이에요"
+                android:text="성희롱을 했어요"
                 android:paddingBottom="15dp"
                 android:textSize="14sp"
                 android:textColor="@color/base"/>
@@ -50,7 +50,7 @@
                 android:id="@+id/tv_Report3"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="홍보성 글이에요"
+                android:text="다른 목적의 대화를 시도해요"
                 android:paddingBottom="15dp"
                 android:textSize="14sp"
                 android:textColor="@color/base"/>
@@ -58,38 +58,10 @@
                 android:id="@+id/tv_Report4"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="도배성 글이에요"
+                android:text="부적절한 아이디에요"
                 android:paddingBottom="15dp"
                 android:textSize="14sp"
                 android:textColor="@color/base"/>
-            <TextView
-                android:id="@+id/tv_Report5"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="광고성 글이에요"
-                android:paddingBottom="10dp"
-                android:textSize="14sp"
-                android:textColor="@color/base"/>
-            <TextView
-                android:id="@+id/tv_Report6"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="정치적 글이에요"
-                android:paddingBottom="15dp"
-                android:textSize="14sp"
-                android:textColor="@color/base"/>
-            <TextView
-                android:id="@+id/tv_Report7"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="음란성 글이에요"
-                android:textSize="14sp"
-                android:textColor="@color/base"/>
-
-
-
-
-
         </LinearLayout>
 
 

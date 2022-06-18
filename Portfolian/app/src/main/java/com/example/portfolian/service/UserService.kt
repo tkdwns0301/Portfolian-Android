@@ -1,6 +1,8 @@
 package com.example.portfolian.service
 
 import com.example.portfolian.data.ModifyProfileResponse
+import com.example.portfolian.data.ReportRequest
+import com.example.portfolian.data.ReportResponse
 import com.example.portfolian.data.UserInfoResponse
 import okhttp3.MultipartBody
 import retrofit2.Call
@@ -27,4 +29,13 @@ interface UserService {
         @Part ("mail") mail: String
     )
     : Call<ModifyProfileResponse>
+
+    @Headers("content-type: application/json")
+    @POST("/reports/users/{userId}")
+    fun reportUser(
+        @Header("Authorization") Authorization: String,
+        @Path("userId") userId: String,
+        @Body reason: ReportRequest
+    )
+    : Call<ReportResponse>
 }

@@ -21,10 +21,13 @@ import androidx.core.view.isVisible
 import com.bumptech.glide.Glide
 import com.example.portfolian.R
 import com.example.portfolian.data.UserInfoResponse
+import com.example.portfolian.databinding.ActivityOtherBinding
 import com.example.portfolian.databinding.FragmentUserBinding
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.UserService
+import com.example.portfolian.view.ReportProjectDialog
+import com.example.portfolian.view.ReportUserDialog
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import de.hdodenhof.circleimageview.CircleImageView
@@ -35,11 +38,12 @@ import retrofit2.Retrofit
 import kotlin.math.roundToInt
 
 class OtherActivity : AppCompatActivity() {
-    private lateinit var binding: FragmentUserBinding
+    private lateinit var binding: ActivityOtherBinding
 
     private lateinit var retrofit: Retrofit
     private lateinit var otherInfoService: UserService
     private lateinit var otherInfo: UserInfoResponse
+    private lateinit var otherId: String
 
     private lateinit var toolbar: Toolbar
     private lateinit var profile: CircleImageView
@@ -56,7 +60,7 @@ class OtherActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        binding = FragmentUserBinding.inflate(layoutInflater)
+        binding = ActivityOtherBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
         init()
@@ -91,19 +95,26 @@ class OtherActivity : AppCompatActivity() {
     }
 
     private fun initToolbar() {
-        toolbar.menu.setGroupVisible(0, false)
-        toolbar.menu.setGroupVisible(1, false)
-        toolbar.title = "상대방 프로필"
 
-        setSupportActionBar(toolbar)
-        supportActionBar!!.setDisplayHomeAsUpEnabled(true)
+        toolbar.setOnMenuItemClickListener {
+            when(it.itemId) {
+                R.id.toolbar_Report -> {
+                    val reportDialog = ReportUserDialog(this, "$otherId")
+                    reportDialog.showDialog()
+                    true
+                }
+                else -> {
+                    true
+                }
+            }
+        }
         toolbar.setNavigationOnClickListener {
             finish()
         }
     }
 
     private fun readOtherInfo() {
-        val otherId = intent.getStringExtra("userId")
+        otherId = intent.getStringExtra("userId").toString()
 
         val callOtherInfo = otherInfoService.readUserInfo(
             "Bearer ${GlobalApplication.prefs.accessToken}",
