@@ -73,19 +73,45 @@
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:background="@color/white"
-        android:paddingStart="20dp"
-        android:paddingEnd="20dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rg_Order">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_Project"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/list_view_home_item" />
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_Project"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:paddingStart="20dp"
+                android:paddingEnd="20dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/list_view_home_item"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"/>
+
+            <TextView
+                android:padding="15dp"
+                android:gravity="center"
+                android:id="@+id/tv_NoneProject"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:text="아직은 프로젝트가 없어요.\n\n새로운 프로젝트를 작성해보세요!"
+                android:textStyle="bold"
+                android:textColor="@color/thema"
+                android:textSize="16sp"
+                android:visibility="invisible"/>
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
     <ImageButton

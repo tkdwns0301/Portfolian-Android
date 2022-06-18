@@ -34,6 +34,7 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import kotlin.math.roundToInt
 import android.os.Parcelable
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -61,6 +62,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), LifecycleObserver{
     private lateinit var chips: ArrayList<Chip>
     private lateinit var searchView: SearchView
     private lateinit var orderRadioGroup: RadioGroup
+    private lateinit var noneProject: TextView
 
     private lateinit var adapter: ProjectAdapter
 
@@ -132,6 +134,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), LifecycleObserver{
         newProject = binding.drawerHome.btnNewProject
         searchView = binding.drawerHome.searchView
         orderRadioGroup = binding.drawerHome.rgOrder
+        noneProject = binding.drawerHome.tvNoneProject
 
         initSearchView()
         initRadioGroup()
@@ -490,7 +493,16 @@ class HomeFragment : Fragment(R.layout.fragment_home), LifecycleObserver{
             ) {
                 if (response.isSuccessful) {
                     val projects = response.body()?.articleList
-                    setProjectAdapter(projects)
+
+                    if(projects.isNullOrEmpty()) {
+                        noneProject.isVisible = true
+                        recyclerView.isVisible = false
+                    } else {
+                        noneProject.isVisible = false
+                        recyclerView.isVisible = true
+                        setProjectAdapter(projects)
+                    }
+
                 }
             }
 

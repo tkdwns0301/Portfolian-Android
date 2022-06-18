@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/fragment_chat"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/fragment_chat"
     tools:context="view.main.chat.ChatFragment">
 
 
@@ -12,38 +12,65 @@
         android:id="@+id/toolbar_ChatList"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        android:layout_marginBottom="10dp"
         android:background="@color/white"
-        android:paddingEnd="20dp"
         android:paddingStart="20dp"
+        android:paddingEnd="20dp"
         app:layout_constraintBottom_toTopOf="@id/sl_Swipe"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:title="채팅"
         app:titleTextAppearance="@style/toolbarTitleStyle"
-        app:titleTextColor="@color/base"
-        android:layout_marginBottom="10dp"/>
+        app:titleTextColor="@color/base" />
 
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/sl_Swipe"
         android:layout_width="match_parent"
         android:layout_height="0dp"
+        android:background="@color/white"
         android:paddingStart="20dp"
         android:paddingEnd="20dp"
-        android:background="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/toolbar_ChatList"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
-        >
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/toolbar_ChatList">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_ChatList"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/list_chat_item" />
+            android:layout_height="match_parent">
+
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_ChatList"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                tools:listitem="@layout/list_chat_item" />
+
+            <TextView
+                android:id="@+id/tv_NoneChat"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:padding="15dp"
+                android:text="아직은 채팅이 없어요.\n\n새로운 사람과 대화를 시작해보세요!"
+                android:textColor="@color/thema"
+                android:textSize="16sp"
+                android:textStyle="bold"
+                android:visibility="invisible"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

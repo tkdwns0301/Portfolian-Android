@@ -6,7 +6,10 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
+import androidx.constraintlayout.widget.ConstraintLayout
+import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -36,7 +39,7 @@ class BookmarkFragment : Fragment(R.layout.fragment_bookmark) {
     private lateinit var swipe: SwipeRefreshLayout
     private lateinit var recyclerView: RecyclerView
     private lateinit var toolbar: Toolbar
-
+    private lateinit var noneBookmark: TextView
     private lateinit var adapter: ProjectAdapter
 
     override fun onCreateView(
@@ -70,6 +73,7 @@ class BookmarkFragment : Fragment(R.layout.fragment_bookmark) {
         swipe = binding.slSwipe
         recyclerView = binding.rvProject
         toolbar = binding.toolbarBookmark
+        noneBookmark = binding.tvNoneBookmark
 
         initSwipeRefreshLayout()
         initRecyclerView()
@@ -119,7 +123,17 @@ class BookmarkFragment : Fragment(R.layout.fragment_bookmark) {
             ) {
                 if (response.isSuccessful) {
                     val bookmarkProjects = response.body()?.articleList
-                    setBookmarkAdapter(bookmarkProjects)
+
+                    if(bookmarkProjects.isNullOrEmpty()) {
+                        noneBookmark.isVisible = true
+                        recyclerView.isVisible = false
+                    } else {
+                        noneBookmark.isVisible = false
+                        recyclerView.isVisible = true
+                        setBookmarkAdapter(bookmarkProjects)
+                    }
+
+
                 }
             }
 

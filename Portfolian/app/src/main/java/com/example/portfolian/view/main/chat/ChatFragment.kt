@@ -10,7 +10,9 @@ import androidx.fragment.app.Fragment
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
+import android.widget.TextView
 import android.widget.Toolbar
+import androidx.core.view.isVisible
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
@@ -50,6 +52,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ChatListAdapter
     private lateinit var swipe: SwipeRefreshLayout
+    private lateinit var noneChat: TextView
 
     private lateinit var mSocket: Socket
 
@@ -88,6 +91,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         toolbar = binding.toolbarChatList
         recyclerView = binding.rvChatList
         swipe = binding.slSwipe
+        noneChat = binding.tvNoneChat
 
         initRecyclerView()
         initToolbar()
@@ -137,8 +141,14 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
                     val message = response.body()!!.message
                     val chatRoomList = response.body()!!.chatRoomList
 
-                    Log.d("callChatList: ", "$code, $message")
-                    setChatListAdapter(chatRoomList)
+                    if(chatRoomList.isNullOrEmpty()) {
+                        noneChat.isVisible = true
+                        recyclerView.isVisible = false
+                    } else {
+                        noneChat.isVisible = false
+                        recyclerView.isVisible = true
+                        setChatListAdapter(chatRoomList)
+                    }
                 }
             }
 
