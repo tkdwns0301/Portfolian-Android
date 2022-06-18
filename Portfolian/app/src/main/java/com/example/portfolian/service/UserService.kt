@@ -13,17 +13,11 @@ interface UserService {
     )
     : Call<UserInfoResponse>
 
-    @Multipart
     @PATCH("/users/{userId}/info")
     fun modifyProfile(
         @Header("Authorization") Authorization: String,
         @Path("userId") userId: String,
-        @Part ("nickName") nickName: String,
-        @Part ("description") description: String,
-        @Part ("stack") stack: List<String>,
-        @Part photo: MultipartBody.Part,
-        @Part ("github") github: String,
-        @Part ("mail") mail: String
+        @Body modify: ModifyProfileRequest
     )
     : Call<ModifyProfileResponse>
 

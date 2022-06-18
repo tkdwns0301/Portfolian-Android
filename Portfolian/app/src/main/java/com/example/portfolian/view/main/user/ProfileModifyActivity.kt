@@ -232,7 +232,7 @@ class ProfileModifyActivity : AppCompatActivity() {
 
                     nickName.setText(userInfo.nickName)
                     if (userInfo.github.isNotEmpty()) {
-                        git.setText(userInfo.github.substring(15, userInfo.github.length))
+                        git.setText(userInfo.github.substring(23, userInfo.github.length))
                     }
                     mail.setText(userInfo.mail)
                     description.setText(userInfo.description)
@@ -312,7 +312,7 @@ class ProfileModifyActivity : AppCompatActivity() {
     private fun setUserInfo() {
 
         var nickNameStr = nickName.text.toString()
-        var gitStr = "https://www.github.com/" + git.text.toString()
+        var gitStr = "www.github.com/" + git.text.toString()
         var mailStr = mail.text.toString()
         var descriptionStr = description.text.toString()
 
@@ -323,39 +323,30 @@ class ProfileModifyActivity : AppCompatActivity() {
             stackList.add(stackName)
         }
 
-//        val file = File(filePath)
-//        var requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
-//        var body: MultipartBody.Part =
-//            MultipartBody.Part.createFormData("photo", "photo", requestFile)
-//
-//
-//        val saveProfile = userService.modifyProfile(
-//            "Bearer ${GlobalApplication.prefs.accessToken}",
-//            "${GlobalApplication.prefs.userId}",
-//            nickNameStr,
-//            descriptionStr,
-//            stackList,
-//            body,
-//            gitStr,
-//            mailStr
-//        )
-//
-//        saveProfile.enqueue(object : Callback<ModifyProfileResponse> {
-//            override fun onResponse(
-//                call: Call<ModifyProfileResponse>,
-//                response: Response<ModifyProfileResponse>
-//            ) {
-//                if (response.isSuccessful) {
-//                    var code = response.body()!!.code
-//
-//                    Log.d("saveProfile: ", "$code")
-//                }
-//            }
-//
-//            override fun onFailure(call: Call<ModifyProfileResponse>, t: Throwable) {
-//                Log.e("saveProfile: ", "$t")
-//            }
-//        })
+        val modify = ModifyProfileRequest(nickNameStr, descriptionStr, stackList, gitStr, mailStr)
+
+        val saveProfile = userService.modifyProfile(
+            "Bearer ${GlobalApplication.prefs.accessToken}",
+            "${GlobalApplication.prefs.userId}",
+            modify
+        )
+
+        saveProfile.enqueue(object : Callback<ModifyProfileResponse> {
+            override fun onResponse(
+                call: Call<ModifyProfileResponse>,
+                response: Response<ModifyProfileResponse>
+            ) {
+                if (response.isSuccessful) {
+                    var code = response.body()!!.code
+
+                    Toast.makeText(applicationContext, "나의 정보 수정이 완료되었습니다.", Toast.LENGTH_SHORT).show()
+                }
+            }
+
+            override fun onFailure(call: Call<ModifyProfileResponse>, t: Throwable) {
+                Toast.makeText(applicationContext, "나의 정보를 수정하는 도중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
+            }
+        })
 
     }
 
