@@ -6,6 +6,8 @@ import android.content.pm.PackageManager
 import android.content.res.ColorStateList
 import android.graphics.Bitmap
 import android.graphics.Color
+import android.net.Uri
+import android.os.Build
 import android.os.Bundle
 import android.os.Environment
 import android.provider.MediaStore
@@ -26,11 +28,13 @@ import com.bumptech.glide.Glide
 import com.example.portfolian.R
 import com.example.portfolian.data.ModifyProfileRequest
 import com.example.portfolian.data.ModifyProfileResponse
+import com.example.portfolian.data.ProfileImageResponse
 import com.example.portfolian.data.UserInfoResponse
 import com.example.portfolian.databinding.ActivityProfilemodifyBinding
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.UserService
+import com.example.portfolian.view.ProfileDialog
 import com.google.android.flexbox.FlexboxLayout
 import com.google.android.material.chip.Chip
 import de.hdodenhof.circleimageview.CircleImageView
@@ -54,7 +58,7 @@ class ProfileModifyActivity : AppCompatActivity() {
     private lateinit var addPhoto: TextView
 
     private lateinit var toolbar: Toolbar
-    private lateinit var profile: CircleImageView
+    lateinit var profile: CircleImageView
     private lateinit var nickName: EditText
     private lateinit var git: EditText
     private lateinit var mail: EditText
@@ -68,12 +72,29 @@ class ProfileModifyActivity : AppCompatActivity() {
     private lateinit var stackView: FlexboxLayout
     private lateinit var checkedStackView: FlexboxLayout
     private lateinit var checkedChips: MutableList<Chip>
+
     private lateinit var bitmap: Bitmap
     private lateinit var filePath: String
+
     private var myStack = ""
     private var myColor = 0
 
+    var customProfileFlag = false
+    lateinit var getResult: ActivityResultLauncher<Intent>
+
+
     private lateinit var checkedStack: List<String>
+
+    init {
+        instance = this
+    }
+
+    companion object {
+        private var instance: ProfileModifyActivity? = null
+        fun getInstance(): ProfileModifyActivity? {
+            return instance
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -81,7 +102,32 @@ class ProfileModifyActivity : AppCompatActivity() {
         binding = ActivityProfilemodifyBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
+            if (it.resultCode == Activity.RESULT_OK) {
+                filePath = getRealPathFromURI(it.data?.data!!)
+                setProfileCustom()
+            }
+
+        }
+
         init()
+    }
+
+    private fun getRealPathFromURI(uri: Uri): String {
+        val buildName = Build.MANUFACTURER
+        if(buildName.equals("Xiaomi")) {
+            return uri.path.toString()
+        }
+
+        var columnIndex = 0
+        val proj = arrayOf(MediaStore.Images.Media.DATA)
+        var cursor = contentResolver.query(uri, proj, null, null, null)
+        if(cursor!!.moveToFirst()) {
+            columnIndex = cursor.getColumnIndexOrThrow(MediaStore.Images.Media.DATA)
+        }
+
+        return cursor.getString(columnIndex)
+
     }
 
     private fun init() {
@@ -96,13 +142,17 @@ class ProfileModifyActivity : AppCompatActivity() {
         description = binding.drawerProfileModify.etIntroduce
         profile = binding.drawerProfileModify.cvProfile
         toolbar = binding.drawerProfileModify.toolbarSetting
-        addPhoto = binding.drawerProfileModify.tvGit
+        addPhoto = binding.drawerProfileModify.tvModifyProfile
+
+        addPhoto.setOnClickListener {
+            val profileDialog = ProfileDialog(this)
+            profileDialog.showDialog()
+        }
         allNonClick = binding.btnAllNonClick
         close = binding.ibClose
 
         initToolbar()
         initUserInfo()
-        initAddPhoto()
 
     }
 
@@ -130,68 +180,35 @@ class ProfileModifyActivity : AppCompatActivity() {
         }
     }
 
-    private lateinit var getResult: ActivityResultLauncher<Intent>
 
-    private fun initAddPhoto() {
-        getResult = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-            if (it.resultCode == Activity.RESULT_OK) {
-                var currentImageUri = it.data?.data
+    fun initAddPhoto() {
 
-                try {
-                    bitmap = MediaStore.Images.Media.getBitmap(contentResolver, currentImageUri)
 
-                    profile.setImageBitmap(bitmap)
-                    var file =
-                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-                    filePath = file.path + "/img.png"
+        var writePermission = ContextCompat.checkSelfPermission(
+            this,
+            android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+        )
+        var readPermission = ContextCompat.checkSelfPermission(
+            this,
+            android.Manifest.permission.READ_EXTERNAL_STORAGE
+        )
 
-                    if (!file.exists()) {
-                        file.mkdirs()
-                    }
-
-                    var out = FileOutputStream(filePath)
-
-                    bitmap.compress(Bitmap.CompressFormat.PNG, 100, out)
-
-                    out.close()
-
-                    setUserInfo()
-
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                }
-            }
-
-        }
-
-        addPhoto.setOnClickListener {
-            var writePermission = ContextCompat.checkSelfPermission(
+        if (writePermission == PackageManager.PERMISSION_DENIED || readPermission == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(
                 this,
-                android.Manifest.permission.WRITE_EXTERNAL_STORAGE
+                arrayOf(
+                    android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
+                    android.Manifest.permission.READ_EXTERNAL_STORAGE
+                ),
+                1
             )
-            var readPermission = ContextCompat.checkSelfPermission(
-                this,
-                android.Manifest.permission.READ_EXTERNAL_STORAGE
-            )
-
-            if (writePermission == PackageManager.PERMISSION_DENIED || readPermission == PackageManager.PERMISSION_DENIED) {
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(
-                        android.Manifest.permission.WRITE_EXTERNAL_STORAGE,
-                        android.Manifest.permission.READ_EXTERNAL_STORAGE
-                    ),
-                    1
-                )
-            } else {
-                var state = Environment.getExternalStorageState()
-                if (TextUtils.equals(state, Environment.MEDIA_MOUNTED)) {
-                    val intent = Intent(Intent.ACTION_PICK)
-                    intent.type = "image/*"
-                    getResult.launch(intent)
-                }
+        } else {
+            var state = Environment.getExternalStorageState()
+            if (TextUtils.equals(state, Environment.MEDIA_MOUNTED)) {
+                val intent = Intent(Intent.ACTION_PICK)
+                intent.type = "image/*"
+                getResult.launch(intent)
             }
-
 
         }
 
@@ -199,8 +216,10 @@ class ProfileModifyActivity : AppCompatActivity() {
     }
 
     private fun initUserInfo() {
-
-        val callUserInfo = userService.readUserInfo("Bearer ${GlobalApplication.prefs.accessToken}", "${GlobalApplication.prefs.userId}")
+        val callUserInfo = userService.readUserInfo(
+            "Bearer ${GlobalApplication.prefs.accessToken}",
+            "${GlobalApplication.prefs.userId}"
+        )
 
         callUserInfo.enqueue(object : Callback<UserInfoResponse> {
             override fun onResponse(
@@ -208,10 +227,13 @@ class ProfileModifyActivity : AppCompatActivity() {
                 response: Response<UserInfoResponse>
             ) {
                 if (response.isSuccessful) {
+                    Log.e("callUserInfo: ", "renewal")
                     val userInfo = response.body()!!
 
                     nickName.setText(userInfo.nickName)
-                    git.setText(userInfo.github.substring(15, userInfo.github.length))
+                    if (userInfo.github.isNotEmpty()) {
+                        git.setText(userInfo.github.substring(15, userInfo.github.length))
+                    }
                     mail.setText(userInfo.mail)
                     description.setText(userInfo.description)
                     checkedStack = userInfo.stackList
@@ -238,6 +260,53 @@ class ProfileModifyActivity : AppCompatActivity() {
         })
     }
 
+    private fun setProfileCustom() {
+        val file = File(filePath)
+        val requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
+        val body: MultipartBody.Part =
+            MultipartBody.Part.createFormData("photo", "photo", requestFile)
+
+        val setCustomImage = userService.modifyCustomProfile(
+            "Bearer ${GlobalApplication.prefs.accessToken}",
+            "${GlobalApplication.prefs.userId}",
+            body
+        )
+
+        setCustomImage.enqueue(object : Callback<ProfileImageResponse> {
+            override fun onResponse(
+                call: Call<ProfileImageResponse>,
+                response: Response<ProfileImageResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val code = response.body()!!.code
+                    val message = response.body()!!.message
+                    val profileURL = response.body()!!.profileURL
+
+                    Log.e("setProfileCustom: ", "$code, $message, $profileURL")
+
+
+                    if (profileURL.isNullOrEmpty()) {
+                        profile.setImageDrawable(getDrawable(R.drawable.avatar_1_raster))
+                    } else {
+                        Glide.with(applicationContext)
+                            .load(profileURL)
+                            .into(profile)
+                    }
+
+                    Toast.makeText(applicationContext, "프로필 사진 수정 완료되었습니다.", Toast.LENGTH_SHORT)
+                        .show()
+                }
+            }
+
+            override fun onFailure(call: Call<ProfileImageResponse>, t: Throwable) {
+                Toast.makeText(
+                    applicationContext,
+                    "프로필 사진을 변경하는 도중 오류가 발생했습니다.",
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        })
+    }
 
 
     private fun setUserInfo() {
@@ -254,39 +323,39 @@ class ProfileModifyActivity : AppCompatActivity() {
             stackList.add(stackName)
         }
 
-        val file = File(filePath)
-        var requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
-        var body: MultipartBody.Part =
-            MultipartBody.Part.createFormData("photo", "photo", requestFile)
-
-
-        val saveProfile = userService.modifyProfile(
-            "Bearer ${GlobalApplication.prefs.accessToken}",
-            "${GlobalApplication.prefs.userId}",
-            nickNameStr,
-            descriptionStr,
-            stackList,
-            body,
-            gitStr,
-            mailStr
-        )
-
-        saveProfile.enqueue(object : Callback<ModifyProfileResponse> {
-            override fun onResponse(
-                call: Call<ModifyProfileResponse>,
-                response: Response<ModifyProfileResponse>
-            ) {
-                if (response.isSuccessful) {
-                    var code = response.body()!!.code
-
-                    Log.d("saveProfile: ", "$code")
-                }
-            }
-
-            override fun onFailure(call: Call<ModifyProfileResponse>, t: Throwable) {
-                Log.e("saveProfile: ", "$t")
-            }
-        })
+//        val file = File(filePath)
+//        var requestFile = RequestBody.create("image/*".toMediaTypeOrNull(), file)
+//        var body: MultipartBody.Part =
+//            MultipartBody.Part.createFormData("photo", "photo", requestFile)
+//
+//
+//        val saveProfile = userService.modifyProfile(
+//            "Bearer ${GlobalApplication.prefs.accessToken}",
+//            "${GlobalApplication.prefs.userId}",
+//            nickNameStr,
+//            descriptionStr,
+//            stackList,
+//            body,
+//            gitStr,
+//            mailStr
+//        )
+//
+//        saveProfile.enqueue(object : Callback<ModifyProfileResponse> {
+//            override fun onResponse(
+//                call: Call<ModifyProfileResponse>,
+//                response: Response<ModifyProfileResponse>
+//            ) {
+//                if (response.isSuccessful) {
+//                    var code = response.body()!!.code
+//
+//                    Log.d("saveProfile: ", "$code")
+//                }
+//            }
+//
+//            override fun onFailure(call: Call<ModifyProfileResponse>, t: Throwable) {
+//                Log.e("saveProfile: ", "$t")
+//            }
+//        })
 
     }
 
@@ -397,8 +466,8 @@ class ProfileModifyActivity : AppCompatActivity() {
 
                 )
 
-                for(stack in checkedStack) {
-                    if(stack == name) {
+                for (stack in checkedStack) {
+                    if (stack == name) {
                         isChecked = true
                         checkedChips.add(this)
                         checkedStackView.addItem(name)

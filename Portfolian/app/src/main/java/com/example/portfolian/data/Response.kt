@@ -313,6 +313,18 @@ data class RemoveChatResponse(
 ) : Parcelable
 //-------------------------------------
 
+// 44, 45 기본 이미지로 변경, 사용자 사진으로 변경
+@Parcelize
+data class ProfileImageResponse(
+    @SerializedName("code")
+    val code:Int,
+    @SerializedName("message")
+    val message: String,
+    @SerializedName("profileURL")
+    val profileURL: String
+) : Parcelable
+//--------------------------------------
+
 // 46, 47 사용자 or 프로젝트 신고하기
 @Parcelize
 data class ReportResponse(

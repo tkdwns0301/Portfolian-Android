@@ -1,9 +1,6 @@
 package com.example.portfolian.service
 
-import com.example.portfolian.data.ModifyProfileResponse
-import com.example.portfolian.data.ReportRequest
-import com.example.portfolian.data.ReportResponse
-import com.example.portfolian.data.UserInfoResponse
+import com.example.portfolian.data.*
 import okhttp3.MultipartBody
 import retrofit2.Call
 import retrofit2.http.*
@@ -38,4 +35,18 @@ interface UserService {
         @Body reason: ReportRequest
     )
     : Call<ReportResponse>
+
+    @PATCH("/users/{userId}/profile/default")
+    fun modifyDefaultProfile(
+        @Header("Authorization") Authorization: String,
+        @Path("userId") userId: String
+    ) : Call<ProfileImageResponse>
+
+    @Multipart
+    @PATCH("/users/{userId}/profile")
+    fun modifyCustomProfile(
+        @Header("Authorization") Authorization: String,
+        @Path("userId") userId: String,
+        @Part photo: MultipartBody.Part
+    ) : Call<ProfileImageResponse>
 }
