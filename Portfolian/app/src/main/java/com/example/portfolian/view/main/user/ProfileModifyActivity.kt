@@ -232,7 +232,7 @@ class ProfileModifyActivity : AppCompatActivity() {
 
                     nickName.setText(userInfo.nickName)
                     if (userInfo.github.isNotEmpty()) {
-                        git.setText(userInfo.github.substring(23, userInfo.github.length))
+                        git.setText(userInfo.github.substring(15, userInfo.github.length))
                     }
                     mail.setText(userInfo.mail)
                     description.setText(userInfo.description)

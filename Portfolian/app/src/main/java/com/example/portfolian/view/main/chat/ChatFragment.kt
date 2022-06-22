@@ -51,7 +51,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private lateinit var toolbar: androidx.appcompat.widget.Toolbar
     private lateinit var recyclerView: RecyclerView
     private lateinit var adapter: ChatListAdapter
-    private lateinit var swipe: SwipeRefreshLayout
     private lateinit var noneChat: TextView
 
     private lateinit var mSocket: Socket
@@ -90,12 +89,10 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private fun initView() {
         toolbar = binding.toolbarChatList
         recyclerView = binding.rvChatList
-        swipe = binding.slSwipe
         noneChat = binding.tvNoneChat
 
         initRecyclerView()
         initToolbar()
-        initSwpieRefreshLayout()
 
         //mSocket.on("chat:receive", onNewMessage)
     }
@@ -123,11 +120,7 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         readChatList()
     }
 
-    private fun initSwpieRefreshLayout() {
-        swipe.setOnRefreshListener {
-            refresh()
-        }
-    }
+
 
 
 
@@ -180,15 +173,5 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
     private var onNewMessage: Emitter.Listener = Emitter.Listener { args ->
         readChatList()
     }
-
-    private fun refresh() {
-        readChatList()
-        swipe.isRefreshing = false
-    }
-
-
-
-
-
 
 }
