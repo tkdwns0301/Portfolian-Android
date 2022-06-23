@@ -97,6 +97,7 @@ class UserFragment : Fragment(R.layout.fragment_user) {
         initProfileModify()
         readUserInfo()
     }
+
     private fun initToolbar() {
         toolbar.setOnMenuItemClickListener {
             when(it.itemId) {
@@ -122,7 +123,6 @@ class UserFragment : Fragment(R.layout.fragment_user) {
     private fun initProfileModify() {
         profileModify.setOnClickListener {
             val intent = Intent(activity, ProfileModifyActivity::class.java)
-            Log.e("profile", "${userInfo.photo}")
             intent.putExtra("profile", "${userInfo.photo}")
             startActivity(intent)
         }
@@ -147,6 +147,7 @@ class UserFragment : Fragment(R.layout.fragment_user) {
             }
         })
     }
+
     private fun setUserInfo() {
         nickName.text = userInfo.nickName
 
@@ -159,12 +160,9 @@ class UserFragment : Fragment(R.layout.fragment_user) {
         }
 
         git.setOnClickListener {
-            var clipboardManager = activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
-            val clip = ClipData.newPlainText("git", "${userInfo.github}")
-            clipboardManager.setPrimaryClip(clip)
-
             val intent = Intent(context, WebViewActivity::class.java)
-            intent.putExtra("git", "${userInfo.github}")
+            Log.e("git", "${userInfo.github}")
+            intent.putExtra("git", "www.github.com/${userInfo.github}")
             startActivity(intent)
         }
 
@@ -224,8 +222,6 @@ class UserFragment : Fragment(R.layout.fragment_user) {
             addView(chip, layoutParams)
         }
     }
-
-
 
     private fun stackColor(name: String) {
         when (name) {

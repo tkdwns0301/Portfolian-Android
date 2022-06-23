@@ -151,7 +151,7 @@ class OtherActivity : AppCompatActivity() {
 
         git.setOnClickListener {
             val intent = Intent(this, WebViewActivity::class.java)
-            intent.putExtra("git", "${otherInfo.github}")
+            intent.putExtra("git", "www.github.com/${otherInfo.github}")
             startActivity(intent)
         }
 

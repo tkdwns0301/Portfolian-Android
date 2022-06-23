@@ -232,7 +232,7 @@ class ProfileModifyActivity : AppCompatActivity() {
 
                     nickName.setText(userInfo.nickName)
                     if (userInfo.github.isNotEmpty()) {
-                        git.setText(userInfo.github.substring(15, userInfo.github.length))
+                        git.setText(userInfo.github)
                     }
                     mail.setText(userInfo.mail)
                     description.setText(userInfo.description)
@@ -312,7 +312,7 @@ class ProfileModifyActivity : AppCompatActivity() {
     private fun setUserInfo() {
 
         var nickNameStr = nickName.text.toString()
-        var gitStr = "www.github.com/" + git.text.toString()
+        var gitStr = git.text.toString()
         var mailStr = mail.text.toString()
         var descriptionStr = description.text.toString()
 
