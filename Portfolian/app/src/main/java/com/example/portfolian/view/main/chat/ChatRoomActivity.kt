@@ -71,6 +71,11 @@ class ChatRoomActivity: AppCompatActivity() {
         readChat()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+        GlobalApplication.prefs.chatTitle = ""
+    }
+
     private fun initRetrofit() {
         retrofit = RetrofitClient.getInstance()
         chatService = retrofit.create(ChatService::class.java)

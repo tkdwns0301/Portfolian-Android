@@ -9,6 +9,7 @@ import androidx.appcompat.widget.Toolbar
 import com.example.portfolian.R
 import com.example.portfolian.databinding.ActivitySettingBinding
 import com.example.portfolian.view.CustomDialog
+import com.example.portfolian.view.main.user.WebViewActivity
 
 class SettingActivity : AppCompatActivity() {
     private lateinit var binding: ActivitySettingBinding
@@ -49,7 +50,10 @@ class SettingActivity : AppCompatActivity() {
         }
     }
     private fun initInformation() {
-
+        information.setOnClickListener {
+            val intent = Intent(this, InformationActivity::class.java)
+            startActivity(intent)
+        }
     }
 
     private fun initInquiry() {

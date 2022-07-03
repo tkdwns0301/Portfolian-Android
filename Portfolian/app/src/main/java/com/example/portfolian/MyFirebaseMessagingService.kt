@@ -108,7 +108,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
 
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
             .setSmallIcon(R.drawable.ic_noti_icon2)
-            .setLargeIcon(BitmapFactory.decodeResource(resources, R.mipmap.ic_icon))
             .setContentTitle(title)
             .setContentText(body)
             .setAutoCancel(true)
