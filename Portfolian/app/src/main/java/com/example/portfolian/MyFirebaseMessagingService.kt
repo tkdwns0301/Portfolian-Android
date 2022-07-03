@@ -98,8 +98,6 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             val channel = NotificationChannel(channelId, channelName, importance)
             channel.description = description
-            channel.enableLights(true)
-            channel.lightColor = Color.RED
             channel.enableVibration(true)
             channel.setShowBadge(true)
             notificationManager.createNotificationChannel(channel)
@@ -109,8 +107,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val defaultSoundUri = RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION)
 
         val notificationBuilder = NotificationCompat.Builder(this, channelId)
-            .setLargeIcon(BitmapFactory.decodeResource(resources, R.mipmap.ic_icon))
-            .setSmallIcon(R.mipmap.ic_icon)
+            .setSmallIcon(R.drawable.ic_noti_icon)
             .setContentTitle(title)
             .setContentText(body)
             .setAutoCancel(true)
