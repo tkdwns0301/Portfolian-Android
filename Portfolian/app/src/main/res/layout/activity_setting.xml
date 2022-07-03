@@ -48,46 +48,14 @@
             android:paddingEnd="20dp">
 
             <LinearLayout
-                android:id="@+id/ll_Notify"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="15dp"
-                android:orientation="horizontal"
-                app:layout_constraintBottom_toTopOf="@id/ll_Version"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent">
-
-                <TextView
-                    android:id="@+id/tv_Notify"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="알림 설정"
-                    android:textColor="@color/base"
-                    android:textSize="16sp" />
-
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-
-                <androidx.constraintlayout.utils.widget.ImageFilterButton
-                    android:id="@+id/btn_Notify"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:src="@drawable/ic_next" />
-            </LinearLayout>
-
-            <LinearLayout
                 android:id="@+id/ll_Version"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="15dp"
-                app:layout_constraintBottom_toTopOf="@id/tv_Logout"
+                app:layout_constraintBottom_toTopOf="@id/tv_Information"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ll_Notify">
+                app:layout_constraintTop_toTopOf="parent">
 
                 <TextView
                     android:layout_width="wrap_content"
@@ -110,6 +78,32 @@
             </LinearLayout>
 
             <TextView
+                android:id="@+id/tv_Information"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="개인정보 처리방침"
+                android:textColor="@color/base"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/ll_Version"
+                app:layout_constraintBottom_toTopOf="@id/tv_Inquiry"/>
+
+            <TextView
+                android:id="@+id/tv_Inquiry"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="15dp"
+                android:text="문의하기"
+                android:textColor="@color/base"
+                android:textSize="16sp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@id/tv_Information"
+                app:layout_constraintBottom_toTopOf="@id/tv_Logout"/>
+
+            <TextView
                 android:id="@+id/tv_Logout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -119,7 +113,7 @@
                 android:textSize="16sp"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/ll_Version"
+                app:layout_constraintTop_toBottomOf="@id/tv_Inquiry"
                 app:layout_constraintBottom_toTopOf="@id/tv_Unlink"/>
 
             <TextView

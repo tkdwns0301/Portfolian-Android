@@ -20,4 +20,10 @@ interface TokenService {
         @Body fcmToken: SendFCMTokenRequest
     )
     : Call<SendFCMTokenResponse>
+
+    @Headers("content-type: application/json")
+    @POST("oauth2/v4/token")
+    fun getGoogleAccessToken(
+        @Body loginGoogleRequest: LoginGoogleRequest
+    ) : Call<LoginGoogleResponse>
 }

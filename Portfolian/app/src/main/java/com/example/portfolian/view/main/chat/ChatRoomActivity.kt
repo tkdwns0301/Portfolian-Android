@@ -50,12 +50,14 @@ class ChatRoomActivity: AppCompatActivity() {
 
     private var chatRoomId = ""
     private var photo = ""
+    private var receiver = ""
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityChatroomBinding.inflate(layoutInflater)
         setContentView(binding.root)
         chatRoomId = intent.getStringExtra("chatRoomId").toString()
+        receiver = intent.getStringExtra("receiver").toString()
 
 
         initRetrofit()
@@ -88,13 +90,11 @@ class ChatRoomActivity: AppCompatActivity() {
         if(oldChatList.size != 0) {
             arrayList = oldChatList!!
 
-            Log.e("oldChatList: ", "${oldChatList[oldChatList.size-1]}")
-
             if(oldChatList[oldChatList.size-1].messageType != "Notice")
                 arrayList.add(ChatModel("", "여기까지 읽으셨습니다.", "Notice","", "", ""))
         }
 
-        mAdapter = ChatAdapter(this, arrayList, chatRoomId, photo)
+        mAdapter = ChatAdapter(this, arrayList, chatRoomId, photo, receiver)
 
         recyclerView.adapter = mAdapter
         val lm = LinearLayoutManager(this)

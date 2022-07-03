@@ -43,4 +43,10 @@ interface UserService {
         @Path("userId") userId: String,
         @Part photo: MultipartBody.Part
     ) : Call<ProfileImageResponse>
+
+    @GET("/users/{userId}/isBan")
+    fun isBanUser(
+        @Header("Authorization") Authorization: String,
+        @Path("userId") userId: String
+    ) : Call<IsBanUserResponse>
 }

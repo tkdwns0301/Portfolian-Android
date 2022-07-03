@@ -17,6 +17,8 @@ class SettingActivity : AppCompatActivity() {
     private lateinit var notify: LinearLayout
     private lateinit var logout: TextView
     private lateinit var unlink: TextView
+    private lateinit var information: TextView
+    private lateinit var inquiry: TextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -29,12 +31,14 @@ class SettingActivity : AppCompatActivity() {
 
     private fun init() {
         toolbar = binding.toolbarSetting
-        notify = binding.llNotify
+        information = binding.tvInformation
+        inquiry = binding.tvInquiry
         logout = binding.tvLogout
         unlink = binding.tvUnlink
 
         initToolbar()
-        initNotifySetting()
+        initInformation()
+        initInquiry()
         initLogout()
         initUnlink()
     }
@@ -42,6 +46,20 @@ class SettingActivity : AppCompatActivity() {
     private fun initToolbar() {
         toolbar.setNavigationOnClickListener {
             finish()
+        }
+    }
+    private fun initInformation() {
+
+    }
+
+    private fun initInquiry() {
+        inquiry.setOnClickListener {
+            val intent = Intent(Intent.ACTION_SEND)
+            intent.type = "plain/text"
+
+            val address = arrayOf("tkdwns97301@naver.com")
+            intent.putExtra(Intent.EXTRA_EMAIL, address)
+            startActivity(intent)
         }
     }
 

@@ -188,7 +188,8 @@ class UserFragment : Fragment(R.layout.fragment_user) {
                 stackColor(name)
 
                 text = " $myStack "
-                setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
+                textSize = 12f
+                textAlignment = View.TEXT_ALIGNMENT_CENTER
 
                 val nonClickColor = ContextCompat.getColor(context, R.color.nonClick_tag)
                 chipBackgroundColor = ColorStateList(
@@ -215,7 +216,7 @@ class UserFragment : Fragment(R.layout.fragment_user) {
             }
             val layoutParams = ViewGroup.MarginLayoutParams(
                 ViewGroup.MarginLayoutParams.WRAP_CONTENT,
-                ViewGroup.MarginLayoutParams.WRAP_CONTENT
+                120
             )
 
             layoutParams.rightMargin = dpToPx(6)

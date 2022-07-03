@@ -4,7 +4,9 @@
 
     <item
         android:id="@+id/toolbar_Report"
-        android:title="신고하기"/>
+        android:title="신고하기"
+        android:icon="@drawable/ic_report"
+        app:showAsAction="always"/>
     <item
         android:id="@+id/toolbar_Modify"
         android:title="수정하기"/>

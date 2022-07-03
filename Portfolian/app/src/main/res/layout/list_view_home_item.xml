@@ -38,7 +38,7 @@
             android:gravity="start"
             android:text="@string/title"
             android:textColor="@color/base"
-            android:textSize="18sp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/cl_Profile_View"
             app:layout_constraintStart_toStartOf="parent"
@@ -55,8 +55,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/cv_Profile"
-                android:layout_width="45dp"
-                android:layout_height="45dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/avatar_1_raster"
                 app:layout_constraintBottom_toTopOf="@id/tv_View"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -65,7 +65,7 @@
 
             <TextView
                 android:id="@+id/tv_View"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/notosanskr_reqular"
                 android:gravity="center"

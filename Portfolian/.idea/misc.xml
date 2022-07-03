@@ -12,6 +12,7 @@
         <entry key="app/src/main/res/drawable/background_chatlist_back_item.xml" value="0.25416666666666665" />
         <entry key="app/src/main/res/drawable/background_drawer.xml" value="0.3435185185185185" />
         <entry key="app/src/main/res/drawable/background_edittext.xml" value="0.2890625" />
+        <entry key="app/src/main/res/drawable/background_google.xml" value="0.24114583333333334" />
         <entry key="app/src/main/res/drawable/background_home_item.xml" value="0.30052083333333335" />
         <entry key="app/src/main/res/drawable/background_home_item2.xml" value="0.37222222222222223" />
         <entry key="app/src/main/res/drawable/background_mychat.xml" value="0.3343370049834571" />
@@ -21,15 +22,18 @@
         <entry key="app/src/main/res/drawable/ic_chat.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_filter.xml" value="0.37407407407407406" />
         <entry key="app/src/main/res/drawable/ic_filter_light.xml" value="0.37407407407407406" />
+        <entry key="app/src/main/res/drawable/ic_google.xml" value="0.24114583333333334" />
         <entry key="app/src/main/res/drawable/ic_home.xml" value="0.37407407407407406" />
         <entry key="app/src/main/res/drawable/ic_kakao.xml" value="0.29010416666666666" />
         <entry key="app/src/main/res/drawable/ic_logo.xml" value="0.34814814814814815" />
         <entry key="app/src/main/res/drawable/ic_recruit_bookmark_light.xml" value="0.3416666666666667" />
         <entry key="app/src/main/res/drawable/ic_recu.xml" value="0.3416666666666667" />
+        <entry key="app/src/main/res/drawable/ic_report.xml" value="0.24114583333333334" />
         <entry key="app/src/main/res/drawable/ic_setting.xml" value="0.41302083333333334" />
         <entry key="app/src/main/res/drawable/ic_user.xml" value="0.37407407407407406" />
         <entry key="app/src/main/res/drawable/ic_user_cnt.xml" value="0.37407407407407406" />
         <entry key="app/src/main/res/drawable/ic_usercircle.xml" value="0.24166666666666667" />
+        <entry key="app/src/main/res/drawable/menu_selector_color.xml" value="0.24114583333333334" />
         <entry key="app/src/main/res/drawable/round_background.xml" value="0.13703703703703704" />
         <entry key="app/src/main/res/drawable/round_background_gray.xml" value="0.13703703703703704" />
         <entry key="app/src/main/res/drawable/switch_thumb.xml" value="0.13148148148148148" />
@@ -65,7 +69,7 @@
         <entry key="app/src/main/res/layout/fragment_chat.xml" value="0.23697916666666666" />
         <entry key="app/src/main/res/layout/fragment_filter.xml" value="0.23697916666666666" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.10833333333333334" />
-        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.27395833333333336" />
+        <entry key="app/src/main/res/layout/fragment_login.xml" value="0.5" />
         <entry key="app/src/main/res/layout/fragment_markdown.xml" value="0.23697916666666666" />
         <entry key="app/src/main/res/layout/fragment_nickname.xml" value="0.10833333333333334" />
         <entry key="app/src/main/res/layout/fragment_user.xml" value="0.22404371584699453" />
@@ -73,13 +77,13 @@
         <entry key="app/src/main/res/layout/item_notice_chat.xml" value="0.27395833333333336" />
         <entry key="app/src/main/res/layout/item_your_chat.xml" value="0.33" />
         <entry key="app/src/main/res/layout/list_chat_item.xml" value="0.2997804863049927" />
-        <entry key="app/src/main/res/layout/list_view_home_item.xml" value="0.125" />
+        <entry key="app/src/main/res/layout/list_view_home_item.xml" value="0.33" />
         <entry key="app/src/main/res/layout/list_view_home_item2.xml" value="0.335" />
         <entry key="app/src/main/res/layout/list_view_nonItem.xml" value="0.33" />
         <entry key="app/src/main/res/layout/list_view_stack_item.xml" value="0.10833333333333334" />
         <entry key="app/src/main/res/layout/view_addprofileimage.xml" value="0.13697916666666668" />
         <entry key="app/src/main/res/layout/view_button.xml" value="0.27291666666666664" />
-        <entry key="app/src/main/res/layout/view_chip.xml" value="0.10833333333333334" />
+        <entry key="app/src/main/res/layout/view_chip.xml" value="0.25" />
         <entry key="app/src/main/res/layout/view_text.xml" value="0.10833333333333334" />
         <entry key="app/src/main/res/menu/menu_main_bookmark_toolbar.xml" value="0.22552083333333334" />
         <entry key="app/src/main/res/menu/menu_main_bottom_nav.xml" value="0.22552083333333334" />

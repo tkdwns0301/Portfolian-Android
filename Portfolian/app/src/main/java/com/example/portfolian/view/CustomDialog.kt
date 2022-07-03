@@ -76,6 +76,7 @@ class CustomDialog(context: Context, flag: Boolean) {
 
                             GlobalApplication.prefs.accessToken = ""
                             GlobalApplication.prefs.userId = ""
+                            GlobalApplication.prefs.loginStatus = 0
 
                             UserApiClient.instance.logout { error ->
                                 if(error != null) {

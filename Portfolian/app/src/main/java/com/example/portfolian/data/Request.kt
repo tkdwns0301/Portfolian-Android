@@ -84,3 +84,12 @@ data class ReportRequest(
 data class SendFCMTokenRequest(
     val fcmToken: String
 )
+
+// 구글 idToken to accessToken
+data class LoginGoogleRequest(
+    val grant_type: String,
+    val client_id: String,
+    val client_secret: String,
+    val redirect_uri: String,
+    val code: String
+)

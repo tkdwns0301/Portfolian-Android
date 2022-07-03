@@ -5,9 +5,11 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.Log
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -143,8 +145,9 @@ class ProjectAdapter(
             chip.apply {
                 stackColor(name)
                 text = "$myStack"
-                textSize = 15f
+                textSize = 12f
                 val nonClickColor = ContextCompat.getColor(context, R.color.nonClick_tag)
+                textAlignment = View.TEXT_ALIGNMENT_CENTER
 
                 chipBackgroundColor = ColorStateList(
                     arrayOf(
@@ -173,11 +176,11 @@ class ProjectAdapter(
             }
 
             val layoutParams = ViewGroup.MarginLayoutParams(
-                ViewGroup.MarginLayoutParams.WRAP_CONTENT,
-                ViewGroup.MarginLayoutParams.WRAP_CONTENT
+                WRAP_CONTENT
+                , 120
             )
 
-            layoutParams.rightMargin = 10
+            layoutParams.rightMargin = 5
             addView(chip, layoutParams)
 
             i++

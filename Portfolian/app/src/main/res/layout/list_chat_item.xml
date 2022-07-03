@@ -116,6 +116,7 @@
                 app:layout_constraintEnd_toStartOf="@id/tv_Title"
                 app:layout_constraintStart_toEndOf="@id/cv_ChatProfile"
                 app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintHorizontal_weight="1"
                 android:paddingEnd="20dp">
 
 
@@ -166,9 +167,10 @@
 
             <TextView
                 android:id="@+id/tv_Title"
-                android:layout_width="wrap_content"
+                android:layout_width="0dp"
                 android:layout_height="0dp"
                 android:gravity="end|top"
+                app:layout_constraintHorizontal_weight="1"
                 android:maxLines="2"
                 android:textColor="@color/base"
                 android:textSize="12sp"

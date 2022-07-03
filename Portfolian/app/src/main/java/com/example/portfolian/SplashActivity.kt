@@ -8,17 +8,20 @@ import android.os.Build
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.portfolian.adapter.ChatAdapter
 import com.example.portfolian.data.ChatModel
+import com.example.portfolian.data.IsBanUserResponse
 import com.example.portfolian.data.KakaoTokenRequest
 import com.example.portfolian.data.OAuthResponse
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.network.SocketApplication
 import com.example.portfolian.service.OAuthService
+import com.example.portfolian.service.UserService
 import com.example.portfolian.view.login.LogInActivity
 import com.example.portfolian.view.login.LogInFragment
 import com.example.portfolian.view.main.MainActivity
@@ -37,11 +40,12 @@ import java.time.LocalDateTime
 
 class SplashActivity: AppCompatActivity() {
     private lateinit var logInService: OAuthService
+    private lateinit var userService: UserService
     private lateinit var retrofit: Retrofit
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        Log.e("splash: ", "${GlobalApplication.prefs.userId}")
         initRetrofit()
 
         UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
@@ -50,16 +54,15 @@ class SplashActivity: AppCompatActivity() {
             }
             else if(tokenInfo != null) {
                 tokenToServer("${AuthApiClient.instance.tokenManagerProvider.manager.getToken()!!.accessToken}")
-
-
             }
-
         }
+
     }
 
     private fun initRetrofit() {
         retrofit = RetrofitClient.getInstance()
         logInService = retrofit.create(OAuthService::class.java)
+        userService = retrofit.create(UserService::class.java)
     }
 
     private fun tokenToServer(idToken: String) {
@@ -77,20 +80,44 @@ class SplashActivity: AppCompatActivity() {
                     GlobalApplication.prefs.accessToken = accessToken
                     GlobalApplication.prefs.userId = userId
 
-                    SocketApplication.setSocket()
-                    SocketApplication.establishConnection()
-
-                    val mSocket = SocketApplication.mSocket
-
-                    mSocket.on("connection") {
-                        SocketApplication.sendUserId()
-                        //mSocket.on("chat:receive", onNewMessage)
-                        toMain()
-                    }
+                    isBan(isNew)
                 }
             }
             override fun onFailure(call: Call<OAuthResponse>, t: Throwable) {
                 Log.e("LogInService: ", "$t")
+            }
+        })
+    }
+
+    private fun isBan(isNew: Boolean) {
+        val isBanUser = userService.isBanUser("Bearer ${GlobalApplication.prefs.accessToken}", "${GlobalApplication.prefs.userId}")
+
+        isBanUser.enqueue(object: Callback<IsBanUserResponse> {
+            override fun onResponse(
+                call: Call<IsBanUserResponse>,
+                response: Response<IsBanUserResponse>
+            ) {
+                if(response.isSuccessful) {
+                    val isBan = response.body()!!.isBan
+
+                    if(isBan) {
+                        Toast.makeText(applicationContext, "신고를 통해 제제된 사용자입니다. 자세한 사항은 문의주세요.", Toast.LENGTH_SHORT).show()
+                    } else {
+                        SocketApplication.setSocket()
+                        SocketApplication.establishConnection()
+
+                        val mSocket = SocketApplication.mSocket
+
+                        mSocket.on("connection") {
+                            SocketApplication.sendUserId()
+                            toMain()
+                        }
+                    }
+                }
+            }
+
+            override fun onFailure(call: Call<IsBanUserResponse>, t: Throwable) {
+                Toast.makeText(applicationContext, "로그인 도중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
             }
         })
     }

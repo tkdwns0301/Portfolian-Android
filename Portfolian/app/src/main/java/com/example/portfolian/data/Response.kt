@@ -344,3 +344,29 @@ data class SendFCMTokenResponse(
     @SerializedName("message")
     val message: String
 ) : Parcelable
+
+// 49 나의 isBan 조회
+@Parcelize
+data class IsBanUserResponse(
+    @SerializedName("code")
+    val code: Int,
+    @SerializedName("message")
+    val message: String,
+    @SerializedName("isBan")
+    val isBan: Boolean
+) : Parcelable
+
+// 구글 idToken to accessToken
+@Parcelize
+data class LoginGoogleResponse(
+    @SerializedName("access_token")
+    val access_token: String,
+    @SerializedName("expires_in")
+    val expires_in: Int,
+    @SerializedName("scope")
+    val scope: String,
+    @SerializedName("token_type")
+    val token_type: String,
+    @SerializedName("id_token")
+    val id_token: String
+) : Parcelable

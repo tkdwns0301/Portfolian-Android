@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.util.Log
 import android.util.TypedValue
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
@@ -374,8 +375,9 @@ class NewProjectActivity : AppCompatActivity() {
             chip.apply {
                 stackColor(name)
 
-                text = "  $myStack  "
-                setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
+                text = "$myStack"
+                textSize = 12f
+                textAlignment = View.TEXT_ALIGNMENT_CENTER
 
                 val nonClickColor = ContextCompat.getColor(context, R.color.nonClick_tag)
 
@@ -430,7 +432,7 @@ class NewProjectActivity : AppCompatActivity() {
 
             val layoutParams = ViewGroup.MarginLayoutParams(
                 ViewGroup.MarginLayoutParams.WRAP_CONTENT,
-                ViewGroup.MarginLayoutParams.WRAP_CONTENT
+                120
             )
 
             layoutParams.rightMargin = dpToPx(6)
@@ -449,8 +451,9 @@ class NewProjectActivity : AppCompatActivity() {
             chip.apply {
                 stackColor(name)
 
-                text = "  $myStack  "
-                setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
+                text = "$myStack"
+                textSize = 12f
+                textAlignment = View.TEXT_ALIGNMENT_CENTER
 
                 val nonClickColor = ContextCompat.getColor(context, R.color.nonClick_tag)
 
@@ -503,7 +506,7 @@ class NewProjectActivity : AppCompatActivity() {
 
             val layoutParams = ViewGroup.MarginLayoutParams(
                 ViewGroup.MarginLayoutParams.WRAP_CONTENT,
-                ViewGroup.MarginLayoutParams.WRAP_CONTENT
+                120
             )
 
             layoutParams.rightMargin = dpToPx(6)
@@ -519,8 +522,9 @@ class NewProjectActivity : AppCompatActivity() {
         chip.apply {
             stackColor(name)
 
-            text = "  $myStack  "
-            setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
+            text = "$myStack"
+            textSize = 12f
+            textAlignment = View.TEXT_ALIGNMENT_CENTER
 
             val nonClickColor = ContextCompat.getColor(context, R.color.nonClick_tag)
             chipBackgroundColor = ColorStateList(
@@ -547,7 +551,7 @@ class NewProjectActivity : AppCompatActivity() {
         }
         val layoutParams = ViewGroup.MarginLayoutParams(
             ViewGroup.MarginLayoutParams.WRAP_CONTENT,
-            ViewGroup.MarginLayoutParams.WRAP_CONTENT
+            120
         )
 
         layoutParams.rightMargin = dpToPx(6)

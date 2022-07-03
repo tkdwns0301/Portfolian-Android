@@ -66,14 +66,57 @@
 
         <ImageButton
             android:id="@+id/btn_Kakao"
-            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintBottom_toTopOf="@id/cl_Google"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
             android:background="@android:color/transparent"
             android:src="@drawable/kakao_login" />
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_marginTop="10dp"
+            android:id="@+id/cl_Google"
+            android:layout_width="300dp"
+            android:layout_height="40dp"
+            app:layout_constraintTop_toBottomOf="@id/btn_Kakao"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:background="@drawable/background_google"
+            >
+
+            <ImageView
+                app:layout_constraintHorizontal_chainStyle="spread_inside"
+                android:id="@+id/iv_Google"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:src="@drawable/ic_google"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:layout_marginStart="8dp"
+                />
+
+            <TextView
+                android:id="@+id/tv_Google"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:fontFamily="@font/roboto_medium"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                android:text="Google 로그인"
+                android:textSize="14sp"
+                android:layout_marginStart="20dp"
+                android:gravity="center"/>
+
+
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 
 

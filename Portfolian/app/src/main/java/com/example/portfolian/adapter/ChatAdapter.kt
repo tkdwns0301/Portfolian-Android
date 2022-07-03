@@ -1,6 +1,7 @@
 package com.example.portfolian.adapter
 
 import android.content.Context
+import android.content.Intent
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +14,7 @@ import com.example.portfolian.R
 import com.example.portfolian.data.ChatModel
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.SocketApplication
+import com.example.portfolian.view.main.user.OtherActivity
 import de.hdodenhof.circleimageview.CircleImageView
 import io.socket.client.Socket
 import org.json.JSONObject
@@ -25,7 +27,8 @@ class ChatAdapter(
     val context: Context,
     val arrayList: ArrayList<ChatModel>,
     val roomId: String,
-    val photo: String
+    val photo: String,
+    val receiver: String
 ) : RecyclerView.Adapter<RecyclerView.ViewHolder>() {
     private lateinit var mSocket: Socket
 
@@ -78,6 +81,12 @@ class ChatAdapter(
                         .into(viewHolder.profile)
                 }
 
+            }
+
+            viewHolder.profile.setOnClickListener {
+                val intent = Intent(context, OtherActivity::class.java)
+                intent.putExtra("userId", "$receiver")
+                context.startActivity(intent)
             }
 
             var time = arrayList[i].date.substring(11 until 16)

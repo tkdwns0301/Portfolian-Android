@@ -309,7 +309,6 @@ class HomeFragment : Fragment(R.layout.fragment_home), LifecycleObserver{
     private fun FlexboxLayout.addItem(names: Map<String, String>) {
         checkedChips = mutableListOf()
 
-
         for ((key, value) in names) {
             val chip = LayoutInflater.from(context).inflate(R.layout.view_chip, null) as Chip
 
@@ -415,8 +414,9 @@ class HomeFragment : Fragment(R.layout.fragment_home), LifecycleObserver{
                     }
                 }
 
-                text = "  $key  "
-                setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
+                text = "$key"
+                textSize = 12f
+                textAlignment = View.TEXT_ALIGNMENT_CENTER
 
                 val nonClickColor = ContextCompat.getColor(context, R.color.nonClick_tag)
                 chipBackgroundColor = ColorStateList(
@@ -455,7 +455,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), LifecycleObserver{
 
             val layoutParams = ViewGroup.MarginLayoutParams(
                 ViewGroup.MarginLayoutParams.WRAP_CONTENT,
-                ViewGroup.MarginLayoutParams.WRAP_CONTENT
+                120
             )
 
             layoutParams.rightMargin = dpToPx(6)

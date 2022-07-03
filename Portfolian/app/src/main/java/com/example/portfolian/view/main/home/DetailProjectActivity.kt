@@ -473,7 +473,9 @@ class DetailProjectActivity : AppCompatActivity() {
                 stackColor(name)
 
                 text = "$myStack"
-                textSize = 15f
+                textSize = 12f
+                textAlignment = View.TEXT_ALIGNMENT_CENTER
+
                 val nonClickColor = ContextCompat.getColor(context, R.color.nonClick_tag)
 
                 chipBackgroundColor = ColorStateList(
@@ -503,7 +505,7 @@ class DetailProjectActivity : AppCompatActivity() {
 
             val layoutParams = ViewGroup.MarginLayoutParams(
                 ViewGroup.MarginLayoutParams.WRAP_CONTENT,
-                ViewGroup.MarginLayoutParams.WRAP_CONTENT
+                120
             )
 
             layoutParams.rightMargin = 10
@@ -521,7 +523,8 @@ class DetailProjectActivity : AppCompatActivity() {
             stackColor(name)
 
             text = "$myStack"
-            textSize = 15f
+            textSize = 12f
+            textAlignment = View.TEXT_ALIGNMENT_CENTER
 
             val nonClickColor = ContextCompat.getColor(context, R.color.nonClick_tag)
 
@@ -552,7 +555,7 @@ class DetailProjectActivity : AppCompatActivity() {
 
         val layoutParams = ViewGroup.MarginLayoutParams(
             ViewGroup.MarginLayoutParams.WRAP_CONTENT,
-            ViewGroup.MarginLayoutParams.WRAP_CONTENT
+            120
         )
 
         layoutParams.rightMargin = 10
