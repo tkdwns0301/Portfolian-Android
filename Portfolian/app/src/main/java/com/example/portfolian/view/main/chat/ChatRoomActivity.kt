@@ -56,8 +56,10 @@ class ChatRoomActivity: AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityChatroomBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
         chatRoomId = intent.getStringExtra("chatRoomId").toString()
         receiver = intent.getStringExtra("receiver").toString()
+
 
 
         initRetrofit()
@@ -86,6 +88,7 @@ class ChatRoomActivity: AppCompatActivity() {
 
         photo = intent.getStringExtra("photo").toString()
         title.text = intent.getStringExtra("title")
+
 
         if(oldChatList.size != 0) {
             arrayList = oldChatList!!
@@ -120,7 +123,7 @@ class ChatRoomActivity: AppCompatActivity() {
 
     private fun initToolbar() {
         toolbarTitle.text = intent.getStringExtra("nickName")
-
+        GlobalApplication.prefs.chatTitle = toolbarTitle.text.toString()
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.chat_Delete -> {
@@ -136,6 +139,7 @@ class ChatRoomActivity: AppCompatActivity() {
             }
         }
         toolbar.setNavigationOnClickListener {
+            GlobalApplication.prefs.chatTitle = ""
             finish()
         }
     }

@@ -30,16 +30,20 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
-        if(remoteMessage.data != null) {
+        if (remoteMessage.data != null) {
             Log.e("data", "${remoteMessage.data}")
         }
 
 
         if (remoteMessage.notification!!.title!!.isNotEmpty() && remoteMessage.notification!!.body!!.isNotEmpty()) {
-            sendNotification(
-                remoteMessage.notification!!.title!!,
-                remoteMessage.notification!!.body!!
-            )
+            Log.e("chatTitle", "${GlobalApplication.prefs.chatTitle}")
+            Log.e("notification", "${remoteMessage.notification!!.title}")
+            if (!remoteMessage.notification!!.title.equals(GlobalApplication.prefs.chatTitle)) {
+                sendNotification(
+                    remoteMessage.notification!!.title!!,
+                    remoteMessage.notification!!.body!!
+                )
+            }
         }
     }
 
@@ -50,14 +54,18 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val tokenService = retrofit.create(TokenService::class.java)
 
         val fcmToken = SendFCMTokenRequest(token)
-        val sendToken = tokenService.sendFCMToken("Bearer ${GlobalApplication.prefs.accessToken}", "${GlobalApplication.prefs.userId}", fcmToken)
+        val sendToken = tokenService.sendFCMToken(
+            "Bearer ${GlobalApplication.prefs.accessToken}",
+            "${GlobalApplication.prefs.userId}",
+            fcmToken
+        )
 
-        sendToken.enqueue(object: Callback<SendFCMTokenResponse> {
+        sendToken.enqueue(object : Callback<SendFCMTokenResponse> {
             override fun onResponse(
                 call: Call<SendFCMTokenResponse>,
                 response: Response<SendFCMTokenResponse>
             ) {
-                if(response.isSuccessful) {
+                if (response.isSuccessful) {
                     val code = response.body()!!.code
                     val message = response.body()!!.message
 
@@ -83,7 +91,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
         val description = "This is Portfolian Channel"
         val importance = NotificationManager.IMPORTANCE_HIGH
 
-        val notificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
+        val notificationManager =
+            getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {

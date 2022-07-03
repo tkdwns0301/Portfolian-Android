@@ -23,4 +23,8 @@ class MySharedPreferences(context: Context) {
     var loginStatus: Int?
         get() = prefs.getInt("loginStatus", 0)
         set(value) = prefs.edit().putInt("loginStatus", value!!).apply()
+
+    var chatTitle: String?
+        get() = prefs.getString("chatTitle", "")
+        set(value) = prefs.edit().putString("chatTitle", value).apply()
 }
