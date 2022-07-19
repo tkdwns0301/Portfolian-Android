@@ -5,10 +5,11 @@ import android.content.Intent
 import android.content.res.ColorStateList
 import android.graphics.Color
 import android.util.Log
-import android.util.TypedValue
+import android.view.Gravity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.ViewGroup.LayoutParams.WRAP_CONTENT
 import android.widget.TextView
 import android.widget.ToggleButton
 import androidx.constraintlayout.widget.ConstraintLayout
@@ -59,6 +60,12 @@ class ProjectAdapter(
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val project = dataSet[position]
 
+        if(project.status == 0) {
+            holder.container.background = ContextCompat.getDrawable(context, R.drawable.background_home_item)
+        } else {
+            holder.container.background = ContextCompat.getDrawable(context, R.drawable.background_home_item2)
+        }
+
         //Profile Image
         if (project.leader.photo.isEmpty()) {
             holder.photo.setImageDrawable(context.getDrawable(R.drawable.avatar_1_raster))
@@ -70,7 +77,7 @@ class ProjectAdapter(
         }
 
         //Title
-        if(project.title.length >= 20) {
+        if (project.title.length >= 20) {
             var titleSub = project.title.substring(0, 20)
             holder.title.text = "$titleSub..."
         } else {
@@ -88,22 +95,32 @@ class ProjectAdapter(
         holder.stack.addItems(project.stackList)
 
         //stackCount
-        if(project.stackList.size > 3)
-            holder.stackCount.text = "+" + "${(project.stackList.size-3)}"
+        if (project.stackList.size > 3)
+            holder.stackCount.text = "+" + "${(project.stackList.size - 3)}"
         else
             holder.stackCount.text = ""
 
         //bookmark
         holder.bookmark.isChecked = project.bookMark
-        holder.bookmark.setOnCheckedChangeListener { buttonView, isChecked ->
-            var bookmarkJson = SetBookmarkRequest(project.projectId, isChecked)
-            Log.d("bookmark", "$isChecked")
-            val setBookmark = projectService.setBookmark("Bearer ${GlobalApplication.prefs.accessToken}", "${GlobalApplication.prefs.userId}", bookmarkJson)
 
-            setBookmark.enqueue(object: Callback<SetBookmarkResponse> {
-                override fun onResponse(callback: Call<SetBookmarkResponse>, response: Response<SetBookmarkResponse>) {
-                    if(response.isSuccessful) {
-                        Log.d("SetBookmark:: ", "${response.body()!!.code}")
+        var index = position
+        holder.bookmark.setOnClickListener {
+            var bookmarkJson = SetBookmarkRequest(project.projectId, holder.bookmark.isChecked)
+
+            val setBookmark = projectService.setBookmark(
+                "Bearer ${GlobalApplication.prefs.accessToken}",
+                "${GlobalApplication.prefs.userId}",
+                bookmarkJson
+            )
+
+            setBookmark.enqueue(object : Callback<SetBookmarkResponse> {
+                override fun onResponse(
+                    callback: Call<SetBookmarkResponse>,
+                    response: Response<SetBookmarkResponse>
+                ) {
+                    if (response.isSuccessful) {
+                        dataSet[index].bookMark = holder.bookmark.isChecked
+                        notifyItemChanged(index)
                     }
                 }
 
@@ -114,9 +131,8 @@ class ProjectAdapter(
         }
 
         holder.container.setOnClickListener {
-            moveDetail(project.projectId)
+            moveDetail(project.projectId, project.leader.userId)
         }
-
     }
 
     //flexbox layout 아이템 동적추가
@@ -127,10 +143,10 @@ class ProjectAdapter(
 
             chip.apply {
                 stackColor(name)
-                text = " $myStack "
-                setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
-
+                text = "$myStack"
+                textSize = 12f
                 val nonClickColor = ContextCompat.getColor(context, R.color.nonClick_tag)
+                textAlignment = View.TEXT_ALIGNMENT_CENTER
 
                 chipBackgroundColor = ColorStateList(
                     arrayOf(
@@ -159,11 +175,11 @@ class ProjectAdapter(
             }
 
             val layoutParams = ViewGroup.MarginLayoutParams(
-                ViewGroup.MarginLayoutParams.WRAP_CONTENT,
-                ViewGroup.MarginLayoutParams.WRAP_CONTENT
+                WRAP_CONTENT
+                , 120
             )
 
-            layoutParams.rightMargin = 12
+            layoutParams.rightMargin = 5
             addView(chip, layoutParams)
 
             i++
@@ -311,23 +327,25 @@ class ProjectAdapter(
 
     override fun getItemCount(): Int = dataSet.size
 
-    private fun moveDetail(projectId: String) {
-        val callDetailProject = projectService.readDetailProject(projectId)
-        callDetailProject.enqueue(object: Callback<DetailProjectResponse> {
-            override fun onResponse(call: Call<DetailProjectResponse>, response: Response<DetailProjectResponse>) {
-                if(response.isSuccessful) {
+    private fun moveDetail(projectId: String, userId: String) {
+        val callDetailProject = projectService.readDetailProject("Bearer ${GlobalApplication.prefs.accessToken}", projectId)
+        callDetailProject.enqueue(object : Callback<DetailProjectResponse> {
+            override fun onResponse(
+                call: Call<DetailProjectResponse>,
+                response: Response<DetailProjectResponse>
+            ) {
+                if (response.isSuccessful) {
                     val detailProject = response.body()!!
-                    Log.e("ProjectAdapter: ", "${response.body()!!.contents.recruitmentCondition}")
                     DetailData.detailData = detailProject
 
                     val intent = Intent(context, DetailProjectActivity::class.java)
 
-                    if(detailProject.leader.userId == GlobalApplication.prefs.userId) {
+                    if (detailProject.leader.userId == GlobalApplication.prefs.userId) {
                         intent.putExtra("OwnerStatus", 1)
                     }
 
+                    intent.putExtra("userId", "$userId")
                     intent.putExtra("projectId", "$projectId")
-                    Log.e("ProjectAdapter: projectId: ", projectId)
 
                     context.startActivity(intent)
                     /*if(detailProject.leader.userId == GlobalApplication.prefs.userId) {

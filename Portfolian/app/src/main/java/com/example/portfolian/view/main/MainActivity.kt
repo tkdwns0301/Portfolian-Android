@@ -1,31 +1,55 @@
 package com.example.portfolian.view.main
 
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.os.Build
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentTransaction
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
 import androidx.navigation.NavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.example.portfolian.R
+import com.example.portfolian.data.SendFCMTokenRequest
+import com.example.portfolian.data.SendFCMTokenResponse
 import com.example.portfolian.databinding.ActivityMainBinding
+import com.example.portfolian.network.GlobalApplication
+import com.example.portfolian.network.RetrofitClient
+import com.example.portfolian.network.SocketApplication
+import com.example.portfolian.service.TokenService
+import com.example.portfolian.service.UserService
 import com.example.portfolian.view.main.bookmark.BookmarkFragment
 import com.example.portfolian.view.main.chat.ChatFragment
 import com.example.portfolian.view.main.home.HomeFragment
 import com.example.portfolian.view.main.user.UserFragment
+import com.google.android.gms.tasks.OnCompleteListener
 import com.google.android.material.bottomnavigation.BottomNavigationView
+import com.google.firebase.messaging.FirebaseMessaging
 import com.kakao.sdk.common.util.Utility
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.Retrofit
+import java.net.Socket
 
 private const val TAG_HOME = "home_Fragment"
 private const val TAG_BOOKMARK = "bookmark_Fragment"
 private const val TAG_CHAT = "chat_Fragment"
 private const val TAG_USER = "user_Fragment"
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), LifecycleObserver{
     private lateinit var binding: ActivityMainBinding
+    private lateinit var retrofit: Retrofit
+    private lateinit var tokenService: TokenService
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -33,14 +57,16 @@ class MainActivity : AppCompatActivity() {
         val view = binding.root
         setContentView(view)
 
+        SocketApplication.getSocket().off("connection")
+        initRetrofit()
+
         val keyHash = Utility.getKeyHash(this)
-        Log.d("Hash", keyHash)
 
         setFragment(TAG_HOME, HomeFragment())
 
         binding.bnMain.setOnItemSelectedListener { item ->
             when(item.itemId) {
-                R.id.homeFragment -> setFragment(TAG_HOME, HomeFragment())
+                R.id.homeFragment-> setFragment(TAG_HOME, HomeFragment())
                 R.id.bookmarkFragment -> setFragment(TAG_BOOKMARK, BookmarkFragment())
                 R.id.chatFragment -> setFragment(TAG_CHAT, ChatFragment())
                 R.id.userFragment -> setFragment(TAG_USER, UserFragment())
@@ -49,8 +75,80 @@ class MainActivity : AppCompatActivity() {
 
         }
 
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            // Create channel to show notifications.
+            val channelId = "Portfolian_Channel"
+            val channelName = "Portfolian"
+            val notificationManager = getSystemService(NotificationManager::class.java)
+            notificationManager?.createNotificationChannel(
+                NotificationChannel(channelId,
+                channelName, NotificationManager.IMPORTANCE_DEFAULT)
+            )
+        }
+
+        FirebaseMessaging.getInstance().token.addOnCompleteListener(OnCompleteListener { task ->
+            if (!task.isSuccessful) {
+                Log.w(TAG, "Fetching FCM registration token failed", task.exception)
+                return@OnCompleteListener
+            }
+
+            // Get new FCM registration token
+            val token = task.result
+
+            // Log and toast
+            val msg = getString(R.string.msg_token_fmt, token)
+            sendFCMToken(token)
+        })
+
+        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
+
     }
 
+    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
+    private fun onAppBackgrounded() {
+        SocketApplication.getSocket().off("chat:receive")
+        SocketApplication.getSocket().off("connection")
+        SocketApplication.closeConnection()
+
+    }
+
+    @OnLifecycleEvent(Lifecycle.Event.ON_START)
+    private fun onAppForegrounded() {
+
+        if (!SocketApplication.getSocket().connected())
+            SocketApplication.establishConnection()
+
+        SocketApplication.getSocket().on("connection") {
+            SocketApplication.sendUserId()
+        }
+    }
+
+
+    private fun initRetrofit() {
+        retrofit = RetrofitClient.getInstance()
+        tokenService = retrofit.create(TokenService::class.java)
+    }
+
+    private fun sendFCMToken(token: String) {
+        val fcmToken = SendFCMTokenRequest(token)
+        val sendToken = tokenService.sendFCMToken("Bearer ${GlobalApplication.prefs.accessToken}", "${GlobalApplication.prefs.userId}", fcmToken)
+
+        sendToken.enqueue(object: Callback<SendFCMTokenResponse> {
+            override fun onResponse(
+                call: Call<SendFCMTokenResponse>,
+                response: Response<SendFCMTokenResponse>
+            ) {
+                if(response.isSuccessful) {
+
+                }
+            }
+
+            override fun onFailure(call: Call<SendFCMTokenResponse>, t: Throwable) {
+                Log.e("sendToken: ", "$t")
+            }
+        })
+
+    }
     private fun setFragment(tag: String, fragment: Fragment) {
         val manager: FragmentManager = supportFragmentManager
         val ft: FragmentTransaction = manager.beginTransaction()
@@ -65,40 +163,45 @@ class MainActivity : AppCompatActivity() {
         val user = manager.findFragmentByTag(TAG_USER)
 
         if(home != null) {
-            ft.hide(home)
+            ft.remove(home)
         }
         if(bookmark != null) {
-            ft.hide(bookmark)
+            ft.remove(bookmark)
         }
         if(chat != null) {
-            ft.hide(chat)
+            ft.remove(chat)
         }
         if(user != null) {
-            ft.hide(user)
+            ft.remove(user)
         }
 
         if(tag == TAG_HOME) {
             if(home != null) {
-                ft.show(home)
+                ft.add(R.id.fg_MainNavContainer, fragment, tag)
             }
         }
         else if(tag == TAG_BOOKMARK) {
             if(bookmark != null) {
-                ft.show(bookmark)
+                ft.add(R.id.fg_MainNavContainer, fragment, tag)
             }
+
         }
         else if(tag == TAG_CHAT) {
             if(chat != null) {
-                ft.show(chat)
+                ft.add(R.id.fg_MainNavContainer, fragment, tag)
             }
         }
         else if(tag == TAG_USER) {
             if(user != null) {
-                ft.show(user)
+                ft.add(R.id.fg_MainNavContainer, fragment, tag)
             }
         }
 
         ft.commitAllowingStateLoss()
+    }
+
+    companion object {
+        private const val TAG = "MainActivity"
     }
 
 }

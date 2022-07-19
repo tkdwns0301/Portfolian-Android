@@ -7,7 +7,8 @@
     android:layout_height="match_parent"
     tools:context=".view.main.user.ProfileModifyActivity">
 
-    <include layout="@layout/drawer_profilemodify" />
+    <include android:id="@+id/drawer_ProfileModify"
+        layout="@layout/drawer_profilemodify" />
 
     <LinearLayout
         android:id="@+id/ll_Drawer"

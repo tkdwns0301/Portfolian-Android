@@ -18,10 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.portfolian.R
 import com.example.portfolian.adapter.ProjectAdapter
-import com.example.portfolian.data.Project
-import com.example.portfolian.data.ReadProjectResponse
-import com.example.portfolian.data.RenewalTokenRequest
-import com.example.portfolian.data.TokenResponse
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.ProjectService
@@ -34,58 +30,89 @@ import retrofit2.Response
 import retrofit2.Retrofit
 import kotlin.math.roundToInt
 import android.os.Parcelable
+import androidx.core.view.isVisible
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
+import androidx.lifecycle.ProcessLifecycleOwner
+import com.example.portfolian.data.*
+import com.example.portfolian.databinding.FragmentHomeBinding
+import com.example.portfolian.network.SocketApplication
 
 
-class HomeFragment : Fragment(R.layout.fragment_home) {
+class HomeFragment : Fragment(R.layout.fragment_home){
+    private lateinit var binding: FragmentHomeBinding
 
     private lateinit var retrofit: Retrofit
     private lateinit var projectService: ProjectService
     private lateinit var tokenService: TokenService
 
-    private lateinit var StackView: FlexboxLayout
-    private lateinit var rv_Project: RecyclerView
-    private lateinit var adapter: ProjectAdapter
-    private lateinit var sl_Swipe: SwipeRefreshLayout
-    private lateinit var dl_Home: DrawerLayout
-    private lateinit var ll_Drawer: LinearLayout
+    private lateinit var stackView: FlexboxLayout
+    private lateinit var recyclerView: RecyclerView
+    private lateinit var swipe: SwipeRefreshLayout
+    private lateinit var drawerLayout: DrawerLayout
+    private lateinit var linearLayout: LinearLayout
     private lateinit var toolbar: Toolbar
-    private lateinit var btn_AllNonClick: Button
-    private lateinit var btn_Close: ImageButton
-    private lateinit var btn_NewProject: ImageButton
+    private lateinit var allNonClick: Button
+    private lateinit var close: ImageButton
+    private lateinit var newProject: ImageButton
     private lateinit var chips: ArrayList<Chip>
     private lateinit var searchView: SearchView
     private lateinit var orderRadioGroup: RadioGroup
+    private lateinit var noneProject: TextView
+
+    private lateinit var adapter: ProjectAdapter
 
     private lateinit var checkedChips: MutableList<Chip>
     private lateinit var nameMap: Map<String, String>
 
-    private val recyclerViewState: Parcelable? = null
-
-
     private var search = ""
     private var radio = "default"
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
+        binding = FragmentHomeBinding.inflate(inflater, container, false)
+        init()
 
-        init(view)
+        return binding.root
     }
 
-    override fun onStart() {
-        super.onStart()
-        refresh()
+
+    override fun onResume() {
+        super.onResume()
+        SocketApplication.getSocket().off("chat:receive")
     }
 
-    private fun init(view: View) {
+    private fun init() {
         initRetrofit()
-        initSearchView(view)
-        initRadioGroup(view)
-        initStackView(view)
-        initSwipeRefreshLayout(view)
-        initRecyclerView(view)
-        initToolbar(view)
-        initDrawer(view)
-        initNewProject(view)
+        initView()
+    }
+
+    private fun initView() {
+        stackView = binding.flStack
+        recyclerView = binding.drawerHome.rvProject
+        swipe = binding.drawerHome.slSwipe
+        drawerLayout = binding.dlHome
+        linearLayout = binding.llDrawer
+        toolbar = binding.drawerHome.toolbarHome
+        allNonClick = binding.btnAllNonClick
+        close = binding.imgBtnClose
+        newProject = binding.drawerHome.btnNewProject
+        searchView = binding.drawerHome.searchView
+        orderRadioGroup = binding.drawerHome.rgOrder
+        noneProject = binding.drawerHome.tvNoneProject
+
+        initSearchView()
+        initRadioGroup()
+        initStackView()
+        initSwipeRefreshLayout()
+        initRecyclerView()
+        initToolbar()
+        initDrawer()
+        initNewProject()
     }
 
     private fun renewal() {
@@ -121,17 +148,14 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     }
 
 
-    private fun initSwipeRefreshLayout(view: View) {
-        sl_Swipe = view.findViewById(R.id.sl_Swipe)
-        sl_Swipe.setOnRefreshListener {
+    private fun initSwipeRefreshLayout() {
+        swipe.setOnRefreshListener {
             refresh()
         }
     }
 
-    private fun initSearchView(view: View) {
-        searchView = view.findViewById(R.id.searchView)
-
-        searchView.setOnQueryTextListener(object: SearchView.OnQueryTextListener {
+    private fun initSearchView() {
+        searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextChange(p0: String?): Boolean {
                 search = p0.toString()
 
@@ -146,11 +170,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         })
     }
 
-    private fun initRadioGroup(view: View) {
-        orderRadioGroup = view.findViewById(R.id.rg_Order)
-
+    private fun initRadioGroup() {
         orderRadioGroup.setOnCheckedChangeListener { group, checkedId ->
-            when(checkedId) {
+            when (checkedId) {
                 R.id.radio_Recent -> {
                     radio = "default"
                     readProject()
@@ -166,27 +188,20 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun initRecyclerView(view: View) {
-        rv_Project = view.findViewById(R.id.rv_Project)
+    private fun initRecyclerView() {
         val layoutManager =
             LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
-        rv_Project.layoutManager = layoutManager
+        recyclerView.layoutManager = layoutManager
         readProject()
     }
 
-    private fun initToolbar(view: View) {
-        toolbar = view.findViewById(R.id.toolbar_home)
+    private fun initToolbar() {
         toolbar.setOnMenuItemClickListener {
             when (it.itemId) {
                 R.id.toolbar_Filter -> {
-                    dl_Home = view.findViewById(R.id.dl_Home)
-                    ll_Drawer = requireView().findViewById(R.id.ll_Drawer)
-                    dl_Home.openDrawer(ll_Drawer)
+                    linearLayout = requireView().findViewById(R.id.ll_Drawer)
+                    drawerLayout.openDrawer(linearLayout)
 
-                    true
-                }
-                R.id.toolbar_Alert -> {
-                    renewal()
                     true
                 }
                 else -> {
@@ -196,10 +211,8 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
         }
     }
 
-    private fun initDrawer(view: View) {
-        btn_AllNonClick = view.findViewById(R.id.btn_AllNonClick)
-
-        btn_AllNonClick.setOnClickListener {
+    private fun initDrawer() {
+        allNonClick.setOnClickListener {
             for (chip in chips) {
                 chip.apply {
                     isChecked = false
@@ -207,24 +220,21 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             }
         }
 
-        btn_Close = view.findViewById(R.id.img_btn_Close)
-        btn_Close.setOnClickListener {
+        close.setOnClickListener {
             readProject()
-            dl_Home.closeDrawers()
+            drawerLayout.closeDrawers()
         }
     }
 
-    private fun initNewProject(view: View) {
-        btn_NewProject = view.findViewById(R.id.btn_NewProject)
-
-        btn_NewProject.setOnClickListener {
+    private fun initNewProject() {
+        newProject.setOnClickListener {
+            DetailData.detailData = null
             val intent = Intent(activity, NewProjectActivity::class.java)
             startActivity(intent)
         }
     }
 
-    private fun initStackView(view: View) {
-        StackView = view.findViewById(R.id.fl_Stack)
+    private fun initStackView() {
         chips = ArrayList()
 
         nameMap = mapOf<String, String>(
@@ -262,13 +272,12 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             "AWS" to "aws"
         )
 
-        StackView.addItem(nameMap)
+        stackView.addItem(nameMap)
 
     }
 
     private fun FlexboxLayout.addItem(names: Map<String, String>) {
         checkedChips = mutableListOf()
-
 
         for ((key, value) in names) {
             val chip = LayoutInflater.from(context).inflate(R.layout.view_chip, null) as Chip
@@ -375,8 +384,9 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
                     }
                 }
 
-                text = "  $key  "
-                setTextSize(TypedValue.COMPLEX_UNIT_DIP, 14f)
+                text = "$key"
+                textSize = 12f
+                textAlignment = View.TEXT_ALIGNMENT_CENTER
 
                 val nonClickColor = ContextCompat.getColor(context, R.color.nonClick_tag)
                 chipBackgroundColor = ColorStateList(
@@ -415,7 +425,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
             val layoutParams = ViewGroup.MarginLayoutParams(
                 ViewGroup.MarginLayoutParams.WRAP_CONTENT,
-                ViewGroup.MarginLayoutParams.WRAP_CONTENT
+                120
             )
 
             layoutParams.rightMargin = dpToPx(6)
@@ -432,14 +442,19 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             stackList.add(stackName)
         }
 
-        if(stackList.isNullOrEmpty()) {
+        if (stackList.isNullOrEmpty()) {
             stackList.add("default")
         }
 
-        if(search == "")
+        if (search == "")
             search = "default"
 
-        val callProjects = projectService.readAllProject("Bearer ${GlobalApplication.prefs.accessToken}", stackList, search, radio)
+        val callProjects = projectService.readAllProject(
+            "Bearer ${GlobalApplication.prefs.accessToken}",
+            stackList,
+            search,
+            radio
+        )
 
         callProjects.enqueue(object : Callback<ReadProjectResponse> {
             override fun onResponse(
@@ -448,7 +463,16 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
             ) {
                 if (response.isSuccessful) {
                     val projects = response.body()?.articleList
-                    setProjectAdapter(projects)
+
+                    if(projects.isNullOrEmpty()) {
+                        noneProject.isVisible = true
+                        recyclerView.isVisible = false
+                    } else {
+                        noneProject.isVisible = false
+                        recyclerView.isVisible = true
+                        setProjectAdapter(projects)
+                    }
+
                 }
             }
 
@@ -461,10 +485,10 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
 
     private fun setProjectAdapter(projects: ArrayList<Project>?) {
         if (projects != null) {
-            val recyclerViewState = rv_Project.layoutManager?.onSaveInstanceState()
+            val recyclerViewState = recyclerView.layoutManager?.onSaveInstanceState()
             adapter = ProjectAdapter(requireContext(), projects, 0)
-            rv_Project.adapter = adapter
-            rv_Project.layoutManager?.onRestoreInstanceState(recyclerViewState)
+            recyclerView.adapter = adapter
+            recyclerView.layoutManager?.onRestoreInstanceState(recyclerViewState)
             adapter.notifyDataSetChanged()
         }
     }
@@ -472,7 +496,7 @@ class HomeFragment : Fragment(R.layout.fragment_home) {
     private fun refresh() {
         renewal()
         readProject()
-        sl_Swipe.isRefreshing = false
+        swipe.isRefreshing = false
     }
 
     private fun dpToPx(dp: Int): Int =

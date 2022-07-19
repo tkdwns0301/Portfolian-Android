@@ -7,10 +7,4 @@
         android:icon="@drawable/ic_filter"
         app:showAsAction="always"/>
 
-    <item
-        android:id='@+id/toolbar_Alert'
-        android:title="알림"
-        android:icon="@drawable/ic_alert"
-        app:showAsAction="always"/>
-
 </menu>

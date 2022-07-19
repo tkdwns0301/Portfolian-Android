@@ -1,6 +1,7 @@
 package com.example.portfolian.service
 
 import com.example.portfolian.data.*
+import com.google.android.datatransport.cct.StringMerger
 import retrofit2.Call
 import retrofit2.http.*
 
@@ -27,6 +28,7 @@ interface ProjectService {
     // 3. 프로젝트 모집글 보기
     @GET("projects/{projectId}")
     fun readDetailProject(
+        @Header("Authorization") Authorization: String,
         @Path("projectId") projectId: String
     )
     : Call<DetailProjectResponse>
@@ -65,4 +67,23 @@ interface ProjectService {
         @Path("projectId") projectId: String
     )
     : Call<ModifyProjectResponse>
+
+    // 12. 프로젝트 모집완료
+    @PATCH("projects/{projectId}/status")
+    fun modifyProjectStatus(
+        @Header("Authorization") Authorization: String,
+        @Path("projectId") projectId: String,
+        @Body modify: ModifyProjectStatusRequest
+    )
+    : Call<ModifyProjectStatusResponse>
+
+    // 47. 프로젝트 신고하기
+    @Headers("content-type: application/json")
+    @POST("reports/projects/{projectId}")
+    fun reportProject(
+        @Header("Authorization") Authorization: String,
+        @Path("projectId") projectId: String,
+        @Body report: ReportRequest
+    )
+    : Call<ReportResponse>
 }

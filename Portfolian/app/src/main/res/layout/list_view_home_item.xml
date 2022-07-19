@@ -1,25 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/cl_Project"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginBottom="20dp"
+    android:layout_marginBottom="10dp"
     android:background="@drawable/background_home_item"
-    android:paddingStart="20dp"
-    android:paddingEnd="10dp">
+    android:paddingStart="15dp"
+    android:paddingEnd="15dp">
 
     <ToggleButton
         android:id="@+id/btn_Bookmark"
         android:layout_width="30dp"
         android:layout_height="30dp"
-        android:background="@drawable/ic_bookmark"
-        android:textOn=""
+        android:background="@drawable/ic_recruit_bookmark"
         android:textOff=""
+        android:textOn=""
         app:layout_constraintBottom_toTopOf="@id/cl_Title"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -27,6 +24,7 @@
         android:id="@+id/cl_Title"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:paddingStart="5dp"
         app:layout_constraintBottom_toTopOf="@id/cl_Stack"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,9 +35,10 @@
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:fontFamily="@font/notosanskr_bold"
+            android:gravity="start"
             android:text="@string/title"
             android:textColor="@color/base"
-            android:textSize="21sp"
+            android:textSize="16sp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/cl_Profile_View"
             app:layout_constraintStart_toStartOf="parent"
@@ -56,9 +55,8 @@
 
             <de.hdodenhof.circleimageview.CircleImageView
                 android:id="@+id/cv_Profile"
-                android:layout_width="80dp"
-                android:layout_height="80dp"
-                android:padding="15dp"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
                 android:src="@drawable/avatar_1_raster"
                 app:layout_constraintBottom_toTopOf="@id/tv_View"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -67,7 +65,7 @@
 
             <TextView
                 android:id="@+id/tv_View"
-                android:layout_width="0dp"
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:fontFamily="@font/notosanskr_reqular"
                 android:gravity="center"
@@ -88,9 +86,10 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginBottom="15dp"
-        app:layout_constraintHorizontal_chainStyle="spread_inside"
+        android:paddingStart="5dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_chainStyle="spread_inside"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/cl_Title">
 
@@ -111,10 +110,10 @@
             android:id="@+id/tv_StackCount"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginStart="2dp"
             android:text="@string/stack"
             android:textColor="@color/base"
             android:textSize="14sp"
-            android:layout_marginStart="2dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintStart_toEndOf="@id/fbl_Stack"
             app:layout_constraintTop_toTopOf="parent" />

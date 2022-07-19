@@ -1,5 +1,14 @@
 package com.example.portfolian.data
 
-import java.util.*
+import android.os.Parcelable
+import kotlinx.android.parcel.Parcelize
 
-class ChatModel (val roomId: String, val sender: String, val message: String, val date: Date)
+@Parcelize
+data class ChatModel(
+    val chatRoomId: String,
+    val messageContent: String,
+    val messageType: String,
+    val sender: String,
+    val receiver: String,
+    val date: String
+) : Parcelable

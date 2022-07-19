@@ -15,4 +15,16 @@ class MySharedPreferences(context: Context) {
     var userId: String?
         get() = prefs.getString("userId", "")
         set(value) = prefs.edit().putString("userId", value).apply()
+
+    var token: String?
+        get() = prefs.getString("token", "")
+        set(value) = prefs.edit().putString("token", value).apply()
+
+    var loginStatus: Int?
+        get() = prefs.getInt("loginStatus", 0)
+        set(value) = prefs.edit().putInt("loginStatus", value!!).apply()
+
+    var chatTitle: String?
+        get() = prefs.getString("chatTitle", "")
+        set(value) = prefs.edit().putString("chatTitle", value).apply()
 }

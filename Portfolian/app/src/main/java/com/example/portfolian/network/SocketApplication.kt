@@ -2,8 +2,10 @@
 package com.example.portfolian.network
 
 import android.util.Log
+import androidx.lifecycle.LifecycleObserver
 import io.socket.client.IO
 import io.socket.client.Socket
+import org.json.JSONObject
 import java.net.URISyntaxException
 
 object SocketApplication {
@@ -26,10 +28,21 @@ object SocketApplication {
     @Synchronized
     fun establishConnection() {
         mSocket.connect()
+        Log.e("socket:", "connect!!!")
     }
 
     @Synchronized
     fun closeConnection() {
+        Log.e("socket:", "disconnect!!!")
         mSocket.disconnect()
+    }
+
+    @Synchronized
+    fun sendUserId() {
+        Log.e("sendUserId", "userid")
+        val jsonObject = JSONObject()
+        jsonObject.put("userId", "${GlobalApplication.prefs.userId}")
+
+        mSocket.emit("auth", jsonObject)
     }
 }

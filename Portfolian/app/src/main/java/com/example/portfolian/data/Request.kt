@@ -15,6 +15,13 @@ data class ModifyProjectRequest (
     var ownerStack: String
 )
 //------------------------------------
+
+// 12. 프로젝트 상태 변경
+data class ModifyProjectStatusRequest (
+    var status: Int
+)
+//-------------------------------------
+
 // 14 나의 정보 수정
 data class ModifyProfileRequest(
     var nickName: String,
@@ -59,3 +66,30 @@ data class RenewalTokenRequest(
     val userId: String
     )
 //------------------------------------
+
+// 40 채팅방 만들기
+data class CreateChatRequest(
+    val userId: String,
+    val projectId: String
+)
+//------------------------------------
+
+// 46, 47 사용자 or 프로젝트 신고하기
+data class ReportRequest(
+    val reason: String
+)
+//------------------------------------
+
+// 48 FCM 토큰 보내기
+data class SendFCMTokenRequest(
+    val fcmToken: String
+)
+
+// 구글 idToken to accessToken
+data class LoginGoogleRequest(
+    val grant_type: String,
+    val client_id: String,
+    val client_secret: String,
+    val redirect_uri: String,
+    val code: String
+)

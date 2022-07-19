@@ -7,19 +7,20 @@
     android:background="@color/white">
 
     <androidx.appcompat.widget.Toolbar
+        android:paddingStart="20dp"
         android:id="@+id/toolbar_Bookmark"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
         android:background="@color/white"
-        android:paddingEnd="10dp"
+        android:paddingEnd="20dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintBottom_toTopOf="@id/sl_Swipe"
-        app:menu="@menu/menu_main_bookmark_toolbar"
         app:layout_constraintTop_toTopOf="parent"
         app:title="북마크"
         app:titleTextAppearance="@style/toolbarTitleStyle"
         app:titleTextColor="@color/base" />
+
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/sl_Swipe"
@@ -31,15 +32,38 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_Bookmark">
 
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/rv_Project"
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_NoneBookmark"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:paddingStart="20dp"
-            android:paddingTop="20dp"
-            android:paddingEnd="20dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            tools:listitem="@layout/list_view_home_item" />
+            android:layout_height="match_parent">
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_Project"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:padding="20dp"
+                app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/list_view_home_item"
+                android:visibility="visible"/>
+            <TextView
+                android:padding="15dp"
+                android:gravity="center"
+                android:id="@+id/tv_NoneBookmark"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                android:text="아직은 북마크한 프로젝트가 없어요.\n\n원하는 프로젝트를 북마크해보세요!"
+                android:textStyle="bold"
+                android:textColor="@color/thema"
+                android:textSize="16sp"
+                android:visibility="invisible"/>
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+
     </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

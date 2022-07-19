@@ -14,9 +14,16 @@ interface OAuthService {
     : Call<OAuthResponse>
 
     @Headers("content-type: application/json")
+    @POST("oauth/google/access")
+    fun getGoogleToken(
+        @Body token: KakaoTokenRequest
+    )
+    : Call<OAuthResponse>
+
+    @Headers("content-type: application/json")
     @PATCH("users/{userId}/nickName")
     fun setNickName(
-        @Header("Authorization") Authorization: String?,
+        @Header("Authorization") Authorization: String,
         @Path("userId") userId: String?,
         @Body nickName: NickNameRequest
     )
@@ -25,7 +32,18 @@ interface OAuthService {
     @Headers("content-type: application/json")
     @PATCH("oauth/logout")
     fun setLogout(
-        @Header("Authorization") Authorization: String?
+        @Header("Authorization") Authorization: String
     )
     : Call<LogoutResponse>
+
+    @DELETE("users/{userId}")
+    fun unLink(
+        @Header("Authorization") Authorization: String,
+        @Path("userId") userId: String
+    )
+    : Call<UnlinkResponse>
+
+
+
+
 }
