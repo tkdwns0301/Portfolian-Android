@@ -115,7 +115,6 @@ class ChatListAdapter(
     }
 
     private fun removeData(position: Int, chatRoomId: String) {
-        Log.e("position: ", "$position")
         val removeChat = chatService.removeChat("Bearer ${GlobalApplication.prefs.accessToken}", "$chatRoomId")
         removeChat.enqueue(object : Callback<RemoveChatResponse> {
             override fun onResponse(
@@ -126,7 +125,6 @@ class ChatListAdapter(
                     val code = response.body()!!.code
                     val message = response.body()!!.message
                     notifyDataSetChanged()
-                    Log.e("RemoveChat: ", "$code: $message")
                 }
             }
 

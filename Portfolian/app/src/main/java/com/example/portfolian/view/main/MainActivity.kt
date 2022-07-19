@@ -97,7 +97,6 @@ class MainActivity : AppCompatActivity(), LifecycleObserver{
 
             // Log and toast
             val msg = getString(R.string.msg_token_fmt, token)
-            Log.e(TAG, msg)
             sendFCMToken(token)
         })
 
@@ -107,7 +106,6 @@ class MainActivity : AppCompatActivity(), LifecycleObserver{
 
     @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
     private fun onAppBackgrounded() {
-        Log.e("STOP", "STOP")
         SocketApplication.getSocket().off("chat:receive")
         SocketApplication.getSocket().off("connection")
         SocketApplication.closeConnection()
@@ -116,40 +114,14 @@ class MainActivity : AppCompatActivity(), LifecycleObserver{
 
     @OnLifecycleEvent(Lifecycle.Event.ON_START)
     private fun onAppForegrounded() {
-        Log.e("START", "START")
 
-        if(!SocketApplication.getSocket().connected())
+        if (!SocketApplication.getSocket().connected())
             SocketApplication.establishConnection()
 
-            SocketApplication.getSocket().on("connection") {
-                SocketApplication.sendUserId()
-            }
+        SocketApplication.getSocket().on("connection") {
+            SocketApplication.sendUserId()
+        }
     }
-
-//    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-//    fun onAppCreated() {
-//        Log.e("CREATE", "CREATE")
-//    }
-//
-//    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-//    fun onAppDestroyed() {
-//        Log.e("DESTROY", "DESTROY")
-//    }
-//
-//    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-//    fun onAppPaused() {
-//        Log.e("PAUSE", "PAUSE")
-//    }
-//
-//    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-//    fun onAppResumed() {
-//        Log.e("RESUME", "RESUME")
-//    }
-//
-//    @OnLifecycleEvent(Lifecycle.Event.ON_ANY)
-//    fun onAppAny() {
-//        Log.e("Any", "Any")
-//    }
 
 
     private fun initRetrofit() {
@@ -167,10 +139,7 @@ class MainActivity : AppCompatActivity(), LifecycleObserver{
                 response: Response<SendFCMTokenResponse>
             ) {
                 if(response.isSuccessful) {
-                    val code = response.body()!!.code
-                    val message = response.body()!!.message
 
-                    Log.e("sendToken: ", "$code: $message")
                 }
             }
 

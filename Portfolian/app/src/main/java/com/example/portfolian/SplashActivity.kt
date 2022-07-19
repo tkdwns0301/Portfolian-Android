@@ -13,30 +13,39 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.NotificationCompat
 import androidx.core.app.NotificationManagerCompat
 import com.example.portfolian.adapter.ChatAdapter
-import com.example.portfolian.data.ChatModel
-import com.example.portfolian.data.IsBanUserResponse
-import com.example.portfolian.data.KakaoTokenRequest
-import com.example.portfolian.data.OAuthResponse
+import com.example.portfolian.data.*
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.network.SocketApplication
 import com.example.portfolian.service.OAuthService
+import com.example.portfolian.service.TokenService
 import com.example.portfolian.service.UserService
 import com.example.portfolian.view.login.LogInActivity
 import com.example.portfolian.view.login.LogInFragment
 import com.example.portfolian.view.main.MainActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
+import com.google.android.gms.common.api.ApiException
 import com.google.android.gms.tasks.OnCompleteListener
 import com.google.firebase.messaging.FirebaseMessaging
+import com.google.gson.GsonBuilder
 import com.kakao.sdk.auth.AuthApiClient
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.user.UserApiClient
 import io.socket.emitter.Emitter
+import okhttp3.JavaNetCookieJar
+import okhttp3.OkHttpClient
+import okhttp3.logging.HttpLoggingInterceptor
 import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
+import retrofit2.converter.scalars.ScalarsConverterFactory
+import java.net.CookieManager
 import java.time.LocalDateTime
+import java.util.concurrent.TimeUnit
 
 class SplashActivity: AppCompatActivity() {
     private lateinit var logInService: OAuthService
@@ -48,16 +57,131 @@ class SplashActivity: AppCompatActivity() {
         Log.e("splash: ", "${GlobalApplication.prefs.userId}")
         initRetrofit()
 
-        UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
-            if(error != null) {
-                toLogIn()
+
+        if(GlobalApplication.prefs.loginStatus == 1) {
+            UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
+                if (error != null) {
+                    toLogIn()
+                } else if (tokenInfo != null) {
+                    tokenToServer("${AuthApiClient.instance.tokenManagerProvider.manager.getToken()!!.accessToken}")
+                }
             }
-            else if(tokenInfo != null) {
-                tokenToServer("${AuthApiClient.instance.tokenManagerProvider.manager.getToken()!!.accessToken}")
-            }
+        } else if(GlobalApplication.prefs.loginStatus == 2) {
+            val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                .requestIdToken("727850004794-5clt9m4h33ff0vqprfl104qlm6m4t32e.apps.googleusercontent.com")
+                .requestServerAuthCode("727850004794-5clt9m4h33ff0vqprfl104qlm6m4t32e.apps.googleusercontent.com")
+                .requestEmail()
+                .build()
+
+            val googleSignInClient = GoogleSignIn.getClient(this, gso)
+
+            val signInIntent = googleSignInClient.signInIntent
+            startActivityForResult(signInIntent, 9001)
+
+
+        } else {
+            toLogIn()
         }
 
+
+
     }
+
+    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
+        super.onActivityResult(requestCode, resultCode, data)
+
+        if (requestCode == 9001) {
+            val task = GoogleSignIn.getSignedInAccountFromIntent(data)
+
+            try {
+                val account = task.getResult(ApiException::class.java)!!
+
+                getGoogleAccessToken(account.serverAuthCode!!)
+
+            } catch (e: ApiException) {
+                Log.e("account", "$e")
+            }
+
+        }
+    }
+
+    private fun getGoogleAccessToken(authCode: String) {
+        val interceptor = HttpLoggingInterceptor()
+        interceptor.setLevel(HttpLoggingInterceptor.Level.BODY)
+
+        val gson = GsonBuilder().setLenient().create()
+
+        val client = OkHttpClient.Builder()
+            .cookieJar(JavaNetCookieJar(CookieManager()))
+            .addInterceptor(interceptor)
+            .connectTimeout(20000L, TimeUnit.SECONDS)
+            .build()
+
+        val instance = Retrofit.Builder()
+            .baseUrl("https://www.googleapis.com/")
+            .addConverterFactory(ScalarsConverterFactory.create())
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .client(client)
+            .build()
+
+        val googleLoginService = instance.create(TokenService::class.java)
+
+        val loginGoogleRequest = LoginGoogleRequest(
+            "authorization_code",
+            "727850004794-5clt9m4h33ff0vqprfl104qlm6m4t32e.apps.googleusercontent.com",
+            "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",
+            "",
+            authCode
+        )
+
+        val googleAccessTokenService = googleLoginService.getGoogleAccessToken(loginGoogleRequest)
+
+        googleAccessTokenService.enqueue(object : Callback<LoginGoogleResponse> {
+            override fun onResponse(
+                call: Call<LoginGoogleResponse>,
+                response: Response<LoginGoogleResponse>
+            ) {
+                if (response.isSuccessful) {
+                    val accessToken = response.body()!!.access_token
+                    googleTokenToServer(accessToken)
+                }
+            }
+
+            override fun onFailure(call: Call<LoginGoogleResponse>, t: Throwable) {
+                Log.e("accessToken: ", "$t")
+            }
+        })
+
+
+    }
+
+    private fun googleTokenToServer(token: String) {
+        val googleToken = KakaoTokenRequest(token)
+        val tokenService = logInService.getGoogleToken(googleToken)
+
+        tokenService.enqueue(object: Callback<OAuthResponse> {
+            override fun onResponse(call: Call<OAuthResponse>, response: Response<OAuthResponse>) {
+                if(response.isSuccessful) {
+                    val code = response.body()!!.code
+                    val isNew = response.body()!!.isNew
+                    val accessToken = response.body()!!.accessToken
+                    val userId = response.body()!!.userId
+
+                    GlobalApplication.prefs.accessToken = accessToken
+                    GlobalApplication.prefs.userId = userId
+                    GlobalApplication.prefs.loginStatus = 2
+
+                    isBan(isNew)
+                }
+            }
+
+            override fun onFailure(call: Call<OAuthResponse>, t: Throwable) {
+                Log.e("googleTokenToServer: ", "$t")
+            }
+        })
+    }
+
+
 
     private fun initRetrofit() {
         retrofit = RetrofitClient.getInstance()
@@ -134,29 +258,4 @@ class SplashActivity: AppCompatActivity() {
         finish()
     }
 
-//    private var onNewMessage: Emitter.Listener = Emitter.Listener { args ->
-//        runOnUiThread {
-//            Log.e("receive:", "zksdjflzkjdsf")
-//            var builder = NotificationCompat.Builder(this,)
-//                .setSmallIcon(R.drawable.cast_ic_notification_small_icon)
-//                .setContentTitle("알림 제목")
-//                .setContentText("알림 내용")
-//
-//            if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-//                val channelId = "Portfolian_Channel"
-//                val channelName ="Portfolian"
-//                val descriptionText = "포트폴리안 알림을 위한 채널입니다."
-//                val importance = NotificationManager.IMPORTANCE_DEFAULT
-//                val channel = NotificationChannel(channelId, channelName, importance).apply {
-//                    description = descriptionText
-//                }
-//
-//                val notificationManager: NotificationManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
-//                notificationManager.createNotificationChannel(channel)
-//
-//                notificationManager.notify(1002 , builder.build())
-//            }
-//
-//        }
-//    }
 }

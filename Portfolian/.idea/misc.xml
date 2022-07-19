@@ -17,9 +17,21 @@
         <entry key="app/src/main/res/drawable/background_home_item.xml" value="0.30052083333333335" />
         <entry key="app/src/main/res/drawable/background_home_item2.xml" value="0.37222222222222223" />
         <entry key="app/src/main/res/drawable/background_mychat.xml" value="0.3343370049834571" />
+        <entry key="app/src/main/res/drawable/background_search.xml" value="0.2765625" />
+        <entry key="app/src/main/res/drawable/background_splash.xml" value="0.2765625" />
+        <entry key="app/src/main/res/drawable/background_stack.xml" value="0.2765625" />
         <entry key="app/src/main/res/drawable/background_yourchat.xml" value="0.13148148148148148" />
+        <entry key="app/src/main/res/drawable/btn_next.xml" value="0.2765625" />
+        <entry key="app/src/main/res/drawable/btn_radio.xml" value="0.2765625" />
+        <entry key="app/src/main/res/drawable/btn_text_color.xml" value="0.2765625" />
+        <entry key="app/src/main/res/drawable/ic_alert.xml" value="0.2765625" />
+        <entry key="app/src/main/res/drawable/ic_baseline_arrow_back_24.xml" value="0.2765625" />
+        <entry key="app/src/main/res/drawable/ic_baseline_more_vert_24.xml" value="0.2765625" />
+        <entry key="app/src/main/res/drawable/ic_baseline_share_24.xml" value="0.2765625" />
         <entry key="app/src/main/res/drawable/ic_bookmark.xml" value="0.12407407407407407" />
         <entry key="app/src/main/res/drawable/ic_bookmark_click.xml" value="0.37407407407407406" />
+        <entry key="app/src/main/res/drawable/ic_bookmark_fill.xml" value="0.2765625" />
+        <entry key="app/src/main/res/drawable/ic_btn_x.xml" value="0.2765625" />
         <entry key="app/src/main/res/drawable/ic_chat.xml" value="0.1" />
         <entry key="app/src/main/res/drawable/ic_filter.xml" value="0.37407407407407406" />
         <entry key="app/src/main/res/drawable/ic_filter_light.xml" value="0.37407407407407406" />
@@ -28,6 +40,7 @@
         <entry key="app/src/main/res/drawable/ic_home.xml" value="0.37407407407407406" />
         <entry key="app/src/main/res/drawable/ic_icon_background.xml" value="0.2557291666666667" />
         <entry key="app/src/main/res/drawable/ic_kakao.xml" value="0.29010416666666666" />
+        <entry key="app/src/main/res/drawable/ic_launcher_background.xml" value="0.2765625" />
         <entry key="app/src/main/res/drawable/ic_logo.xml" value="0.34814814814814815" />
         <entry key="app/src/main/res/drawable/ic_recruit_bookmark_light.xml" value="0.3416666666666667" />
         <entry key="app/src/main/res/drawable/ic_recu.xml" value="0.3416666666666667" />
@@ -39,7 +52,10 @@
         <entry key="app/src/main/res/drawable/menu_selector_color.xml" value="0.24114583333333334" />
         <entry key="app/src/main/res/drawable/round_background.xml" value="0.13703703703703704" />
         <entry key="app/src/main/res/drawable/round_background_gray.xml" value="0.13703703703703704" />
+        <entry key="app/src/main/res/drawable/shape_btn_nonclick.xml" value="0.2765625" />
         <entry key="app/src/main/res/drawable/switch_thumb.xml" value="0.13148148148148148" />
+        <entry key="app/src/main/res/drawable/switch_track_off.xml" value="0.2765625" />
+        <entry key="app/src/main/res/drawable/switch_track_on.xml" value="0.2765625" />
         <entry key="app/src/main/res/drawable/switch_track_selector.xml" value="0.13148148148148148" />
         <entry key="app/src/main/res/drawable/swtich_track_off.xml" value="0.13148148148148148" />
         <entry key="app/src/main/res/drawable/swtich_track_on.xml" value="0.13148148148148148" />
@@ -48,6 +64,7 @@
         <entry key="app/src/main/res/layout/activity_detailproject_owner.xml" value="0.335" />
         <entry key="app/src/main/res/layout/activity_detailproject_user.xml" value="0.24846625766871167" />
         <entry key="app/src/main/res/layout/activity_information.xml" value="0.39076923076923076" />
+        <entry key="app/src/main/res/layout/activity_login.xml" value="0.2604166666666667" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.23697916666666666" />
         <entry key="app/src/main/res/layout/activity_markdown.xml" value="0.26557377049180325" />
         <entry key="app/src/main/res/layout/activity_newproject.xml" value="0.25" />

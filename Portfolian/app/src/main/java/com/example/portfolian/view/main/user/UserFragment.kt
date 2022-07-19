@@ -161,7 +161,6 @@ class UserFragment : Fragment(R.layout.fragment_user) {
 
         git.setOnClickListener {
             val intent = Intent(context, WebViewActivity::class.java)
-            Log.e("git", "${userInfo.github}")
             intent.putExtra("git", "www.github.com/${userInfo.github}")
             startActivity(intent)
         }
@@ -170,6 +169,7 @@ class UserFragment : Fragment(R.layout.fragment_user) {
             var clipboardManager = activity?.getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("mail", "${userInfo.mail}")
             clipboardManager.setPrimaryClip(clip)
+            Toast.makeText(requireContext(), "메일주소가 복사되었습니다.", Toast.LENGTH_SHORT).show()
         }
 
         description.text = userInfo.description

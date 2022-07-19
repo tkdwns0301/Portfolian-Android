@@ -92,27 +92,9 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         noneChat = binding.tvNoneChat
 
         initRecyclerView()
-        initToolbar()
-
-        //mSocket.on("chat:receive", onNewMessage)
     }
 
-    private fun initToolbar() {
-        toolbar.setOnMenuItemClickListener {
-            when (it.itemId) {
-                R.id.toolbar_Alert -> {
-                    SocketApplication.sendUserId()
-                    Log.e("버튼 눌렸어요!!!!", "!!!!")
-                    true;
-                }
 
-                else -> {
-                    super.onOptionsItemSelected(it)
-                }
-            }
-
-        }
-    }
 
     private fun initRecyclerView() {
         val layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.VERTICAL, false)
@@ -130,8 +112,6 @@ class ChatFragment : Fragment(R.layout.fragment_chat) {
         callChatList.enqueue(object: Callback<ReadChatList> {
             override fun onResponse(call: Call<ReadChatList>, response: Response<ReadChatList>) {
                 if(response.isSuccessful) {
-                    val code = response.body()!!.code
-                    val message = response.body()!!.message
                     val chatRoomList = response.body()!!.chatRoomList
 
                     if(chatRoomList.isNullOrEmpty()) {

@@ -30,14 +30,8 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
         super.onMessageReceived(remoteMessage)
 
-        if (remoteMessage.data != null) {
-            Log.e("data", "${remoteMessage.data}")
-        }
-
-
         if (remoteMessage.notification!!.title!!.isNotEmpty() && remoteMessage.notification!!.body!!.isNotEmpty()) {
-            Log.e("chatTitle", "${GlobalApplication.prefs.chatTitle}")
-            Log.e("notification", "${remoteMessage.notification!!.title}")
+
             if (!remoteMessage.notification!!.title.equals(GlobalApplication.prefs.chatTitle)) {
                 sendNotification(
                     remoteMessage.notification!!.title!!,
@@ -66,10 +60,7 @@ class MyFirebaseMessagingService : FirebaseMessagingService() {
                 response: Response<SendFCMTokenResponse>
             ) {
                 if (response.isSuccessful) {
-                    val code = response.body()!!.code
-                    val message = response.body()!!.message
 
-                    Log.e("sendToken: ", "$code: $message")
                 }
             }
 

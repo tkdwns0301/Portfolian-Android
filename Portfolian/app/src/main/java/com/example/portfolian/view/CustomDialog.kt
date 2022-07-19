@@ -13,16 +13,19 @@ import android.view.ViewGroup
 import android.view.WindowManager
 import android.widget.Button
 import android.widget.TextView
+import android.widget.Toast
 import androidx.fragment.app.DialogFragment
 import com.example.portfolian.R
-import com.example.portfolian.data.LogoutResponse
-import com.example.portfolian.data.OAuthResponse
-import com.example.portfolian.data.UnlinkResponse
+import com.example.portfolian.data.*
 import com.example.portfolian.databinding.DialogLayoutBinding
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.OAuthService
+import com.example.portfolian.service.TokenService
 import com.example.portfolian.view.login.LogInActivity
+import com.google.android.gms.auth.api.signin.GoogleSignIn
+import com.google.android.gms.auth.api.signin.GoogleSignInClient
+import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.kakao.sdk.user.UserApiClient
 import org.w3c.dom.Text
 import retrofit2.Call
@@ -35,6 +38,7 @@ class CustomDialog(context: Context, flag: Boolean) {
     private var mContext = context
     private lateinit var retrofit: Retrofit
     private lateinit var oauthService: OAuthService
+    private lateinit var tokenService: TokenService
 
     private val dialog1 = Dialog(context)
 
@@ -76,15 +80,30 @@ class CustomDialog(context: Context, flag: Boolean) {
 
                             GlobalApplication.prefs.accessToken = ""
                             GlobalApplication.prefs.userId = ""
-                            GlobalApplication.prefs.loginStatus = 0
 
-                            UserApiClient.instance.logout { error ->
-                                if(error != null) {
-                                    Log.e("Logout: ", "로그아웃 실패 SDK에서 토큰 삭제됨 $error")
-                                }else {
-                                    Log.e("Logout: ", "로그아웃 성공. SDK에서 토큰 삭제됨")
+                            if(GlobalApplication.prefs.loginStatus == 1) {
+                                UserApiClient.instance.logout { error ->
+                                    if (error != null) {
+                                        Toast.makeText(mContext, "오류로 인해 로그아웃 실패하였습니다.", Toast.LENGTH_SHORT).show()
+                                    } else {
+                                        Log.e("Logout: ", "로그아웃 성공. SDK에서 토큰 삭제됨")
+                                    }
                                 }
+                            } else {
+                                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                    .requestIdToken("727850004794-5clt9m4h33ff0vqprfl104qlm6m4t32e.apps.googleusercontent.com")
+                                    .requestServerAuthCode("727850004794-5clt9m4h33ff0vqprfl104qlm6m4t32e.apps.googleusercontent.com")
+                                    .requestEmail()
+                                    .build()
+
+                                val googleSignInClient = GoogleSignIn.getClient(mContext, gso)
+
+                                googleSignInClient!!.signOut()
                             }
+
+                            sendFCMToken("")
+
+                            GlobalApplication.prefs.loginStatus = 0
 
                             val intent = Intent(mContext, LogInActivity::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -113,19 +132,32 @@ class CustomDialog(context: Context, flag: Boolean) {
                             val code = response.body()!!.code
                             val message = response.body()!!.message
 
-                            Log.d("unlink: ", "$code")
-                            Log.d("unlink: ", "$message")
-
                             GlobalApplication.prefs.accessToken = ""
                             GlobalApplication.prefs.userId = ""
 
-                            UserApiClient.instance.unlink { error ->
-                                if(error != null) {
-                                    Log.e("unlink: ", "연결끊기 실패 $error")
-                                }else {
-                                    Log.e("unlink: ", "연결끊기 성공. SDK에서 토큰 삭제됨")
+
+                            if(GlobalApplication.prefs.loginStatus == 1) {
+                                UserApiClient.instance.unlink { error ->
+                                    if(error != null) {
+                                        Toast.makeText(mContext, "오류로 인해 회원탈퇴 실패하였습니다.", Toast.LENGTH_SHORT).show()
+                                    }else {
+                                        Log.e("unlink: ", "연결끊기 성공. SDK에서 토큰 삭제됨")
+                                    }
                                 }
+                            } else {
+                                val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
+                                    .requestIdToken("727850004794-5clt9m4h33ff0vqprfl104qlm6m4t32e.apps.googleusercontent.com")
+                                    .requestServerAuthCode("727850004794-5clt9m4h33ff0vqprfl104qlm6m4t32e.apps.googleusercontent.com")
+                                    .requestEmail()
+                                    .build()
+
+                                val googleSignInClient = GoogleSignIn.getClient(mContext, gso)
+
+                                googleSignInClient!!.revokeAccess()
                             }
+
+
+                            GlobalApplication.prefs.loginStatus = 0
 
                             val intent = Intent(mContext, LogInActivity::class.java)
                             intent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK or Intent.FLAG_ACTIVITY_NEW_TASK)
@@ -146,9 +178,30 @@ class CustomDialog(context: Context, flag: Boolean) {
         }
     }
 
+    private fun sendFCMToken(token: String) {
+        val fcmToken = SendFCMTokenRequest(token)
+        val sendToken = tokenService.sendFCMToken("Bearer ${GlobalApplication.prefs.accessToken}", "${GlobalApplication.prefs.userId}", fcmToken)
+
+        sendToken.enqueue(object: Callback<SendFCMTokenResponse> {
+            override fun onResponse(
+                call: Call<SendFCMTokenResponse>,
+                response: Response<SendFCMTokenResponse>
+            ) {
+                if(response.isSuccessful) {
+                }
+            }
+
+            override fun onFailure(call: Call<SendFCMTokenResponse>, t: Throwable) {
+                Log.e("sendToken: ", "$t")
+            }
+        })
+
+    }
+
     private fun initRetrofit() {
         retrofit = RetrofitClient.getInstance()
         oauthService = retrofit.create(OAuthService::class.java)
+        tokenService = retrofit.create(TokenService::class.java)
     }
 
 }

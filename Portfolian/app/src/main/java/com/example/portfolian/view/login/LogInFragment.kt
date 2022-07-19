@@ -115,36 +115,44 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
             if (error != null) {
                 when {
                     error.toString() == AccessDenied.toString() -> {
+                        Toast.makeText(requireContext(), "로그인 하는 도중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
                         Log.e("LogIn Error: ", "접근이 거부 됨(동의 취소)")
                     }
                     error.toString() == InvalidClient.toString() -> {
+                        Toast.makeText(requireContext(), "로그인 하는 도중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
                         Log.e("LogIn Error: ", "유효하지 않은 앱")
                     }
                     error.toString() == InvalidGrant.toString() -> {
+                        Toast.makeText(requireContext(), "로그인 하는 도중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
                         Log.e("LogIn Error: ", "인증 수단이 유효하지 않아 인증할 수 없는 상태")
                     }
                     error.toString() == InvalidRequest.toString() -> {
+                        Toast.makeText(requireContext(), "로그인 하는 도중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
                         Log.e("LogIn Error: ", "요청 파라미터 오류")
                     }
                     error.toString() == InvalidScope.toString() -> {
+                        Toast.makeText(requireContext(), "로그인 하는 도중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
                         Log.e("LogIn Error: ", "유효하지 않은 scope ID")
                     }
                     error.toString() == Misconfigured.toString() -> {
+                        Toast.makeText(requireContext(), "로그인 하는 도중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
                         Log.e("LogIn Error: ", "설정이 올바르지 않음(android key hash)")
                     }
                     error.toString() == ServerError.toString() -> {
+                        Toast.makeText(requireContext(), "로그인 하는 도중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
                         Log.e("LogIn Error: ", "서버 내부 에러")
                     }
                     error.toString() == Unauthorized.toString() -> {
+                        Toast.makeText(requireContext(), "로그인 하는 도중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
                         Log.e("LogIn Error: ", "앱이 요청 권한이 없음")
                     }
                     else -> {
+                        Toast.makeText(requireContext(), "로그인 하는 도중 오류가 발생했습니다.", Toast.LENGTH_SHORT).show()
                         Log.e("LogIn Error: ", "기타 에러: $error")
                     }
                 }
             } else if (token != null) {
                 tokenToServer(token.accessToken)
-                Log.d("token", "${token.accessToken}")
             }
         }
         kakaoLogin.setOnClickListener {
@@ -184,13 +192,7 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
             try {
                 val account = task.getResult(ApiException::class.java)!!
 
-                Log.e("idToken: ", "${account.idToken}")
-                Log.e("authCode: ", "${account.serverAuthCode}")
                 getGoogleAccessToken(account.serverAuthCode!!)
-
-                //firebaseAuthWithGoogle(account.idToken!!)
-                //tokenToServer(account.idToken!!)
-
 
             } catch (e: ApiException) {
                 Log.e("account", "$e")
@@ -199,21 +201,6 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
         }
     }
 
-    private fun firebaseAuthWithGoogle(idToken: String) {
-        val credential = GoogleAuthProvider.getCredential(idToken, null)
-
-        auth.signInWithCredential(credential)
-            .addOnCompleteListener(requireActivity()) { task ->
-                if (task.isSuccessful) {
-                    val user = auth.currentUser
-                    val accessToken = auth
-
-                    //Log.e("accessToken: ", "${accessToken}")
-                } else {
-                    Log.e("firebaseAuthWithGoogle", "${task.exception}")
-                }
-            }
-    }
 
     private fun getGoogleAccessToken(authCode: String) {
         val interceptor = HttpLoggingInterceptor()
@@ -253,8 +240,7 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
             ) {
                 if (response.isSuccessful) {
                     val accessToken = response.body()!!.access_token
-
-                    Log.e("accessToken: ", "$accessToken")
+                    googleTokenToServer(accessToken)
                 }
             }
 
@@ -264,6 +250,31 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
         })
 
 
+    }
+
+    private fun googleTokenToServer(token: String) {
+        val googleToken = KakaoTokenRequest(token)
+        val tokenService = logInService.getGoogleToken(googleToken)
+
+        tokenService.enqueue(object: Callback<OAuthResponse> {
+            override fun onResponse(call: Call<OAuthResponse>, response: Response<OAuthResponse>) {
+                if(response.isSuccessful) {
+                    val isNew = response.body()!!.isNew
+                    val accessToken = response.body()!!.accessToken
+                    val userId = response.body()!!.userId
+
+                    GlobalApplication.prefs.accessToken = accessToken
+                    GlobalApplication.prefs.userId = userId
+                    GlobalApplication.prefs.loginStatus = 2
+
+                    isBan(isNew)
+                }
+            }
+
+            override fun onFailure(call: Call<OAuthResponse>, t: Throwable) {
+                Log.e("googleTokenToServer: ", "$t")
+            }
+        })
     }
 
 
@@ -288,7 +299,6 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
         tokenService.enqueue(object : Callback<OAuthResponse> {
             override fun onResponse(call: Call<OAuthResponse>, response: Response<OAuthResponse>) {
                 if (response.isSuccessful) {
-                    val code = response.body()!!.code
                     val isNew = response.body()!!.isNew
                     val accessToken = response.body()!!.accessToken
                     val userId = response.body()!!.userId

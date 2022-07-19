@@ -4,6 +4,7 @@ import android.os.Bundle
 import android.util.Log
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import com.example.portfolian.databinding.ActivityWebviewBinding
 
@@ -27,9 +28,8 @@ class WebViewActivity: AppCompatActivity() {
 
         val git = intent.getStringExtra("git")
 
-        Log.e("git", "$git")
         if(git.isNullOrEmpty()) {
-            Log.e("webView:", "false")
+            Toast.makeText(applicationContext, "깃 주소가 등록되지 않은 사용자입니다.", Toast.LENGTH_SHORT).show()
         } else {
             webView.loadUrl("https://$git")
         }

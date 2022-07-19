@@ -225,10 +225,9 @@ class NewProjectActivity : AppCompatActivity() {
                         response: Response<ModifyProjectResponse>
                     ) {
                         if (response.isSuccessful) {
-                            var code = response.body()!!.code
-                            var message = response.body()!!.message
 
-                            Log.d("modifyProject: ", "$code, $message")
+
+                            Toast.makeText(applicationContext, "프로젝트 수정이 완료되었습니다.", Toast.LENGTH_SHORT).show()
                         }
                     }
 
@@ -248,11 +247,7 @@ class NewProjectActivity : AppCompatActivity() {
                         response: Response<WriteProjectResponse>
                     ) {
                         if (response.isSuccessful) {
-                            var code = response.body()!!.code
-                            var message = response.body()!!.message
-                            var newProjectID = response.body()!!.newProjectID
-
-                            Log.d("saveProject: ", "${code}, ${message}, ${newProjectID}")
+                            Toast.makeText(applicationContext, "새로운 글 작성을 완료했습니다.", Toast.LENGTH_SHORT).show()
                         }
                     }
 

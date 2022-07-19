@@ -13,6 +13,7 @@ import android.view.LayoutInflater
 import android.view.ViewGroup
 import android.widget.ImageButton
 import android.widget.TextView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.AppCompatButton
 import androidx.appcompat.widget.Toolbar
@@ -159,6 +160,7 @@ class OtherActivity : AppCompatActivity() {
             val clipboardManager = getSystemService(Context.CLIPBOARD_SERVICE) as ClipboardManager
             val clip = ClipData.newPlainText("mail", "${otherInfo.mail}")
             clipboardManager.setPrimaryClip(clip)
+            Toast.makeText(this, "메일주소가 복사되었습니다.", Toast.LENGTH_SHORT).show()
         }
 
         description.text = otherInfo.description

@@ -119,7 +119,6 @@ class ProjectAdapter(
                     response: Response<SetBookmarkResponse>
                 ) {
                     if (response.isSuccessful) {
-                        Log.d("SetBookmark:: ", "${response.body()!!.code}")
                         dataSet[index].bookMark = holder.bookmark.isChecked
                         notifyItemChanged(index)
                     }
@@ -337,7 +336,6 @@ class ProjectAdapter(
             ) {
                 if (response.isSuccessful) {
                     val detailProject = response.body()!!
-                    Log.e("ProjectAdapter: ", "${response.body()!!.contents.recruitmentCondition}")
                     DetailData.detailData = detailProject
 
                     val intent = Intent(context, DetailProjectActivity::class.java)
@@ -348,7 +346,6 @@ class ProjectAdapter(
 
                     intent.putExtra("userId", "$userId")
                     intent.putExtra("projectId", "$projectId")
-                    Log.e("ProjectAdapter: projectId: ", projectId)
 
                     context.startActivity(intent)
                     /*if(detailProject.leader.userId == GlobalApplication.prefs.userId) {

@@ -283,7 +283,6 @@ class ProfileModifyActivity : AppCompatActivity() {
                     val message = response.body()!!.message
                     val profileURL = response.body()!!.profileURL
 
-                    Log.e("setProfileCustom: ", "$code, $message, $profileURL")
 
 
                     if (profileURL.isNullOrEmpty()) {

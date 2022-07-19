@@ -82,7 +82,6 @@ class ChatRoomActivity: AppCompatActivity() {
     }
 
     private fun initView() {
-        Log.e("initView", "view")
         toolbar = binding.toolbarChat
         toolbarTitle = binding.tvYourName
 
@@ -176,9 +175,6 @@ class ChatRoomActivity: AppCompatActivity() {
                 if (response.isSuccessful) {
                     oldChatList = response.body()!!.chatList.oldChatList
                     newChatList = response.body()!!.chatList.newChatList
-
-                    Log.e("oldChatList: ", "$oldChatList")
-                    Log.e("newChatList: ", "$newChatList")
 
                     initView()
 

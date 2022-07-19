@@ -221,7 +221,6 @@ class DetailProjectActivity : AppCompatActivity() {
                         response: Response<SetBookmarkResponse>
                     ) {
                         if (response.isSuccessful) {
-                            Log.d("SetBookmark:: ", "${response.body()!!.code}")
                         }
                     }
 
@@ -302,7 +301,6 @@ class DetailProjectActivity : AppCompatActivity() {
                                 val code = response.body()!!.code
                                 val message = response.body()!!.message
 
-                                Log.e("modifyStatus: ", "code: $code, message: $message")
 
                                 dynamic.text = "모집집행"
                                 dynamic.background = ContextCompat.getDrawable(
@@ -338,7 +336,6 @@ class DetailProjectActivity : AppCompatActivity() {
                                 val code = response.body()!!.code
                                 val message = response.body()!!.message
 
-                                Log.e("modifyStatus: ", "code: $code, message: $message")
 
                                 dynamic.text = "모집완료"
                                 dynamic.background = ContextCompat.getDrawable(
@@ -376,7 +373,6 @@ class DetailProjectActivity : AppCompatActivity() {
                             val message = response.body()!!.message
                             val chatRoomId = response.body()!!.chatRoomId
 
-                            Log.e("createChat: ", "$code $message $chatRoomId")
 
                             val intent =
                                 Intent(this@DetailProjectActivity, ChatRoomActivity::class.java)
@@ -412,7 +408,6 @@ class DetailProjectActivity : AppCompatActivity() {
                     val code = response.body()!!.code
                     val message = response.body()!!.message
 
-                    Log.d("deleteProject: ", "$code, $message")
                 }
             }
 

@@ -2,12 +2,10 @@ package com.example.portfolian.adapter
 
 import android.content.Context
 import android.content.Intent
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import androidx.core.view.isVisible
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.portfolian.R
@@ -18,9 +16,6 @@ import com.example.portfolian.view.main.user.OtherActivity
 import de.hdodenhof.circleimageview.CircleImageView
 import io.socket.client.Socket
 import org.json.JSONObject
-import java.text.SimpleDateFormat
-import java.time.LocalDateTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 
 class ChatAdapter(

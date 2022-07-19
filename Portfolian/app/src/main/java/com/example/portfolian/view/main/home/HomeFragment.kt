@@ -18,10 +18,6 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.example.portfolian.R
 import com.example.portfolian.adapter.ProjectAdapter
-import com.example.portfolian.data.Project
-import com.example.portfolian.data.ReadProjectResponse
-import com.example.portfolian.data.RenewalTokenRequest
-import com.example.portfolian.data.TokenResponse
 import com.example.portfolian.network.GlobalApplication
 import com.example.portfolian.network.RetrofitClient
 import com.example.portfolian.service.ProjectService
@@ -39,11 +35,12 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
 import androidx.lifecycle.ProcessLifecycleOwner
+import com.example.portfolian.data.*
 import com.example.portfolian.databinding.FragmentHomeBinding
 import com.example.portfolian.network.SocketApplication
 
 
-class HomeFragment : Fragment(R.layout.fragment_home), LifecycleObserver{
+class HomeFragment : Fragment(R.layout.fragment_home){
     private lateinit var binding: FragmentHomeBinding
 
     private lateinit var retrofit: Retrofit
@@ -80,40 +77,12 @@ class HomeFragment : Fragment(R.layout.fragment_home), LifecycleObserver{
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         init()
 
-        ProcessLifecycleOwner.get().lifecycle.addObserver(this)
         return binding.root
     }
 
-    @OnLifecycleEvent(Lifecycle.Event.ON_STOP)
-    private fun appOnStop() {
-        Log.e("HomeFragment: ", "onResume")
-    }
-    @OnLifecycleEvent(Lifecycle.Event.ON_CREATE)
-    private fun appOnCreate() {
-        Log.e("HomeFragment: ", "onResume")
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_DESTROY)
-    private fun appOnDestroy() {
-        Log.e("HomeFragment: ", "onResume")
-    }
-    @OnLifecycleEvent(Lifecycle.Event.ON_PAUSE)
-    private fun appOnPause() {
-        Log.e("HomeFragment: ", "onResume")
-    }
-    @OnLifecycleEvent(Lifecycle.Event.ON_RESUME)
-    private fun appOnResume() {
-        Log.e("HomeFragment: ", "onResume")
-    }
-
-    @OnLifecycleEvent(Lifecycle.Event.ON_START)
-    private fun appOnStart() {
-        Log.e("HomeFragment: ", "onStart")
-    }
 
     override fun onResume() {
         super.onResume()
-        //Log.e("HomeFragment: ", "onResume")
         SocketApplication.getSocket().off("chat:receive")
     }
 
@@ -259,6 +228,7 @@ class HomeFragment : Fragment(R.layout.fragment_home), LifecycleObserver{
 
     private fun initNewProject() {
         newProject.setOnClickListener {
+            DetailData.detailData = null
             val intent = Intent(activity, NewProjectActivity::class.java)
             startActivity(intent)
         }

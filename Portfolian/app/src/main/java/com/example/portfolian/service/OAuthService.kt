@@ -14,6 +14,13 @@ interface OAuthService {
     : Call<OAuthResponse>
 
     @Headers("content-type: application/json")
+    @POST("oauth/google/access")
+    fun getGoogleToken(
+        @Body token: KakaoTokenRequest
+    )
+    : Call<OAuthResponse>
+
+    @Headers("content-type: application/json")
     @PATCH("users/{userId}/nickName")
     fun setNickName(
         @Header("Authorization") Authorization: String,

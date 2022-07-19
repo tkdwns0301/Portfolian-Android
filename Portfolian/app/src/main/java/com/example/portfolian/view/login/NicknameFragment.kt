@@ -64,7 +64,6 @@ class NicknameFragment : Fragment(R.layout.fragment_nickname) {
 
         if (et_Nickname.text.isNullOrBlank()) {
             Toast.makeText(activity, "닉네임을 입력해주세요.", Toast.LENGTH_SHORT).show()
-            Log.e("NicknameFragment:: ", "Null Or Blank")
         } else {
             //메인페이지로 이동
             val nickname = NickNameRequest(et_Nickname.text.toString())
