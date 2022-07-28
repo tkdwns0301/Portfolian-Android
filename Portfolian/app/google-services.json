@@ -7,17 +7,17 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:727850004794:android:75441c9f61cb7ed599e003",
+        "mobilesdk_app_id": "1:727850004794:android:beb3af29942afe4599e003",
         "android_client_info": {
-          "package_name": "com.example.portfolian"
+          "package_name": "com.hand.portfolian"
         }
       },
       "oauth_client": [
         {
-          "client_id": "727850004794-63tqor1lr7mv59elcnd4nnp4jsh3pttd.apps.googleusercontent.com",
+          "client_id": "727850004794-qrpmammdv18jaflhhe6gjrhuaqouqo3l.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
-            "package_name": "com.example.portfolian",
+            "package_name": "com.hand.portfolian",
             "certificate_hash": "47be3ab298ebc836e1fe9f711e8262c18bfc3511"
           }
         },
