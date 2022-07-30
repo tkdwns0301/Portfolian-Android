@@ -1,10 +1,12 @@
 package com.hand.portfolian
 
 import android.content.Intent
+import android.graphics.Color
 import android.os.Bundle
 import android.util.Log
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import com.hand.portfolian.data.*
 import com.hand.portfolian.network.GlobalApplication
 import com.hand.portfolian.network.RetrofitClient
@@ -19,6 +21,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.gson.GsonBuilder
 import com.kakao.sdk.auth.AuthApiClient
+import com.kakao.sdk.common.util.Utility
 import com.kakao.sdk.user.UserApiClient
 import okhttp3.JavaNetCookieJar
 import okhttp3.OkHttpClient
@@ -39,9 +42,9 @@ class SplashActivity: AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        Log.e("splash: ", "${GlobalApplication.prefs.userId}")
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+        window.statusBarColor = Color.parseColor("#343A40")
         initRetrofit()
-
 
         if(GlobalApplication.prefs.loginStatus == 1) {
             UserApiClient.instance.accessTokenInfo { tokenInfo, error ->
