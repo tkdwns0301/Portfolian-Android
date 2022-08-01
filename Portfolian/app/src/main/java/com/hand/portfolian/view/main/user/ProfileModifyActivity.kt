@@ -182,8 +182,6 @@ class ProfileModifyActivity : AppCompatActivity() {
 
 
     fun initAddPhoto() {
-
-
         var writePermission = ContextCompat.checkSelfPermission(
             this,
             android.Manifest.permission.WRITE_EXTERNAL_STORAGE

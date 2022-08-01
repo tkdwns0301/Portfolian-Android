@@ -160,8 +160,8 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
         auth = FirebaseAuth.getInstance()
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("727850004794-5clt9m4h33ff0vqprfl104qlm6m4t32e.apps.googleusercontent.com")
-            .requestServerAuthCode("727850004794-5clt9m4h33ff0vqprfl104qlm6m4t32e.apps.googleusercontent.com")
+            .requestIdToken(R.string.google_client_id.toString())
+            .requestServerAuthCode(R.string.google_client_id.toString())
             .requestEmail()
             .build()
 
@@ -214,8 +214,8 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
 
         val loginGoogleRequest = LoginGoogleRequest(
             "authorization_code",
-            "727850004794-5clt9m4h33ff0vqprfl104qlm6m4t32e.apps.googleusercontent.com",
-            "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",
+            R.string.google_client_id.toString(),
+            R.string.google_clent_secret.toString(),
             "",
             authCode
         )

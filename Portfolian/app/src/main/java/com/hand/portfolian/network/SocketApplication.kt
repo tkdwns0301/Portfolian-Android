@@ -27,18 +27,15 @@ object SocketApplication {
     @Synchronized
     fun establishConnection() {
         mSocket.connect()
-        Log.e("socket:", "connect!!!")
     }
 
     @Synchronized
     fun closeConnection() {
-        Log.e("socket:", "disconnect!!!")
         mSocket.disconnect()
     }
 
     @Synchronized
     fun sendUserId() {
-        Log.e("sendUserId", "userid")
         val jsonObject = JSONObject()
         jsonObject.put("userId", "${GlobalApplication.prefs.userId}")
 

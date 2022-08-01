@@ -14,6 +14,14 @@
       },
       "oauth_client": [
         {
+          "client_id": "727850004794-10j9orebubemudegm433lqrkib0n1kkk.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hand.portfolian",
+            "certificate_hash": "da05c38dcef81b4201f0160104d77a49f8b7aa60"
+          }
+        },
+        {
           "client_id": "727850004794-qrpmammdv18jaflhhe6gjrhuaqouqo3l.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
