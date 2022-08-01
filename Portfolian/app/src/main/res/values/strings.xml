@@ -14,7 +14,9 @@
     <string name="server_client_id">1083263618420-h64dmhckpltu1fkj1pnprg4aicavm13d.apps.googleusercontent.com</string>
     <string name="BASE_URL">3.36.84.11:3000</string>
     <string name="kakao_app_key">8ab6cd6b8425d701ee369a5b461275a8</string>
-    <string name="Version">ver 1.0.0</string>
+    <string name="Version">ver 1.0.2</string>
     <string name="msg_token_fmt" translatable="false">토큰: %s</string>
     <string name="default_notification_channel_id">1083263618420</string>
+    <string name="google_client_id">727850004794-5clt9m4h33ff0vqprfl104qlm6m4t32e.apps.googleusercontent.com</string>
+    <string name="google_clent_secret">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</string>
 </resources>
