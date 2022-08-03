@@ -56,8 +56,8 @@ class SplashActivity: AppCompatActivity() {
             }
         } else if(GlobalApplication.prefs.loginStatus == 2) {
             val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-                .requestIdToken(R.string.google_client_id.toString())
-                .requestServerAuthCode(R.string.google_client_id.toString())
+                .requestIdToken("${BuildConfig.GOOGLE_CLIENT_ID}")
+                .requestServerAuthCode("${BuildConfig.GOOGLE_CLIENT_ID}")
                 .requestEmail()
                 .build()
 
@@ -116,8 +116,8 @@ class SplashActivity: AppCompatActivity() {
 
         val loginGoogleRequest = LoginGoogleRequest(
             "authorization_code",
-            R.string.google_client_id.toString(),
-            R.string.google_clent_secret.toString(),
+            "${BuildConfig.GOOGLE_CLIENT_ID}",
+            "${BuildConfig.GOOGLE_CLIENT_SECRET}",
             "",
             authCode
         )

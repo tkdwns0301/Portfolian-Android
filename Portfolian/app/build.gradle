@@ -6,6 +6,9 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     compileSdkVersion 31
     buildToolsVersion "30.0.3"
@@ -14,8 +17,11 @@ android {
         applicationId "com.hand.portfolian"
         minSdkVersion 26
         targetSdkVersion 31
-        versionCode 102
-        versionName "1.02"
+        versionCode 103
+        versionName "1.03"
+
+        buildConfigField "String", "GOOGLE_CLIENT_ID", properties['google_client_id']
+        buildConfigField "String", "GOOGLE_CLIENT_SECRET", properties['google_client_secret']
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -26,6 +32,7 @@ android {
         }
 
         release {
+
             minifyEnabled false
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }

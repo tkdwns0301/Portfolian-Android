@@ -22,6 +22,14 @@
           }
         },
         {
+          "client_id": "727850004794-mnhjsdaf5853vtarciakivdddpjaern7.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.hand.portfolian",
+            "certificate_hash": "49f5b6f8064e619f0a89dd4c799bfc88ee94e820"
+          }
+        },
+        {
           "client_id": "727850004794-qrpmammdv18jaflhhe6gjrhuaqouqo3l.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
