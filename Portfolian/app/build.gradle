@@ -6,6 +6,9 @@ plugins {
     id 'com.google.gms.google-services'
 }
 
+Properties properties = new Properties()
+properties.load(project.rootProject.file('local.properties').newDataInputStream())
+
 android {
     compileSdkVersion 31
     buildToolsVersion "30.0.3"
@@ -16,6 +19,9 @@ android {
         targetSdkVersion 31
         versionCode 103
         versionName "1.03"
+
+        buildConfigField "String", "GOOGLE_CLIENT_ID", properties['google_client_id']
+        buildConfigField "String", "GOOGLE_CLIENT_SECRET", properties['google_client_secret']
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }

@@ -28,6 +28,7 @@ import com.google.android.gms.auth.api.signin.GoogleSignInOptions
 import com.google.android.gms.common.api.ApiException
 import com.google.firebase.auth.FirebaseAuth
 import com.google.gson.GsonBuilder
+import com.hand.portfolian.BuildConfig
 import com.kakao.sdk.auth.model.OAuthToken
 import com.kakao.sdk.common.model.AuthErrorCause.*
 import com.kakao.sdk.user.UserApiClient
@@ -160,8 +161,8 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
         auth = FirebaseAuth.getInstance()
 
         val gso = GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
-            .requestIdToken("727850004794-5clt9m4h33ff0vqprfl104qlm6m4t32e.apps.googleusercontent.com")
-            .requestServerAuthCode("727850004794-5clt9m4h33ff0vqprfl104qlm6m4t32e.apps.googleusercontent.com")
+            .requestIdToken("${BuildConfig.GOOGLE_CLIENT_ID}")
+            .requestServerAuthCode("${BuildConfig.GOOGLE_CLIENT_ID}")
             .requestEmail()
             .build()
 
@@ -214,8 +215,8 @@ class LogInFragment : Fragment(R.layout.fragment_login) {
 
         val loginGoogleRequest = LoginGoogleRequest(
             "authorization_code",
-            "727850004794-5clt9m4h33ff0vqprfl104qlm6m4t32e.apps.googleusercontent.com",
-            "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",
+            "${BuildConfig.GOOGLE_CLIENT_ID}",
+            "${BuildConfig.GOOGLE_CLIENT_SECRET}",
             "",
             authCode
         )
